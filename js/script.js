@@ -30,7 +30,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
         message.className = `message ${data.status}`;
         if (data.status === "success") {
             setTimeout(() => {
-                alert("Você seria redirecionado ao Dashboard do evoGraph!");
+                window.location.href = "dashboard.php"; // Redireciona ao Dashboard
             }, 2000);
         }
     })
