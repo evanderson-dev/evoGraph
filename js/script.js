@@ -94,3 +94,11 @@ document.getElementById('reset-form').addEventListener('submit', function(event)
         console.error('Erro:', error);
     });
 });
+
+// Mostrar/esconder o formulário de cadastro de turma no Dashboard do coordenador
+if (document.getElementById('show-turma-form')) {
+    document.getElementById('show-turma-form').addEventListener('click', function() {
+        const form = document.getElementById('turma-form');
+        form.classList.toggle('hidden');
+    });
+}

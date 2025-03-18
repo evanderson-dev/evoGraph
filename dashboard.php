@@ -36,11 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
 </head>
 <body>
     <div class="container">
-        <h1>Bem-vindo ao Dashboard do evoGraph, <?php echo htmlspecialchars($_SESSION["email"]); ?>!</h1>
-
         <?php if ($_SESSION["role"] === "professor"): ?>
             <!-- Dashboard do Professor -->
-            <h2>Suas Turmas</h2>
+            <h2>Minhas Turmas</h2>
             <ul class="turmas-list">
                 <?php
                 $professor_id = $_SESSION["professor_id"];
@@ -71,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
             if ($prof_result->num_rows > 0) {
                 while ($prof = $prof_result->fetch_assoc()) {
                     echo "<div class='professor-section'>";
-                    echo "<h3>" . htmlspecialchars($prof["email"]) . "</h3>";
+                    echo "<span class='professor-name'>" . htmlspecialchars($prof["email"]) . ": </span>";
                     $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("i", $prof["id"]);
@@ -79,13 +77,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
                     $turmas_result = $stmt->get_result();
 
                     if ($turmas_result->num_rows > 0) {
-                        echo "<ul class='turmas-list'>";
+                        echo "<span class='turmas-inline'>";
                         while ($turma = $turmas_result->fetch_assoc()) {
-                            echo "<li><a href='turma.php?id=" . $turma["id"] . "'>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</a></li>";
+                            echo "<a href='turma.php?id=" . $turma["id"] . "'>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</a>, ";
                         }
-                        echo "</ul>";
+                        echo "</span>";
                     } else {
-                        echo "<p>Nenhuma turma associada.</p>";
+                        echo "<span>Nenhuma turma associada.</span>";
                     }
                     $stmt->close();
                     echo "</div>";
@@ -95,9 +93,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
             }
             ?>
 
-            <!-- Formulário de Cadastro de Turma -->
-            <h3>Cadastrar Nova Turma</h3>
-            <form method="POST" class="turma-form">
+            <!-- Botão para mostrar formulário -->
+            <button id="show-turma-form" class="login-button">Cadastrar Nova Turma</button>
+            <form method="POST" class="turma-form hidden" id="turma-form">
                 <div class="form-group">
                     <label for="nome">Nome da Turma</label>
                     <input type="text" id="nome" name="nome" placeholder="Ex.: 5º Ano A" required>
@@ -123,6 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
 
         <a href="logout.php">Sair</a>
     </div>
+    <script src="./js/script.js"></script>
 </body>
 </html>
 <?php $conn->close(); ?>
