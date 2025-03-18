@@ -151,3 +151,34 @@ body {
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.turma-form {
+  margin-top: 20px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alunos-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.alunos-list li {
+  background-color: #ffffff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.turmas-list a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+.turmas-list a:hover {
+  color: #007bff;
+}
