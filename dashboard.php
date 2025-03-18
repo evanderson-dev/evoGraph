@@ -6,13 +6,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     exit;
 }
 
-// Conectar ao MySQL
-$conn = new mysqli("localhost", "admEvoGraph", "evoGraph123", "evograph_db");
+$conn = new mysqli("localhost", "root", "root123", "evograph_db");
 if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);
 }
 
-// Buscar turmas do professor logado
 $professor_id = $_SESSION["professor_id"];
 $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
 $stmt = $conn->prepare($sql);
@@ -20,8 +18,8 @@ $stmt->bind_param("i", $professor_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Processar cadastro de nova turma
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
+// Cadastro de nova turma (apenas para coordenadores)
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SESSION["role"] === "coordenador") {
     $nome = $_POST["nome"];
     $ano = $_POST["ano"];
     $insertSql = "INSERT INTO turmas (nome, ano, professor_id) VALUES (?, ?, ?)";
@@ -29,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
     $insertStmt->bind_param("sii", $nome, $ano, $professor_id);
     $insertStmt->execute();
     $insertStmt->close();
-    header("Location: dashboard.php"); // Recarrega a página
+    header("Location: dashboard.php");
     exit;
 }
 ?>
@@ -59,19 +57,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
             ?>
         </ul>
 
-        <!-- Formulário para cadastrar nova turma -->
-        <h3>Cadastrar Nova Turma</h3>
-        <form method="POST" class="turma-form">
-            <div class="form-group">
-                <label for="nome">Nome da Turma</label>
-                <input type="text" id="nome" name="nome" placeholder="Ex.: 5º Ano A" required>
-            </div>
-            <div class="form-group">
-                <label for="ano">Ano</label>
-                <input type="number" id="ano" name="ano" placeholder="Ex.: 5" required>
-            </div>
-            <button type="submit" name="nova-turma" class="login-button">Cadastrar</button>
-        </form>
+        <?php if ($_SESSION["role"] === "coordenador"): ?>
+            <!-- Formulário visível apenas para coordenadores -->
+            <h3>Cadastrar Nova Turma</h3>
+            <form method="POST" class="turma-form">
+                <div class="form-group">
+                    <label for="nome">Nome da Turma</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex.: 5º Ano A" required>
+                </div>
+                <div class="form-group">
+                    <label for="ano">Ano</label>
+                    <input type="number" id="ano" name="ano" placeholder="Ex.: 5" required>
+                </div>
+                <button type="submit" name="nova-turma" class="login-button">Cadastrar</button>
+            </form>
+        <?php endif; ?>
 
         <a href="logout.php">Sair</a>
     </div>
