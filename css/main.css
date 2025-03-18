@@ -107,3 +107,27 @@ body {
   border: 1px solid #f5c6cb;
   display: block;
 }
+
+.forgot-password {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.forgot-password a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.reset-form {
+  margin-top: 20px;
+}
+
+.hidden {
+
+  display: none;
+
+}
