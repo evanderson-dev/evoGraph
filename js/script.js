@@ -107,4 +107,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Mostrar/esconder a sidebar (somente no dashboard.php)
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.main-content');
+    if (menuToggle && sidebar && mainContent) {
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('shifted');
+        });
+    }
 });
