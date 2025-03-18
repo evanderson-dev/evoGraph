@@ -23,7 +23,7 @@ if ($conn->connect_error) {
 <body>
     <div class="sidebar" id="sidebar">
         <ul class="sidebar-menu">
-            <?php if ($_SESSION["role"] === "coordenador"): ?>
+            <?php if ($_SESSION["cargo"] === "Coordenador"): ?>
                 <li><a href="cadastro_turma.php">Cadastrar Nova Turma</a></li>
             <?php endif; ?>
             <li><a href="logout.php">Sair</a></li>
@@ -32,15 +32,15 @@ if ($conn->connect_error) {
     <div class="main-content">
         <button class="menu-toggle" id="menu-toggle">☰</button>
         <div class="container">
-            <?php if ($_SESSION["role"] === "professor"): ?>
+            <?php if ($_SESSION["cargo"] === "Professor"): ?>
                 <!-- Dashboard do Professor -->
                 <h2>Minhas Turmas</h2>
                 <ul class="turmas-list">
                     <?php
-                    $professor_id = $_SESSION["professor_id"];
+                    $funcionario_id = $_SESSION["funcionario_id"];
                     $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $professor_id);
+                    $stmt->bind_param("i", $funcionario_id);
                     $stmt->execute();
                     $result = $stmt->get_result();
 
@@ -55,13 +55,13 @@ if ($conn->connect_error) {
                     ?>
                 </ul>
 
-            <?php elseif ($_SESSION["role"] === "coordenador"): ?>
+            <?php elseif ($_SESSION["cargo"] === "Coordenador"): ?>
                 <!-- Dashboard do Coordenador -->
-                <h2>Professores e Turmas</h2>
+                <h2>Funcionários e Turmas</h2>
                 <table class="professores-turmas-table">
                     <thead>
                         <tr>
-                            <th>Professor</th>
+                            <th>Funcionário</th>
                             <th>Turma 1</th>
                             <th>Turma 2</th>
                             <th>Turma 3</th>
@@ -69,17 +69,17 @@ if ($conn->connect_error) {
                     </thead>
                     <tbody>
                         <?php
-                        $sql = "SELECT id, email FROM professores WHERE role = 'professor'";
-                        $prof_result = $conn->query($sql);
+                        $sql = "SELECT id, nome, sobrenome FROM funcionarios WHERE cargo = 'Professor'";
+                        $func_result = $conn->query($sql);
 
-                        if ($prof_result->num_rows > 0) {
-                            while ($prof = $prof_result->fetch_assoc()) {
+                        if ($func_result->num_rows > 0) {
+                            while ($func = $func_result->fetch_assoc()) {
                                 echo "<tr>";
-                                echo "<td>" . htmlspecialchars($prof["email"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</td>";
                                 
                                 $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
                                 $stmt = $conn->prepare($sql);
-                                $stmt->bind_param("i", $prof["id"]);
+                                $stmt->bind_param("i", $func["id"]);
                                 $stmt->execute();
                                 $turmas_result = $stmt->get_result();
                                 $turmas = [];

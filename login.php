@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $sql = "SELECT * FROM professores WHERE email = ?";
+    $sql = "SELECT * FROM funcionarios WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -21,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $row["senha"])) {
             $_SESSION["loggedin"] = true;
             $_SESSION["email"] = $email;
-            $_SESSION["professor_id"] = $row["id"];
-            $_SESSION["role"] = $row["role"]; // Adicionar o papel à sessão
+            $_SESSION["funcionario_id"] = $row["id"];
+            $_SESSION["cargo"] = $row["cargo"];
             echo json_encode(["status" => "success", "message" => "Login bem-sucedido!"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Senha inválida."]);

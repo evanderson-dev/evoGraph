@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SESSION["role"] !== "coordenador") {
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SESSION["cargo"] !== "Coordenador") {
     header("Location: index.html");
     exit;
 }
@@ -15,10 +15,10 @@ if ($conn->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
     $nome = $_POST["nome"];
     $ano = $_POST["ano"];
-    $professor_id = $_POST["professor_id"];
+    $funcionario_id = $_POST["funcionario_id"];
     $insertSql = "INSERT INTO turmas (nome, ano, professor_id) VALUES (?, ?, ?)";
     $insertStmt = $conn->prepare($insertSql);
-    $insertStmt->bind_param("sii", $nome, $ano, $professor_id);
+    $insertStmt->bind_param("sii", $nome, $ano, $funcionario_id);
     $insertStmt->execute();
     $insertStmt->close();
     header("Location: dashboard.php");
@@ -47,12 +47,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
                 <input type="number" id="ano" name="ano" placeholder="Ex.: 5" required>
             </div>
             <div class="form-group">
-                <label for="professor_id">Professor Responsável</label>
-                <select id="professor_id" name="professor_id" required>
+                <label for="funcionario_id">Professor Responsável</label>
+                <select id="funcionario_id" name="funcionario_id" required>
                     <?php
-                    $prof_result = $conn->query("SELECT id, email FROM professores WHERE role = 'professor'");
-                    while ($prof = $prof_result->fetch_assoc()) {
-                        echo "<option value='" . $prof["id"] . "'>" . htmlspecialchars($prof["email"]) . "</option>";
+                    $func_result = $conn->query("SELECT id, nome, sobrenome FROM funcionarios WHERE cargo = 'Professor'");
+                    while ($func = $func_result->fetch_assoc()) {
+                        echo "<option value='" . $func["id"] . "'>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</option>";
                     }
                     ?>
                 </select>

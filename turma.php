@@ -6,23 +6,20 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     exit;
 }
 
-// Conectar ao MySQL
-$conn = new mysqli("localhost", "admEvoGraph", "evoGraph123", "evograph_db");
+$conn = new mysqli("localhost", "admEvoGraph", "evoGrap123", "evograph_db");
 if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);
 }
 
-// Pegar o ID da turma da URL
 if (!isset($_GET["id"])) {
     header("Location: dashboard.php");
     exit;
 }
 $turma_id = $_GET["id"];
 
-// Buscar detalhes da turma
 $sql = "SELECT nome, ano FROM turmas WHERE id = ? AND professor_id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ii", $turma_id, $_SESSION["professor_id"]);
+$stmt->bind_param("ii", $turma_id, $_SESSION["funcionario_id"]);
 $stmt->execute();
 $turma_result = $stmt->get_result();
 $turma = $turma_result->fetch_assoc();
@@ -33,8 +30,7 @@ if (!$turma) {
     exit;
 }
 
-// Buscar alunos da turma
-$sql = "SELECT nome FROM alunos WHERE turma_id = ?";
+$sql = "SELECT nome, sobrenome FROM alunos WHERE turma_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $turma_id);
 $stmt->execute();
@@ -57,7 +53,7 @@ $alunos_result = $stmt->get_result();
             <?php
             if ($alunos_result->num_rows > 0) {
                 while ($row = $alunos_result->fetch_assoc()) {
-                    echo "<li>" . htmlspecialchars($row["nome"]) . "</li>";
+                    echo "<li>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</li>";
                 }
             } else {
                 echo "<li>Nenhum aluno cadastrado.</li>";
