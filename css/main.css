@@ -131,3 +131,23 @@ body {
   display: none;
 
 }
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.turmas-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.turmas-list li {
+  background-color: #ffffff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

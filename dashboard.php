@@ -1,11 +1,24 @@
 <?php
 session_start();
 
-// Verificar se o usuário está logado
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("Location: index.html");
     exit;
 }
+
+// Conectar ao MySQL
+$conn = new mysqli("localhost", "root", "root123", "evograph_db");
+if ($conn->connect_error) {
+    die("Erro de conexão: " . $conn->connect_error);
+}
+
+// Buscar turmas do professor logado
+$professor_id = $_SESSION["professor_id"];
+$sql = "SELECT nome, ano FROM turmas WHERE professor_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $professor_id);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +32,20 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 <body>
     <div class="container">
         <h1>Bem-vindo ao Dashboard do evoGraph, <?php echo htmlspecialchars($_SESSION["email"]); ?>!</h1>
-        <p>Você está logado com sucesso.</p>
+        <h2>Suas Turmas</h2>
+        <ul class="turmas-list">
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<li>" . htmlspecialchars($row["nome"]) . " - Ano " . $row["ano"] . "</li>";
+                }
+            } else {
+                echo "<li>Nenhuma turma cadastrada.</li>";
+            }
+            $stmt->close();
+            $conn->close();
+            ?>
+        </ul>
         <a href="logout.php">Sair</a>
     </div>
 </body>
