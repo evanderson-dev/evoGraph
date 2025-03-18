@@ -6,7 +6,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     exit;
 }
 
-$conn = new mysqli("localhost", "admEvoGraph", "evoGraph123", "evograph_db");
+$conn = new mysqli("localhost", "admEvoGaph", "evoGraph123", "evograph_db");
 if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);
 }
@@ -66,7 +66,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
                 <thead>
                     <tr>
                         <th>Professor</th>
-                        <th>Turmas</th>
+                        <th>Turma 1</th>
+                        <th>Turma 2</th>
+                        <th>Turma 3</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,26 +80,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
                         while ($prof = $prof_result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($prof["email"]) . "</td>";
-                            echo "<td>";
+                            
+                            // Buscar turmas do professor
                             $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
                             $stmt = $conn->prepare($sql);
                             $stmt->bind_param("i", $prof["id"]);
                             $stmt->execute();
                             $turmas_result = $stmt->get_result();
-
-                            if ($turmas_result->num_rows > 0) {
-                                while ($turma = $turmas_result->fetch_assoc()) {
-                                    echo "<a href='turma.php?id=" . $turma["id"] . "'>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</a>, ";
-                                }
-                            } else {
-                                echo "Nenhuma turma associada.";
+                            $turmas = [];
+                            while ($turma = $turmas_result->fetch_assoc()) {
+                                $turmas[] = "<a href='turma.php?id=" . $turma["id"] . "'>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</a>";
                             }
                             $stmt->close();
-                            echo "</td>";
+
+                            // Preencher até 3 colunas de turmas
+                            for ($i = 0; $i < 3; $i++) {
+                                echo "<td>";
+                                if (isset($turmas[$i])) {
+                                    echo $turmas[$i];
+                                } else {
+                                    echo "-";
+                                }
+                                echo "</td>";
+                            }
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='2'>Nenhum professor cadastrado.</td></tr>";
+                        echo "<tr><td colspan='4'>Nenhum professor cadastrado.</td></tr>";
                     }
                     ?>
                 </tbody>

@@ -215,8 +215,6 @@ body {
   text-decoration: underline;
 }
 
-/* Estilos existentes permanecem até .turmas-inline */
-
 .professores-turmas-table {
   width: 100%;
   border-collapse: collapse;
@@ -225,9 +223,9 @@ body {
 
 .professores-turmas-table th,
 .professores-turmas-table td {
-  border: 1px solid #ddd;
+  border: 1px solid #333; /* Bordas visíveis */
   padding: 10px;
-  text-align: left;
+  text-align: left; /* Alinhamento à esquerda */
 }
 
 .professores-turmas-table th {
@@ -238,7 +236,6 @@ body {
 .professores-turmas-table td a {
   text-decoration: none;
   color: #007bff;
-  margin-right: 5px;
 }
 
 .professores-turmas-table td a:hover {
