@@ -10,20 +10,6 @@ $conn = new mysqli("localhost", "admEvoGraph", "evoGraph123", "evograph_db");
 if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);
 }
-
-// Processar cadastro de nova turma (apenas coordenadores)
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SESSION["role"] === "coordenador") {
-    $nome = $_POST["nome"];
-    $ano = $_POST["ano"];
-    $professor_id = $_POST["professor_id"];
-    $insertSql = "INSERT INTO turmas (nome, ano, professor_id) VALUES (?, ?, ?)";
-    $insertStmt = $conn->prepare($insertSql);
-    $insertStmt->bind_param("sii", $nome, $ano, $professor_id);
-    $insertStmt->execute();
-    $insertStmt->close();
-    header("Location: dashboard.php");
-    exit;
-}
 ?>
 
 <!DOCTYPE html>
@@ -81,7 +67,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($prof["email"]) . "</td>";
                             
-                            // Buscar turmas do professor
                             $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
                             $stmt = $conn->prepare($sql);
                             $stmt->bind_param("i", $prof["id"]);
@@ -93,7 +78,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
                             }
                             $stmt->close();
 
-                            // Preencher até 3 colunas de turmas
                             for ($i = 0; $i < 3; $i++) {
                                 echo "<td>";
                                 if (isset($turmas[$i])) {
@@ -112,30 +96,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
                 </tbody>
             </table>
 
-            <!-- Botão para mostrar formulário -->
-            <button id="show-turma-form" class="login-button">Cadastrar Nova Turma</button>
-            <form method="POST" class="turma-form hidden" id="turma-form">
-                <div class="form-group">
-                    <label for="nome">Nome da Turma</label>
-                    <input type="text" id="nome" name="nome" placeholder="Ex.: 5º Ano A" required>
-                </div>
-                <div class="form-group">
-                    <label for="ano">Ano</label>
-                    <input type="number" id="ano" name="ano" placeholder="Ex.: 5" required>
-                </div>
-                <div class="form-group">
-                    <label for="professor_id">Professor Responsável</label>
-                    <select id="professor_id" name="professor_id" required>
-                        <?php
-                        $prof_result = $conn->query("SELECT id, email FROM professores WHERE role = 'professor'");
-                        while ($prof = $prof_result->fetch_assoc()) {
-                            echo "<option value='" . $prof["id"] . "'>" . htmlspecialchars($prof["email"]) . "</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-                <button type="submit" name="nova-turma" class="login-button">Cadastrar</button>
-            </form>
+            <!-- Botão para abrir cadastro em nova página -->
+            <a href="cadastro_turma.php" class="login-button">Cadastrar Nova Turma</a>
         <?php endif; ?>
 
         <a href="logout.php">Sair</a>

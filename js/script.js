@@ -107,15 +107,4 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    // Mostrar/esconder o formulário de cadastro de turma (somente no dashboard.php)
-    const showTurmaFormButton = document.getElementById('show-turma-form');
-    if (showTurmaFormButton) {
-        showTurmaFormButton.addEventListener('click', function() {
-            const form = document.getElementById('turma-form');
-            if (form) {
-                form.classList.toggle('hidden');
-            }
-        });
-    }
 });

@@ -223,9 +223,9 @@ body {
 
 .professores-turmas-table th,
 .professores-turmas-table td {
-  border: 1px solid #333; /* Bordas visíveis */
+  border: 1px solid #333;
   padding: 10px;
-  text-align: left; /* Alinhamento à esquerda */
+  text-align: left;
 }
 
 .professores-turmas-table th {
@@ -258,8 +258,18 @@ body {
   margin-top: 5px;
 }
 
-#show-turma-form {
-  margin: 20px 0;
+.cancel-button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #ccc;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.cancel-button:hover {
+  background-color: #bbb;
 }
 
 .hidden {
