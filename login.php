@@ -1,6 +1,6 @@
 <?php
 // Conectar ao MySQL (ajuste a senha do root)
-$conn = new mysqli("localhost", "admEvoGraph", "evoGraph1234", "evograph_db");
+$conn = new mysqli("localhost", "admEvoGraph", "evoGraph123", "evograph_db");
 
 // Verificar conexão
 if ($conn->connect_error) {
