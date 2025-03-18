@@ -62,36 +62,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"]) && $_SES
         <?php elseif ($_SESSION["role"] === "coordenador"): ?>
             <!-- Dashboard do Coordenador -->
             <h2>Professores e Turmas</h2>
-            <?php
-            $sql = "SELECT id, email FROM professores WHERE role = 'professor'";
-            $prof_result = $conn->query($sql);
+            <table class="professores-turmas-table">
+                <thead>
+                    <tr>
+                        <th>Professor</th>
+                        <th>Turmas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $sql = "SELECT id, email FROM professores WHERE role = 'professor'";
+                    $prof_result = $conn->query($sql);
 
-            if ($prof_result->num_rows > 0) {
-                while ($prof = $prof_result->fetch_assoc()) {
-                    echo "<div class='professor-section'>";
-                    echo "<span class='professor-name'>" . htmlspecialchars($prof["email"]) . ": </span>";
-                    $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $prof["id"]);
-                    $stmt->execute();
-                    $turmas_result = $stmt->get_result();
+                    if ($prof_result->num_rows > 0) {
+                        while ($prof = $prof_result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($prof["email"]) . "</td>";
+                            echo "<td>";
+                            $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
+                            $stmt = $conn->prepare($sql);
+                            $stmt->bind_param("i", $prof["id"]);
+                            $stmt->execute();
+                            $turmas_result = $stmt->get_result();
 
-                    if ($turmas_result->num_rows > 0) {
-                        echo "<span class='turmas-inline'>";
-                        while ($turma = $turmas_result->fetch_assoc()) {
-                            echo "<a href='turma.php?id=" . $turma["id"] . "'>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</a>, ";
+                            if ($turmas_result->num_rows > 0) {
+                                while ($turma = $turmas_result->fetch_assoc()) {
+                                    echo "<a href='turma.php?id=" . $turma["id"] . "'>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</a>, ";
+                                }
+                            } else {
+                                echo "Nenhuma turma associada.";
+                            }
+                            $stmt->close();
+                            echo "</td>";
+                            echo "</tr>";
                         }
-                        echo "</span>";
                     } else {
-                        echo "<span>Nenhuma turma associada.</span>";
+                        echo "<tr><td colspan='2'>Nenhum professor cadastrado.</td></tr>";
                     }
-                    $stmt->close();
-                    echo "</div>";
-                }
-            } else {
-                echo "<p>Nenhum professor cadastrado.</p>";
-            }
-            ?>
+                    ?>
+                </tbody>
+            </table>
 
             <!-- Botão para mostrar formulário -->
             <button id="show-turma-form" class="login-button">Cadastrar Nova Turma</button>

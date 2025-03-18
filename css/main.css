@@ -126,12 +126,6 @@ body {
   margin-top: 20px;
 }
 
-.hidden {
-
-  display: none;
-
-}
-
 .container {
   max-width: 800px;
   margin: 50px auto;
@@ -221,6 +215,56 @@ body {
   text-decoration: underline;
 }
 
+/* Estilos existentes permanecem até .turmas-inline */
+
+.professores-turmas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.professores-turmas-table th,
+.professores-turmas-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.professores-turmas-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.professores-turmas-table td a {
+  text-decoration: none;
+  color: #007bff;
+  margin-right: 5px;
+}
+
+.professores-turmas-table td a:hover {
+  text-decoration: underline;
+}
+
+.turma-form {
+  margin-top: 20px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.turma-form select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
 #show-turma-form {
   margin: 20px 0;
+}
+
+.hidden {
+  display: none;
 }
