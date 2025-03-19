@@ -24,6 +24,7 @@ require_once 'db_connection.php';
             <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
                 <li><a href="cadastro_turma.php">Cadastrar Nova Turma</a></li>
                 <li><a href="cadastro_funcionario.php">Cadastrar Funcionário</a></li>
+                <li><a href="cadastro_aluno.php">Cadastrar Aluno</a></li>
             <?php endif; ?>
             <li><a href="logout.php">Sair</a></li>
         </ul>
@@ -53,6 +54,41 @@ require_once 'db_connection.php';
                     $stmt->close();
                     ?>
                 </ul>
+                <h2>Meus Alunos</h2>
+                <table class="professores-turmas-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Matrícula</th>
+                            <th>Turma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql = "SELECT a.nome, a.sobrenome, a.matricula, t.nome AS turma_nome, t.ano 
+                                FROM alunos a 
+                                JOIN turmas t ON a.turma_id = t.id 
+                                WHERE t.professor_id = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("i", $funcionario_id);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($row["turma_nome"] . " - Ano " . $row["ano"]) . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='3'>Nenhum aluno cadastrado.</td></tr>";
+                        }
+                        $stmt->close();
+                        ?>
+                    </tbody>
+                </table>
 
             <?php elseif ($_SESSION["cargo"] === "Coordenador"): ?>
                 <!-- Dashboard do Coordenador -->
@@ -102,6 +138,36 @@ require_once 'db_connection.php';
                             }
                         } else {
                             echo "<tr><td colspan='5'>Nenhum professor cadastrado.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <h2>Alunos</h2>
+                <table class="professores-turmas-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Matrícula</th>
+                            <th>Turma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql = "SELECT a.id, a.nome, a.sobrenome, a.matricula, t.nome AS turma_nome, t.ano 
+                                FROM alunos a 
+                                JOIN turmas t ON a.turma_id = t.id";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td><a href='cadastro_aluno.php?edit_id=" . $row["id"] . "'>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</a></td>";
+                                echo "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($row["turma_nome"] . " - Ano " . $row["ano"]) . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='3'>Nenhum aluno cadastrado.</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -161,6 +227,36 @@ require_once 'db_connection.php';
                             }
                         } else {
                             echo "<tr><td colspan='6'>Nenhum funcionário cadastrado.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <h2>Alunos</h2>
+                <table class="professores-turmas-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Matrícula</th>
+                            <th>Turma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql = "SELECT a.id, a.nome, a.sobrenome, a.matricula, t.nome AS turma_nome, t.ano 
+                                FROM alunos a 
+                                JOIN turmas t ON a.turma_id = t.id";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td><a href='cadastro_aluno.php?edit_id=" . $row["id"] . "'>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</a></td>";
+                                echo "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($row["turma_nome"] . " - Ano " . $row["ano"]) . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='3'>Nenhum aluno cadastrado.</td></tr>";
                         }
                         ?>
                     </tbody>
