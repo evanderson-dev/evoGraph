@@ -65,7 +65,6 @@ require_once 'db_connection.php';
                             <th>Turma 1</th>
                             <th>Turma 2</th>
                             <th>Turma 3</th>
-                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,7 +75,7 @@ require_once 'db_connection.php';
                         if ($func_result->num_rows > 0) {
                             while ($func = $func_result->fetch_assoc()) {
                                 echo "<tr>";
-                                echo "<td>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</td>";
+                                echo "<td><a href='cadastro_funcionario.php?edit_id=" . $func["id"] . "'>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</a></td>";
                                 echo "<td>" . htmlspecialchars($func["rf"]) . "</td>";
                                 
                                 $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
@@ -99,11 +98,10 @@ require_once 'db_connection.php';
                                     }
                                     echo "</td>";
                                 }
-                                echo "<td><a href='cadastro_funcionario.php?edit_id=" . $func["id"] . "' class='edit-button'>Editar</a></td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>Nenhum professor cadastrado.</td></tr>";
+                            echo "<tr><td colspan='5'>Nenhum professor cadastrado.</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -121,7 +119,6 @@ require_once 'db_connection.php';
                             <th>Turma 1</th>
                             <th>Turma 2</th>
                             <th>Turma 3</th>
-                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,7 +129,7 @@ require_once 'db_connection.php';
                         if ($func_result->num_rows > 0) {
                             while ($func = $func_result->fetch_assoc()) {
                                 echo "<tr>";
-                                echo "<td>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</td>";
+                                echo "<td><a href='cadastro_funcionario.php?edit_id=" . $func["id"] . "'>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</a></td>";
                                 echo "<td>" . htmlspecialchars($func["rf"]) . "</td>";
                                 echo "<td>" . htmlspecialchars($func["cargo"]) . "</td>";
 
@@ -160,11 +157,10 @@ require_once 'db_connection.php';
                                 } else {
                                     echo "<td>-</td><td>-</td><td>-</td>";
                                 }
-                                echo "<td><a href='cadastro_funcionario.php?edit_id=" . $func["id"] . "' class='edit-button'>Editar</a></td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='7'>Nenhum funcionário cadastrado.</td></tr>";
+                            echo "<tr><td colspan='6'>Nenhum funcionário cadastrado.</td></tr>";
                         }
                         ?>
                     </tbody>

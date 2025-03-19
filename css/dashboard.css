@@ -32,8 +32,9 @@
 .professores-turmas-table th,
 .professores-turmas-table td {
     border: 1px solid #333;
-    padding: 10px;
+    padding: 7px; /* Reduzido de 10px para ~70% da altura original */
     text-align: left;
+    font-size: 12px; /* Reduzido de 16px implícito para 12px */
 }
 
 .professores-turmas-table th {
@@ -48,19 +49,6 @@
 
 .professores-turmas-table td a:hover {
     text-decoration: underline;
-}
-
-.edit-button {
-    display: inline-block;
-    padding: 5px 10px;
-    background-color: #5bc0de;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 3px;
-}
-
-.edit-button:hover {
-    background-color: #31b0d5;
 }
 
 .professor-section {
