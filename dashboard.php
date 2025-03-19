@@ -1,29 +1,8 @@
 <?php
-session_start();
-
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("Location: index.html");
-    exit;
-}
-
-require_once 'db_connection.php';
-
-// Buscar nome e sobrenome do usuário logado
-$sql = "SELECT nome, sobrenome FROM funcionarios WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $_SESSION["funcionario_id"]);
-$stmt->execute();
-$result = $stmt->get_result();
-$usuario = $result->fetch_assoc();
-$stmt->close();
+include 'header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./css/global.css" rel="stylesheet" />
     <link href="./css/dashboard.css" rel="stylesheet" />
     <title>evoGraph Dashboard</title>
 </head>
@@ -40,9 +19,6 @@ $stmt->close();
     </div>
     <div class="main-content" id="main-content">
         <button class="menu-toggle" id="menu-toggle">☰</button>
-        <div class="user-info">
-            Logado como: <?php echo htmlspecialchars($usuario["nome"] . " " . $usuario["sobrenome"] . " (" . $_SESSION["cargo"] . ")"); ?>
-        </div>
         <div class="content-wrapper">
             <div class="container">
                 <?php if ($_SESSION["cargo"] === "Professor"): ?>

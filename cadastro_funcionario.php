@@ -1,21 +1,10 @@
 <?php
-session_start();
+include 'header.php';
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor")) {
+if ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor") {
     header("Location: index.html");
     exit;
 }
-
-require_once 'db_connection.php';
-
-// Buscar nome e sobrenome do usuário logado
-$sql = "SELECT nome, sobrenome FROM funcionarios WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $_SESSION["funcionario_id"]);
-$stmt->execute();
-$result = $stmt->get_result();
-$usuario = $result->fetch_assoc();
-$stmt->close();
 
 // Processar cadastro ou edição
 $edit_mode = false;
