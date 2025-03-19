@@ -27,6 +27,8 @@ $stmt->close();
     <link href="./css/global.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="user-info">
-        Logado como: <?php echo htmlspecialchars($usuario["nome"] . " " . $usuario["sobrenome"] . " (" . $_SESSION["cargo"] . ")"); ?>
+    <div class="header-bar">
+        <div class="user-info">
+            Logado como: <?php echo htmlspecialchars($usuario["nome"] . " " . $usuario["sobrenome"] . " (" . $_SESSION["cargo"] . ")"); ?>
+        </div>
     </div>
