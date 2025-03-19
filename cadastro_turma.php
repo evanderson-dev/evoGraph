@@ -6,10 +6,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SESSION
     exit;
 }
 
-$conn = new mysqli("localhost", "admEvoGraph", "evoGraph123", "evograph_db");
-if ($conn->connect_error) {
-    die("Erro de conexão: " . $conn->connect_error);
-}
+require_once 'db_connection.php';
 
 // Processar cadastro de nova turma
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
