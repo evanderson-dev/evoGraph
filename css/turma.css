@@ -1,0 +1,20 @@
+.alunos-list {
+    list-style: none;
+    padding: 0;
+}
+
+.alunos-list li {
+    margin: 10px 0;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-radius: 3px;
+}
+
+.container a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.container a:hover {
+    text-decoration: underline;
+}

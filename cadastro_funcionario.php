@@ -140,7 +140,8 @@ if (isset($_GET["edit_id"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./css/main.css" rel="stylesheet" />
+    <link href="./css/global.css" rel="stylesheet" />
+    <link href="./css/cadastro.css" rel="stylesheet" />
     <title>evoGraph - <?php echo $edit_mode ? "Editar" : "Cadastrar"; ?> Funcionário</title>
 </head>
 <body>
