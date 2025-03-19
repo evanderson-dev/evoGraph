@@ -21,10 +21,7 @@ require_once 'db_connection.php';
 <body>
     <div class="sidebar" id="sidebar">
         <ul class="sidebar-menu">
-            <?php if ($_SESSION["cargo"] === "Coordenador"): ?>
-                <li><a href="cadastro_turma.php">Cadastrar Nova Turma</a></li>
-                <li><a href="cadastro_funcionario.php">Cadastrar Funcionário</a></li>
-            <?php elseif ($_SESSION["cargo"] === "Diretor"): ?>
+            <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
                 <li><a href="cadastro_turma.php">Cadastrar Nova Turma</a></li>
                 <li><a href="cadastro_funcionario.php">Cadastrar Funcionário</a></li>
             <?php endif; ?>
@@ -114,13 +111,16 @@ require_once 'db_connection.php';
 
             <?php elseif ($_SESSION["cargo"] === "Diretor"): ?>
                 <!-- Dashboard do Diretor -->
-                <h2>Funcionários</h2>
+                <h2>Funcionários e Turmas</h2>
                 <table class="professores-turmas-table">
                     <thead>
                         <tr>
                             <th>Nome</th>
                             <th>RF</th>
                             <th>Cargo</th>
+                            <th>Turma 1</th>
+                            <th>Turma 2</th>
+                            <th>Turma 3</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -135,11 +135,36 @@ require_once 'db_connection.php';
                                 echo "<td>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</td>";
                                 echo "<td>" . htmlspecialchars($func["rf"]) . "</td>";
                                 echo "<td>" . htmlspecialchars($func["cargo"]) . "</td>";
+
+                                if ($func["cargo"] === "Professor") {
+                                    $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
+                                    $stmt = $conn->prepare($sql);
+                                    $stmt->bind_param("i", $func["id"]);
+                                    $stmt->execute();
+                                    $turmas_result = $stmt->get_result();
+                                    $turmas = [];
+                                    while ($turma = $turmas_result->fetch_assoc()) {
+                                        $turmas[] = "<a href='turma.php?id=" . $turma["id"] . "'>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</a>";
+                                    }
+                                    $stmt->close();
+
+                                    for ($i = 0; $i < 3; $i++) {
+                                        echo "<td>";
+                                        if (isset($turmas[$i])) {
+                                            echo $turmas[$i];
+                                        } else {
+                                            echo "-";
+                                        }
+                                        echo "</td>";
+                                    }
+                                } else {
+                                    echo "<td>-</td><td>-</td><td>-</td>";
+                                }
                                 echo "<td><a href='cadastro_funcionario.php?edit_id=" . $func["id"] . "' class='edit-button'>Editar</a></td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='4'>Nenhum funcionário cadastrado.</td></tr>";
+                            echo "<tr><td colspan='7'>Nenhum funcionário cadastrado.</td></tr>";
                         }
                         ?>
                     </tbody>
