@@ -272,6 +272,25 @@ body {
   background-color: #bbb;
 }
 
+.error-message {
+  color: #d9534f;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.edit-button {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #5bc0de;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 3px;
+}
+
+.edit-button:hover {
+  background-color: #31b0d5;
+}
+
 .hidden {
   display: none;
 }
@@ -282,14 +301,14 @@ body {
   height: 100%;
   position: fixed;
   top: 0;
-  left: -250px; /* Escondida por padrão */
+  left: -250px;
   background-color: #333;
   transition: 0.3s;
   padding-top: 60px;
 }
 
 .sidebar.active {
-  left: 0; /* Mostra a sidebar */
+  left: 0;
 }
 
 .sidebar-menu {
@@ -318,7 +337,7 @@ body {
 }
 
 .main-content.shifted {
-  margin-left: 250px; /* Move o conteúdo quando a sidebar aparece */
+  margin-left: 250px;
 }
 
 .menu-toggle {
