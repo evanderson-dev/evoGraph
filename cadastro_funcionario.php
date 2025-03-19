@@ -32,72 +32,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Verificar se o RF já existe
         $check_rf_sql = "SELECT id FROM funcionarios WHERE rf = ? AND id != ?";
         $check_rf_stmt = $conn->prepare($check_rf_sql);
-        $check_id = isset($_POST["edit_id"]) ? $_POST["edit_id"] : 0; // 0 para novo cadastro
-        $check_rf_stmt->bind_param("si", $rf, $check_id);
-        $check_rf_stmt->execute();
-        $check_rf_result = $check_rf_stmt->get_result();
-
-        // Verificar se o e-mail já existe
-        $check_email_sql = "SELECT id FROM funcionarios WHERE email = ? AND id != ?";
-        $check_email_stmt = $conn->prepare($check_email_sql);
-        $check_email_stmt->bind_param("si", $email, $check_id);
-        $check_email_stmt->execute();
-        $check_email_result = $check_email_stmt->get_result();
-
-        if ($check_rf_result->num_rows > 0) {
-            $error_message = "O Registro Funcional (RF) já está em uso por outro funcionário.";
-        } elseif ($check_email_result->num_rows > 0) {
-            $error_message = "O e-mail já está em uso por outro funcionário.";
+        if ($check_rf_stmt === false) {
+            $error_message = "Erro na preparação da consulta de RF: " . $conn->error;
         } else {
-            if (isset($_POST["edit_id"]) && !empty($_POST["edit_id"])) {
-                // Edição
-                $funcionario_id = $_POST["edit_id"];
-                $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?, data_nascimento = ?, rf = ?, cargo = ? WHERE id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ssssssi", $nome, $sobrenome, $email, $data_nascimento, $rf, $cargo, $funcionario_id);
-                if ($stmt->execute()) {
-                    if (!empty($senha)) {
-                        $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
-                        $sql_senha = "UPDATE funcionarios SET senha = ? WHERE id = ?";
-                        $stmt_senha = $conn->prepare($sql_senha);
-                        $stmt_senha->bind_param("si", $hashed_senha, $funcionario_id);
-                        $stmt_senha->execute();
-                        $stmt_senha->close();
-                    }
-                    header("Location: dashboard.php");
-                    exit;
-                } else {
-                    $error_message = "Erro ao atualizar funcionário: " . $conn->error;
-                }
-                $stmt->close();
+            $check_id = isset($_POST["edit_id"]) ? (int)$_POST["edit_id"] : 0; // 0 para novo cadastro
+            $check_rf_stmt->bind_param("si", $rf, $check_id);
+            $check_rf_stmt->execute();
+            $check_rf_result = $check_rf_stmt->get_result();
+
+            // Verificar se o e-mail já existe
+            $check_email_sql = "SELECT id FROM funcionarios WHERE email = ? AND id != ?";
+            $check_email_stmt = $conn->prepare($check_email_sql);
+            if ($check_email_stmt === false) {
+                $error_message = "Erro na preparação da consulta de e-mail: " . $conn->error;
             } else {
-                // Cadastro
-                if (empty($senha)) {
-                    $error_message = "A senha é obrigatória para novos funcionários.";
+                $check_email_stmt->bind_param("si", $email, $check_id);
+                $check_email_stmt->execute();
+                $check_email_result = $check_email_stmt->get_result();
+
+                if ($check_rf_result->num_rows > 0) {
+                    $error_message = "O Registro Funcional (RF) já está em uso por outro funcionário.";
+                } elseif ($check_email_result->num_rows > 0) {
+                    $error_message = "O e-mail já está em uso por outro funcionário.";
                 } else {
-                    $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
-                    $sql = "INSERT INTO funcionarios (nome, sobrenome, email, senha, data_nascimento, rf, cargo) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("sssssss", $nome, $sobrenome, $email, $hashed_senha, $data_nascimento, $rf, $cargo);
-                    if ($stmt->execute()) {
-                        header("Location: dashboard.php");
-                        exit;
+                    if (isset($_POST["edit_id"]) && !empty($_POST["edit_id"])) {
+                        // Edição
+                        $funcionario_id = (int)$_POST["edit_id"];
+                        $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?, data_nascimento = ?, rf = ?, cargo = ? WHERE id = ?";
+                        $stmt = $conn->prepare($sql);
+                        if ($stmt === false) {
+                            $error_message = "Erro na preparação da atualização: " . $conn->error;
+                        } else {
+                            $stmt->bind_param("ssssssi", $nome, $sobrenome, $email, $data_nascimento, $rf, $cargo, $funcionario_id);
+                            if ($stmt->execute()) {
+                                if (!empty($senha)) {
+                                    $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
+                                    $sql_senha = "UPDATE funcionarios SET senha = ? WHERE id = ?";
+                                    $stmt_senha = $conn->prepare($sql_senha);
+                                    $stmt_senha->bind_param("si", $hashed_senha, $funcionario_id);
+                                    $stmt_senha->execute();
+                                    $stmt_senha->close();
+                                }
+                                header("Location: dashboard.php");
+                                exit;
+                            } else {
+                                $error_message = "Erro ao atualizar funcionário: " . $conn->error;
+                            }
+                            $stmt->close();
+                        }
                     } else {
-                        $error_message = "Erro ao cadastrar funcionário: " . $conn->error;
+                        // Cadastro
+                        if (empty($senha)) {
+                            $error_message = "A senha é obrigatória para novos funcionários.";
+                        } else {
+                            $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
+                            $sql = "INSERT INTO funcionarios (nome, sobrenome, email, senha, data_nascimento, rf, cargo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                            $stmt = $conn->prepare($sql);
+                            if ($stmt === false) {
+                                $error_message = "Erro na preparação do cadastro: " . $conn->error;
+                            } else {
+                                $stmt->bind_param("sssssss", $nome, $sobrenome, $email, $hashed_senha, $data_nascimento, $rf, $cargo);
+                                if ($stmt->execute()) {
+                                    header("Location: dashboard.php");
+                                    exit;
+                                } else {
+                                    $error_message = "Erro ao cadastrar funcionário: " . $conn->error;
+                                }
+                                $stmt->close();
+                            }
+                        }
                     }
-                    $stmt->close();
                 }
+                $check_email_stmt->close();
             }
+            $check_rf_stmt->close();
         }
-        $check_rf_stmt->close();
-        $check_email_stmt->close();
     }
 }
 
 // Carregar dados para edição, se aplicável
 if (isset($_GET["edit_id"])) {
     $edit_mode = true;
-    $funcionario_id = $_GET["edit_id"];
+    $funcionario_id = (int)$_GET["edit_id"];
     $sql = "SELECT nome, sobrenome, email, data_nascimento, rf, cargo FROM funcionarios WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $funcionario_id);
