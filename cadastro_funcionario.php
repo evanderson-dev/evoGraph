@@ -28,40 +28,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_message = "Todos os campos são obrigatórios.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error_message = "E-mail inválido.";
-    } elseif (isset($_POST["edit_id"]) && !empty($_POST["edit_id"])) {
-        // Edição
-        $funcionario_id = $_POST["edit_id"];
-        $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?, data_nascimento = ?, rf = ?, cargo = ? WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssi", $nome, $sobrenome, $email, $data_nascimento, $rf, $cargo, $funcionario_id);
-        if ($stmt->execute()) {
-            if (!empty($senha)) {
-                $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
-                $sql_senha = "UPDATE funcionarios SET senha = ? WHERE id = ?";
-                $stmt_senha = $conn->prepare($sql_senha);
-                $stmt_senha->bind_param("si", $hashed_senha, $funcionario_id);
-                $stmt_senha->execute();
-                $stmt_senha->close();
-            }
-            header("Location: dashboard.php");
-            exit;
-        } else {
-            $error_message = "Erro ao atualizar funcionário: " . $conn->error;
-        }
-        $stmt->close();
     } else {
-        // Cadastro
-        $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO funcionarios (nome, sobrenome, email, senha, data_nascimento, rf, cargo) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssss", $nome, $sobrenome, $email, $hashed_senha, $data_nascimento, $rf, $cargo);
-        if ($stmt->execute()) {
-            header("Location: dashboard.php");
-            exit;
+        // Verificar se o RF já existe
+        $check_rf_sql = "SELECT id FROM funcionarios WHERE rf = ? AND id != ?";
+        $check_stmt = $conn->prepare($check_rf_sql);
+        $check_id = isset($_POST["edit_id"]) ? $_POST["edit_id"] : 0; // 0 para novo cadastro
+        $check_stmt->bind_param("si", $rf, $check_id);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
+
+        if ($check_result->num_rows > 0) {
+            $error_message = "O Registro Funcional (RF) já está em uso por outro funcionário.";
         } else {
-            $error_message = "Erro ao cadastrar funcionário: " . $conn->error;
+            if (isset($_POST["edit_id"]) && !empty($_POST["edit_id"])) {
+                // Edição
+                $funcionario_id = $_POST["edit_id"];
+                $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?, data_nascimento = ?, rf = ?, cargo = ? WHERE id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssssssi", $nome, $sobrenome, $email, $data_nascimento, $rf, $cargo, $funcionario_id);
+                if ($stmt->execute()) {
+                    if (!empty($senha)) {
+                        $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
+                        $sql_senha = "UPDATE funcionarios SET senha = ? WHERE id = ?";
+                        $stmt_senha = $conn->prepare($sql_senha);
+                        $stmt_senha->bind_param("si", $hashed_senha, $funcionario_id);
+                        $stmt_senha->execute();
+                        $stmt_senha->close();
+                    }
+                    header("Location: dashboard.php");
+                    exit;
+                } else {
+                    $error_message = "Erro ao atualizar funcionário: " . $conn->error;
+                }
+                $stmt->close();
+            } else {
+                // Cadastro
+                if (empty($senha)) {
+                    $error_message = "A senha é obrigatória para novos funcionários.";
+                } else {
+                    $hashed_senha = password_hash($senha, PASSWORD_DEFAULT);
+                    $sql = "INSERT INTO funcionarios (nome, sobrenome, email, senha, data_nascimento, rf, cargo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("sssssss", $nome, $sobrenome, $email, $hashed_senha, $data_nascimento, $rf, $cargo);
+                    if ($stmt->execute()) {
+                        header("Location: dashboard.php");
+                        exit;
+                    } else {
+                        $error_message = "Erro ao cadastrar funcionário: " . $conn->error;
+                    }
+                    $stmt->close();
+                }
+            }
         }
-        $stmt->close();
+        $check_stmt->close();
     }
 }
 
@@ -134,7 +153,6 @@ if (isset($_GET["edit_id"])) {
                 <select id="cargo" name="cargo" required>
                     <option value="Professor" <?php echo $cargo === "Professor" ? "selected" : ""; ?>>Professor</option>
                     <option value="Coordenador" <?php echo $cargo === "Coordenador" ? "selected" : ""; ?>>Coordenador</option>
-                    <!-- Adicione outros cargos aqui, se necessário -->
                 </select>
             </div>
             <?php if ($edit_mode): ?>
