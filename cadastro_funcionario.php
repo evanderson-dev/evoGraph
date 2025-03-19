@@ -120,9 +120,6 @@ if (isset($_GET["edit_id"])) {
 <body>
     <div class="container">
         <h2><?php echo $edit_mode ? "Editar Funcionário" : "Cadastrar Novo Funcionário"; ?></h2>
-        <?php if (!empty($error_message)): ?>
-            <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
-        <?php endif; ?>
         <form method="POST" class="turma-form">
             <div class="form-group">
                 <label for="nome">Nome</label>
@@ -162,6 +159,12 @@ if (isset($_GET["edit_id"])) {
             <a href="dashboard.php" class="cancel-button">Cancelar</a>
         </form>
     </div>
+
+    <?php if (!empty($error_message)): ?>
+        <script>
+            alert("<?php echo htmlspecialchars($error_message); ?>");
+        </script>
+    <?php endif; ?>
 </body>
 </html>
 <?php $conn->close(); ?>
