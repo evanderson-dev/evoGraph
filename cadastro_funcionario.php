@@ -31,14 +31,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // Verificar se o RF já existe
         $check_rf_sql = "SELECT id FROM funcionarios WHERE rf = ? AND id != ?";
-        $check_stmt = $conn->prepare($check_rf_sql);
+        $check_rf_stmt = $conn->prepare($check_rf_sql);
         $check_id = isset($_POST["edit_id"]) ? $_POST["edit_id"] : 0; // 0 para novo cadastro
-        $check_stmt->bind_param("si", $rf, $check_id);
-        $check_stmt->execute();
-        $check_result = $check_stmt->get_result();
+        $check_rf_stmt->bind_param("si", $rf, $check_id);
+        $check_rf_stmt->execute();
+        $check_rf_result = $check_rf_stmt->get_result();
 
-        if ($check_result->num_rows > 0) {
+        // Verificar se o e-mail já existe
+        $check_email_sql = "SELECT id FROM funcionarios WHERE email = ? AND id != ?";
+        $check_email_stmt = $conn->prepare($check_email_sql);
+        $check_email_stmt->bind_param("si", $email, $check_id);
+        $check_email_stmt->execute();
+        $check_email_result = $check_email_stmt->get_result();
+
+        if ($check_rf_result->num_rows > 0) {
             $error_message = "O Registro Funcional (RF) já está em uso por outro funcionário.";
+        } elseif ($check_email_result->num_rows > 0) {
+            $error_message = "O e-mail já está em uso por outro funcionário.";
         } else {
             if (isset($_POST["edit_id"]) && !empty($_POST["edit_id"])) {
                 // Edição
@@ -80,7 +89,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
-        $check_stmt->close();
+        $check_rf_stmt->close();
+        $check_email_stmt->close();
     }
 }
 
