@@ -42,9 +42,6 @@ $alunos_result = $stmt->get_result();
     <title>evoGraph - <?php echo htmlspecialchars($turma["nome"]); ?></title>
 </head>
 <body>
-    <div class="user-info">
-        Logado como: <?php echo htmlspecialchars($usuario["nome"] . " " . $usuario["sobrenome"] . " (" . $_SESSION["cargo"] . ")"); ?>
-    </div>
     <div class="container">
         <h1><?php echo htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"]; ?></h1>
         <h2>Alunos</h2>
