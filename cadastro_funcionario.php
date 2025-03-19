@@ -8,6 +8,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSIO
 
 require_once 'db_connection.php';
 
+// Buscar nome e sobrenome do usuário logado
+$sql = "SELECT nome, sobrenome FROM funcionarios WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION["funcionario_id"]);
+$stmt->execute();
+$result = $stmt->get_result();
+$usuario = $result->fetch_assoc();
+$stmt->close();
+
 // Processar cadastro ou edição
 $edit_mode = false;
 $funcionario_id = null;
@@ -145,6 +154,9 @@ if (isset($_GET["edit_id"])) {
     <title>evoGraph - <?php echo $edit_mode ? "Editar" : "Cadastrar"; ?> Funcionário</title>
 </head>
 <body>
+    <div class="user-info">
+        Logado como: <?php echo htmlspecialchars($usuario["nome"] . " " . $usuario["sobrenome"] . " (" . $_SESSION["cargo"] . ")"); ?>
+    </div>
     <div class="container">
         <h2><?php echo $edit_mode ? "Editar Funcionário" : "Cadastrar Novo Funcionário"; ?></h2>
         <form method="POST" class="turma-form">

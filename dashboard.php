@@ -7,6 +7,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 }
 
 require_once 'db_connection.php';
+
+// Buscar nome e sobrenome do usuário logado
+$sql = "SELECT nome, sobrenome FROM funcionarios WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION["funcionario_id"]);
+$stmt->execute();
+$result = $stmt->get_result();
+$usuario = $result->fetch_assoc();
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +40,9 @@ require_once 'db_connection.php';
     </div>
     <div class="main-content" id="main-content">
         <button class="menu-toggle" id="menu-toggle">☰</button>
+        <div class="user-info">
+            Logado como: <?php echo htmlspecialchars($usuario["nome"] . " " . $usuario["sobrenome"] . " (" . $_SESSION["cargo"] . ")"); ?>
+        </div>
         <div class="content-wrapper">
             <div class="container">
                 <?php if ($_SESSION["cargo"] === "Professor"): ?>

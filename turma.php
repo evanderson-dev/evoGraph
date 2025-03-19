@@ -8,6 +8,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 require_once 'db_connection.php';
 
+// Buscar nome e sobrenome do usuário logado
+$sql = "SELECT nome, sobrenome FROM funcionarios WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION["funcionario_id"]);
+$stmt->execute();
+$result = $stmt->get_result();
+$usuario = $result->fetch_assoc();
+$stmt->close();
+
 if (!isset($_GET["id"])) {
     header("Location: dashboard.php");
     exit;
@@ -44,6 +53,9 @@ $alunos_result = $stmt->get_result();
     <title>evoGraph - <?php echo htmlspecialchars($turma["nome"]); ?></title>
 </head>
 <body>
+    <div class="user-info">
+        Logado como: <?php echo htmlspecialchars($usuario["nome"] . " " . $usuario["sobrenome"] . " (" . $_SESSION["cargo"] . ")"); ?>
+    </div>
     <div class="container">
         <h1><?php echo htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"]; ?></h1>
         <h2>Alunos</h2>
