@@ -1,5 +1,4 @@
 <?php
-<?php
 include 'header.php';
 
 if ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor") {
