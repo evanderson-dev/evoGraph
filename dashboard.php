@@ -24,6 +24,9 @@ require_once 'db_connection.php';
             <?php if ($_SESSION["cargo"] === "Coordenador"): ?>
                 <li><a href="cadastro_turma.php">Cadastrar Nova Turma</a></li>
                 <li><a href="cadastro_funcionario.php">Cadastrar Funcionário</a></li>
+            <?php elseif ($_SESSION["cargo"] === "Diretor"): ?>
+                <li><a href="cadastro_turma.php">Cadastrar Nova Turma</a></li>
+                <li><a href="cadastro_funcionario.php">Cadastrar Funcionário</a></li>
             <?php endif; ?>
             <li><a href="logout.php">Sair</a></li>
         </ul>
@@ -56,11 +59,11 @@ require_once 'db_connection.php';
 
             <?php elseif ($_SESSION["cargo"] === "Coordenador"): ?>
                 <!-- Dashboard do Coordenador -->
-                <h2>Funcionários e Turmas</h2>
+                <h2>Professores e Turmas</h2>
                 <table class="professores-turmas-table">
                     <thead>
                         <tr>
-                            <th>Funcionário</th>
+                            <th>Professor</th>
                             <th>RF</th>
                             <th>Turma 1</th>
                             <th>Turma 2</th>
@@ -104,6 +107,39 @@ require_once 'db_connection.php';
                             }
                         } else {
                             echo "<tr><td colspan='6'>Nenhum professor cadastrado.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
+            <?php elseif ($_SESSION["cargo"] === "Diretor"): ?>
+                <!-- Dashboard do Diretor -->
+                <h2>Funcionários</h2>
+                <table class="professores-turmas-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>RF</th>
+                            <th>Cargo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql = "SELECT id, nome, sobrenome, rf, cargo FROM funcionarios";
+                        $func_result = $conn->query($sql);
+
+                        if ($func_result->num_rows > 0) {
+                            while ($func = $func_result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($func["rf"]) . "</td>";
+                                echo "<td>" . htmlspecialchars($func["cargo"]) . "</td>";
+                                echo "<td><a href='cadastro_funcionario.php?edit_id=" . $func["id"] . "' class='edit-button'>Editar</a></td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>Nenhum funcionário cadastrado.</td></tr>";
                         }
                         ?>
                     </tbody>

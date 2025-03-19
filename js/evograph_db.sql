@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS evograph_db;
 USE evograph_db;
 
--- Tabela funcionarios (antiga professores)
+-- Tabela funcionarios
 CREATE TABLE funcionarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -41,7 +41,8 @@ INSERT INTO funcionarios (email, senha, nome, sobrenome, data_nascimento, rf, ca
     ('professor@escola.com', '$2y$10$exemploHashAqui', 'João', 'Silva', '1980-05-15', 'RF001', 'Professor'),
     ('coordenador@escola.com', '$2y$10$exemploHashAqui', 'Maria', 'Oliveira', '1975-08-22', 'RF002', 'Coordenador'),
     ('professor2@escola.com', '$2y$10$exemploHashAqui', 'Pedro', 'Santos', '1985-03-10', 'RF003', 'Professor'),
-    ('professor3@escola.com', '$2y$10$exemploHashAqui', 'Ana', 'Costa', '1990-11-30', 'RF004', 'Professor');
+    ('professor3@escola.com', '$2y$10$exemploHashAqui', 'Ana', 'Costa', '1990-11-30', 'RF004', 'Professor'),
+    ('diretor@escola.com', '$2y$10$exemploHashAqui', 'Carlos', 'Mendes', '1970-01-25', 'RF005', 'Diretor');
 
 -- Inserções na tabela turmas (mínimo de 2 por professor)
 INSERT INTO turmas (nome, ano, professor_id) VALUES
