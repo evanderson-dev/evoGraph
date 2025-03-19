@@ -1,3 +1,28 @@
+/* dashboard.css */
+.turmas-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.turmas-list li {
+    background-color: #ffffff;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.turmas-list a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.turmas-list a:hover {
+    color: #007bff;
+}
+
 .professores-turmas-table {
     width: 100%;
     border-collapse: collapse;
@@ -38,20 +63,26 @@
     background-color: #31b0d5;
 }
 
-.turmas-list {
-    list-style: none;
-    padding: 0;
-}
-
-.turmas-list li {
+.professor-section {
     margin: 10px 0;
+    padding: 10px;
 }
 
-.turmas-list li a {
+.professor-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.turmas-inline {
+    display: inline;
+}
+
+.turmas-inline a {
     text-decoration: none;
     color: #007bff;
+    margin-right: 5px;
 }
 
-.turmas-list li a:hover {
+.turmas-inline a:hover {
     text-decoration: underline;
 }

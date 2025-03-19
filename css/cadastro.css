@@ -1,3 +1,4 @@
+/* cadastro.css */
 .turma-form {
     margin-top: 20px;
     max-width: 400px;
@@ -6,13 +7,15 @@
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
 .form-group label {
     display: block;
+    font-size: 14px;
+    color: #333;
     margin-bottom: 5px;
-    font-weight: bold;
 }
 
 .form-group input,
@@ -22,5 +25,9 @@
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-top: 5px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
 }

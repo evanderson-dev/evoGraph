@@ -1,20 +1,14 @@
+/* turma.css */
 .alunos-list {
     list-style: none;
     padding: 0;
+    margin: 20px 0;
 }
 
 .alunos-list li {
+    background-color: #ffffff;
+    padding: 15px;
     margin: 10px 0;
-    padding: 5px;
-    background-color: #f9f9f9;
-    border-radius: 3px;
-}
-
-.container a {
-    text-decoration: none;
-    color: #007bff;
-}
-
-.container a:hover {
-    text-decoration: underline;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
