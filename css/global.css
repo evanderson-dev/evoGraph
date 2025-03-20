@@ -124,3 +124,9 @@ body {
     cursor: pointer;
     z-index: 1001; /* Acima do header e da sidebar */
 }
+
+/* Para garantir que o ícone Font Awesome tenha o mesmo tamanho */
+.menu-toggle i {
+    font-size: 24px;
+    color: white;
+}

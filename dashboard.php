@@ -53,7 +53,7 @@ require_once 'db_connection.php';
 
     <!-- Início Main Content -->
     <div class="main-content" id="main-content">
-        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
         <div class="content-wrapper">
             <div class="container">
                 <?php if ($_SESSION["cargo"] === "Professor"): ?>
