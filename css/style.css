@@ -95,17 +95,17 @@ header {
     color: #444;
 }
 
-.content {
-    width: calc(100% - 190px); /* Ajustado para ocupar o espaço restante */
+/*.content {
+    width: calc(100% - 190px); /* Ajustado para ocupar o espaço restante 
     background-color: rgb(245, 245, 245);
     padding: 20px;
-    margin-left: 190px; /* Deslocado para a direita da sidebar */
-}
-/*.content{
+    margin-left: 190px; /* Deslocado para a direita da sidebar 
+}*/
+.content{
     width: 80%;
     background-color: rgb(245, 245, 245);
     padding: 20px;
-}*/
+}
 
 .titulo-secao {
     border-radius: 10px;
