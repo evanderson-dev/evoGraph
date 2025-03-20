@@ -1,8 +1,20 @@
 <?php
-include 'header.php';
+session_start();
+
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    header("Location: index.html");
+    exit;
+}
+
+require_once 'db_connection.php';
 ?>
 
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/global.css" rel="stylesheet" />
     <link href="./css/dashboard.css" rel="stylesheet" />
     <title>evoGraph Dashboard</title>
 </head>

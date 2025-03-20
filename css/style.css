@@ -1,0 +1,163 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+html, body{
+    height: 100%;
+}
+
+header{
+    background-color: #73b4ff;
+    padding: 20px 2%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo h3{
+    cursor: pointer;
+}
+
+.icons-header{
+    cursor: pointer;
+}
+
+.info-header{
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.info-header img{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin:0 8px;
+}
+
+.info-header svg{
+    margin:0 10px;
+}
+
+.icons-header{
+    margin-left: 10px;
+}
+
+.main{
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+}
+
+.sidebar a.sidebar-active{
+    border-left: 3px solid #73b4ff;
+    background-color: rgb(245, 245, 245);
+    color: #777;
+    font-weight: bold;
+}
+
+.sidebar a.sidebar-active > svg{
+    color: #777;
+}
+
+.sidebar{
+    width: 180px;
+    background-color: white;
+    height: 100%;
+    border-width: 0 1px 0 0;
+    border-style: solid;
+    border-color: #73b4ff;
+}
+
+.sidebar h3{
+    color: #333;
+    font-size: 20px;
+    margin: 10px;
+}
+
+.sidebar a{
+    display: block;
+    text-decoration: none;
+    padding: 10px 15px;
+    color: #444;
+}
+
+.sidebar a:hover{
+    border-left: 3px solid #73b4ff;
+    background-color: rgb(245, 245, 245);
+    color: #777;
+    font-weight: bold;
+}
+
+.sidebar a:hover .sidebar a > svg{
+    color: #777;
+}
+
+.sidebar a > svg{
+    color: #444;
+}
+
+.content{
+    width: 80%;
+    background-color: rgb(245, 245, 245);
+    padding: 20px;
+}
+
+.titulo-secao{
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.titulo-secao h2{
+    font-size: 19px;
+}
+
+.titulo-secao p{
+    font-size: 14px;
+}
+
+.titulo-secao svg{
+    color: #73b4ff;
+}
+
+.separator{
+    width: 100%;
+    height: 1px;
+    background-color: #73b4ff;
+}
+
+.box-info{
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.box-info-single{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 10px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.feed{
+    background-color: white;
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.feed-single{
+    display: flex;
+    justify-content: space-between;
+} 

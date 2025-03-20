@@ -1,10 +1,12 @@
 <?php
-include 'header.php';
+session_start();
 
-if ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor") {
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor")) {
     header("Location: index.html");
     exit;
 }
+
+require_once 'db_connection.php';
 
 // Processar cadastro ou edição
 $edit_mode = false;
