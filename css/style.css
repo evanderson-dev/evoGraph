@@ -109,6 +109,7 @@ header {
     background-color: rgb(245, 245, 245);
     padding: 20px;
     min-height: calc(100vh - 60px); /* Garante que o conteúdo preencha a altura disponível */
+    margin-top: 20px;
 }
 
 .titulo-secao {
