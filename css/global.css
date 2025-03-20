@@ -62,14 +62,14 @@ body {
 
 .sidebar {
     width: 250px;
-    height: calc(100% - 60px); /* Altura ajustada para começar abaixo do header */
+    height: calc(100% - 60px);
     position: fixed;
-    top: 60px; /* Alinhado exatamente abaixo do header */
+    top: 60px;
     left: -250px;
     background-color: #333;
     transition: 0.3s;
     padding-top: 20px;
-    z-index: 999; /* Mantido abaixo do header */
+    z-index: 999;
 }
 
 .sidebar.active {
@@ -101,7 +101,7 @@ body {
     min-height: 100vh;
     margin-left: 0;
     transition: 0.3s;
-    padding-top: 100px; /* Aumentado para acomodar o menu-toggle abaixo do header */
+    padding-top: 100px;
 }
 
 .main-content.shifted {
@@ -109,24 +109,24 @@ body {
 }
 
 .content-wrapper {
-    max-height: calc(100vh - 100px); /* Ajustado para o novo padding-top */
+    max-height: calc(100vh - 100px);
     overflow-y: auto;
     padding: 20px;
 }
 
 .menu-toggle {
     position: fixed;
-    top: 70px; /* Posicionado abaixo do header (60px de altura + 10px de margem) */
+    top: 70px;
     left: 10px;
     font-size: 24px;
     background: none;
     border: none;
     cursor: pointer;
-    z-index: 1001; /* Acima do header e da sidebar */
+    z-index: 1001;
 }
 
-/* Para garantir que o ícone Font Awesome tenha o mesmo tamanho */
-.menu-toggle i {
+/* Aumentar especificidade para garantir cor branca */
+.menu-toggle i.fa-solid.fa-bars {
     font-size: 24px;
-    color: white;
+    color: #ffffff; /* Branco puro */
 }
