@@ -7,6 +7,7 @@
 
 html, body {
     height: 100%;
+    overflow-x: hidden; /* Evita rolagem horizontal desnecessária */
 }
 
 header {
@@ -14,14 +15,16 @@ header {
     padding: 20px 2%;
     display: flex;
     justify-content: space-between;
+    position: fixed; /* Fixa o header no topo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Acima da sidebar e do conteúdo */
 }
 
 .logo h3 {
     cursor: pointer;
-}
-
-.icons-header{
-    cursor: pointer;
+    color: white; /* Garante que o texto seja visível */
 }
 
 .info-header {
@@ -37,22 +40,27 @@ header {
     margin: 0 8px;
 }
 
-.info-header svg{
-    margin:0 10px;
-}
-
-.info-header i{
-    margin:0 10px;
-}
-
-.icons-header{
-    margin-left: 10px;
+.info-header i {
+    margin: 0 10px;
 }
 
 .main {
     display: flex;
-    flex-wrap: wrap;
     height: 100%;
+    padding-top: 60px; /* Espaço para o header fixo */
+}
+
+.sidebar {
+    width: 190px;
+    background-color: white;
+    height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
+    border-width: 0 1px 0 0;
+    border-style: solid;
+    border-color: #73b4ff;
+    position: fixed; /* Fixa a sidebar à esquerda */
+    top: 60px; /* Alinhado abaixo do header */
+    left: 0;
+    z-index: 999; /* Abaixo do header, acima do conteúdo */
 }
 
 .sidebar a.sidebar-active {
@@ -62,17 +70,8 @@ header {
     font-weight: bold;
 }
 
-.sidebar a.sidebar-active > svg{
+.sidebar a.sidebar-active > i {
     color: #777;
-}
-
-.sidebar{
-    width: 190px;
-    background-color: white;
-    height: 100%;
-    border-width: 0 1px 0 0;
-    border-style: solid;
-    border-color: #73b4ff;
 }
 
 .sidebar h3 {
@@ -95,17 +94,21 @@ header {
     font-weight: bold;
 }
 
-.sidebar a:hover .sidebar a > svg{
+.sidebar a:hover > i {
     color: #777;
 }
 
-.sidebar a > svg{
+.sidebar a > i {
     color: #444;
+    margin-right: 10px; /* Espaço entre ícone e texto */
 }
-.content{
-    width: 85%;
+
+.content {
+    width: calc(100% - 190px); /* Ocupa o espaço restante ao lado da sidebar */
+    margin-left: 190px; /* Desloca para a direita da sidebar fixa */
     background-color: rgb(245, 245, 245);
     padding: 20px;
+    min-height: calc(100vh - 60px); /* Garante que o conteúdo preencha a altura disponível */
 }
 
 .titulo-secao {
@@ -123,8 +126,9 @@ header {
     font-size: 14px;
 }
 
-.titulo-secao svg{
+.titulo-secao i {
     color: #73b4ff;
+    margin-right: 5px; /* Espaço entre ícone e texto */
 }
 
 .separator {
@@ -138,24 +142,24 @@ header {
     margin-top: 20px;
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap; /* Permitir quebra de linha se necessário */
+    flex-wrap: wrap;
 }
 
 .box-turmas-single {
     display: flex;
     justify-content: space-between;
-    width: 30%; /* Ajustado para 3 por linha */
+    width: 30%;
     margin: 10px;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    cursor: pointer; /* Indica que é clicável */
+    cursor: pointer;
     transition: transform 0.2s;
 }
 
 .box-turmas-single:hover {
-    transform: scale(1.05); /* Efeito de hover */
+    transform: scale(1.05);
 }
 
 .box-turmas-single h3 {
@@ -196,4 +200,35 @@ header {
 
 .tabela-turma-selecionada td {
     color: #333;
+}
+
+/* Media Query para telas menores */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 150px; /* Reduz a largura da sidebar */
+    }
+
+    .content {
+        width: calc(100% - 150px); /* Ajusta o conteúdo */
+        margin-left: 150px;
+    }
+
+    .box-turmas-single {
+        width: 45%; /* 2 por linha em telas médias */
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 100px; /* Sidebar ainda mais estreita */
+    }
+
+    .content {
+        width: calc(100% - 100px);
+        margin-left: 100px;
+    }
+
+    .box-turmas-single {
+        width: 100%; /* 1 por linha em telas pequenas */
+    }
 }
