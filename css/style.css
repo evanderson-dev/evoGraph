@@ -61,6 +61,7 @@ header {
     top: 60px; /* Alinhado abaixo do header */
     left: 0;
     z-index: 999; /* Abaixo do header, acima do conteúdo */
+    margin-top: 20px;
 }
 
 .sidebar a.sidebar-active {
