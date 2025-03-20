@@ -20,6 +20,10 @@ header {
     cursor: pointer;
 }
 
+.icons-header{
+    cursor: pointer;
+}
+
 .info-header {
     color: white;
     display: flex;
@@ -34,6 +38,10 @@ header {
 }
 
 .info-header svg{
+    margin:0 10px;
+}
+
+.info-header i{
     margin:0 10px;
 }
 
@@ -94,13 +102,6 @@ header {
 .sidebar a > svg{
     color: #444;
 }
-
-/*.content {
-    width: calc(100% - 190px); /* Ajustado para ocupar o espaço restante 
-    background-color: rgb(245, 245, 245);
-    padding: 20px;
-    margin-left: 190px; /* Deslocado para a direita da sidebar 
-}*/
 .content{
     width: 80%;
     background-color: rgb(245, 245, 245);
