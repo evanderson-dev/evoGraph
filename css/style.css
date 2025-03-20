@@ -103,7 +103,7 @@ header {
     color: #444;
 }
 .content{
-    width: auto;
+    width: 90%;
     background-color: rgb(245, 245, 245);
     padding: 20px;
 }
