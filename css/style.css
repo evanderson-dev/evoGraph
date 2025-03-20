@@ -14,16 +14,10 @@ header {
     padding: 20px 2%;
     display: flex;
     justify-content: space-between;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
 }
 
 .logo h3 {
     cursor: pointer;
-    color: white;
 }
 
 .info-header {
@@ -39,16 +33,18 @@ header {
     margin: 0 8px;
 }
 
-.info-header i {
-    margin: 0 10px;
-    font-size: 18px;
+.info-header svg{
+    margin:0 10px;
+}
+
+.icons-header{
+    margin-left: 10px;
 }
 
 .main {
     display: flex;
     flex-wrap: wrap;
     height: 100%;
-    padding-top: 60px; /* Espaço para o header fixo */
 }
 
 .sidebar a.sidebar-active {
@@ -58,21 +54,17 @@ header {
     font-weight: bold;
 }
 
-.sidebar a.sidebar-active > i {
+.sidebar a.sidebar-active > svg{
     color: #777;
 }
 
-.sidebar {
+.sidebar{
     width: 190px;
     background-color: white;
     height: 100%;
     border-width: 0 1px 0 0;
     border-style: solid;
     border-color: #73b4ff;
-    position: fixed;
-    top: 60px; /* Alinhado abaixo do header */
-    left: 0;
-    z-index: 999;
 }
 
 .sidebar h3 {
@@ -95,13 +87,12 @@ header {
     font-weight: bold;
 }
 
-.sidebar a:hover > i {
+.sidebar a:hover .sidebar a > svg{
     color: #777;
 }
 
-.sidebar a > i {
+.sidebar a > svg{
     color: #444;
-    margin-right: 10px;
 }
 
 .content {
@@ -110,6 +101,11 @@ header {
     padding: 20px;
     margin-left: 190px; /* Deslocado para a direita da sidebar */
 }
+/*.content{
+    width: 80%;
+    background-color: rgb(245, 245, 245);
+    padding: 20px;
+}*/
 
 .titulo-secao {
     border-radius: 10px;
@@ -126,9 +122,8 @@ header {
     font-size: 14px;
 }
 
-.titulo-secao i {
+.titulo-secao svg{
     color: #73b4ff;
-    margin-right: 5px;
 }
 
 .separator {
