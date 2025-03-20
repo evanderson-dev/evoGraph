@@ -16,7 +16,7 @@ require_once 'db_connection.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./css/global.css" rel="stylesheet" />
     <link href="./css/dashboard.css" rel="stylesheet" />
-    <link href=".css/header.css" rel="stylesheet" />
+    <link href="./css/header.css" rel="stylesheet" />
     <title>evoGraph Dashboard</title>
 </head>
 <body>
