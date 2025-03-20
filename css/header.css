@@ -16,6 +16,8 @@ header {
     cursor: pointer;
     color: white;
     margin: 0;
+    /* possicionar 10 pixels para a direita */
+    margin-left: 30px;
 }
 
 .info-header {
