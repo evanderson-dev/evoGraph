@@ -17,12 +17,14 @@ require_once 'db_connection.php';
     <link href="./css/global.css" rel="stylesheet" />
     <link href="./css/dashboard.css" rel="stylesheet" />
     <link href="./css/header.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/js/all.min.css" rel="stylesheet" />
     <title>evoGraph Dashboard</title>
 </head>
+
 <body>
     <!-- Início Header -->
     <header>
-    <div class="info-header">
+        <div class="info-header">
             <div class="logo">
                 <h3>evoGraph</h3>
             </div>
@@ -290,6 +292,8 @@ require_once 'db_connection.php';
     <!-- Fim Main Content -->
 
     <script src="./js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/js/all.min.js"></script>
+    
 </body>
 </html>
 <?php $conn->close(); ?>
