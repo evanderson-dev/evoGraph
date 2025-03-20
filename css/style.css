@@ -130,14 +130,14 @@ header{
     background-color: #73b4ff;
 }
 
-.box-info{
+.box-turmas{
     width: 100%;
     margin-top: 20px;
     display: flex;
     justify-content: space-around;
 }
 
-.box-info-single{
+.box-turmas-single{
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -148,7 +148,7 @@ header{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.feed{
+.tabela-turma-selecionada{
     background-color: white;
     width: 100%;
     padding: 20px;
@@ -156,8 +156,3 @@ header{
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
-.feed-single{
-    display: flex;
-    justify-content: space-between;
-} 

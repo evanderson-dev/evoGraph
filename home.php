@@ -39,17 +39,18 @@
             <p><i class="fa-solid fa-house"></i> / Minhas Turmas</p>
         </div>
 
-        <div class="box-info">
+        <div class="box-turmas">
             <?php
             // Exemplo de dados dinâmicos
             $turmas = [
+                // O nome da turma e a quantidade de alunos deve ser prenchida de acordo com os dados buscados no db
                 ["nome" => "Infantil 1 A", "quantidade" => 20],
                 ["nome" => "Infantil 1 B", "quantidade" => 20],
                 ["nome" => "Infantil 1 C", "quantidade" => 100]
             ];
 
             foreach ($turmas as $turma) {
-                echo "<div class='box-info-single'>";
+                echo "<div class='box-turmas-single'>";
                 echo "<h3>{$turma['nome']}</h3>";
                 echo "<p>{$turma['quantidade']}</p>";
                 echo "</div>";
@@ -57,20 +58,9 @@
             ?>
         </div>
 
-        <div class="feed">
-            <?php
-            foreach ($turmas as $turma) {
-                echo "<div class='feed-single'>";
-                echo "<div class='feed-text'>";
-                echo "<i class='fa-solid fa-house'></i>";
-                echo "<span>{$turma['nome']}</span>";
-                echo "</div>";
-                echo "<div class='feed-time'>";
-                echo "<h3>Texto</h3>";
-                echo "</div>";
-                echo "</div>";
-            }
-            ?>
+        <div class="tabela-turma-selecionada">
+            <!-- Aqui será exibido a tabela da turma selecionada  em box-turmas-->
+
         </div>
 
     </div><!--FIM CONTENT-->
