@@ -1,158 +1,203 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-html, body{
+html, body {
     height: 100%;
 }
 
-header{
+header {
     background-color: #73b4ff;
     padding: 20px 2%;
     display: flex;
     justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
-.logo h3{
+.logo h3 {
     cursor: pointer;
+    color: white;
 }
 
-.icons-header{
-    cursor: pointer;
-}
-
-.info-header{
+.info-header {
     color: white;
     display: flex;
     align-items: center;
 }
 
-.info-header img{
+.info-header img {
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    margin:0 8px;
+    margin: 0 8px;
 }
 
-.info-header svg{
-    margin:0 10px;
+.info-header i {
+    margin: 0 10px;
+    font-size: 18px;
 }
 
-.icons-header{
-    margin-left: 10px;
-}
-
-.main{
+.main {
     display: flex;
     flex-wrap: wrap;
     height: 100%;
+    padding-top: 60px; /* Espaço para o header fixo */
 }
 
-.sidebar a.sidebar-active{
+.sidebar a.sidebar-active {
     border-left: 3px solid #73b4ff;
     background-color: rgb(245, 245, 245);
     color: #777;
     font-weight: bold;
 }
 
-.sidebar a.sidebar-active > svg{
+.sidebar a.sidebar-active > i {
     color: #777;
 }
 
-.sidebar{
+.sidebar {
     width: 190px;
     background-color: white;
     height: 100%;
     border-width: 0 1px 0 0;
     border-style: solid;
     border-color: #73b4ff;
+    position: fixed;
+    top: 60px; /* Alinhado abaixo do header */
+    left: 0;
+    z-index: 999;
 }
 
-.sidebar h3{
+.sidebar h3 {
     color: #333;
     font-size: 20px;
     margin: 10px;
 }
 
-.sidebar a{
+.sidebar a {
     display: block;
     text-decoration: none;
     padding: 10px 15px;
     color: #444;
 }
 
-.sidebar a:hover{
+.sidebar a:hover {
     border-left: 3px solid #73b4ff;
     background-color: rgb(245, 245, 245);
     color: #777;
     font-weight: bold;
 }
 
-.sidebar a:hover .sidebar a > svg{
+.sidebar a:hover > i {
     color: #777;
 }
 
-.sidebar a > svg{
+.sidebar a > i {
     color: #444;
+    margin-right: 10px;
 }
 
-.content{
-    width: 80%;
+.content {
+    width: calc(100% - 190px); /* Ajustado para ocupar o espaço restante */
     background-color: rgb(245, 245, 245);
     padding: 20px;
+    margin-left: 190px; /* Deslocado para a direita da sidebar */
 }
 
-.titulo-secao{
+.titulo-secao {
     border-radius: 10px;
     background-color: white;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.titulo-secao h2{
+.titulo-secao h2 {
     font-size: 19px;
 }
 
-.titulo-secao p{
+.titulo-secao p {
     font-size: 14px;
 }
 
-.titulo-secao svg{
+.titulo-secao i {
     color: #73b4ff;
+    margin-right: 5px;
 }
 
-.separator{
+.separator {
     width: 100%;
     height: 1px;
     background-color: #73b4ff;
 }
 
-.box-turmas{
+.box-turmas {
     width: 100%;
     margin-top: 20px;
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap; /* Permitir quebra de linha se necessário */
 }
 
-.box-turmas-single{
+.box-turmas-single {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    margin: 0 10px;
+    width: 30%; /* Ajustado para 3 por linha */
+    margin: 10px;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer; /* Indica que é clicável */
+    transition: transform 0.2s;
 }
 
-.tabela-turma-selecionada{
+.box-turmas-single:hover {
+    transform: scale(1.05); /* Efeito de hover */
+}
+
+.box-turmas-single h3 {
+    font-size: 16px;
+    color: #333;
+}
+
+.box-turmas-single p {
+    font-size: 14px;
+    color: #777;
+}
+
+.tabela-turma-selecionada {
     background-color: white;
     width: 100%;
     padding: 20px;
     margin-top: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.tabela-turma-selecionada table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-turma-selecionada th,
+.tabela-turma-selecionada td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabela-turma-selecionada th {
+    background-color: #73b4ff;
+    color: white;
+}
+
+.tabela-turma-selecionada td {
+    color: #333;
 }
