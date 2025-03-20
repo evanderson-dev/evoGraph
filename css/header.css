@@ -1,35 +1,38 @@
-header{
+header {
     background-color: #73b4ff;
     padding: 20px 2%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    position: fixed; /* Fixa o header no topo */
+    top: 0; /* Alinha ao topo da página */
+    left: 0; /* Alinha à esquerda */
+    width: 100%; /* Garante que ocupe toda a largura */
+    z-index: 1000; /* Fica acima de outros elementos */
 }
 
-.logo h3{
+.logo h3 {
     cursor: pointer;
+    color: white;
+    margin: 0;
 }
 
-.icons-header{
-    cursor: pointer;
-}
-
-.info-header{
+.info-header {
     color: white;
     display: flex;
     align-items: center;
 }
 
-.info-header img{
+.info-header img {
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    margin:0 8px;
+    margin: 0 8px;
 }
 
-.info-header svg{
-    margin:0 10px;
+.info-header i { /* Substitui svg por i para ícones Font Awesome */
+    margin: 0 10px;
+    font-size: 18px;
 }
 
-.icons-header{
-    margin-left: 10px;
-}
+/* Removido .icons-header pois não está sendo usado no HTML */
