@@ -16,9 +16,27 @@ require_once 'db_connection.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./css/global.css" rel="stylesheet" />
     <link href="./css/dashboard.css" rel="stylesheet" />
+    <link href=".css/header.css" rel="stylesheet" />
     <title>evoGraph Dashboard</title>
 </head>
 <body>
+    <!-- Início Header -->
+    <header>
+    <div class="info-header">
+            <div class="logo">
+                <h3>evoGraph</h3>
+            </div>
+        </div>
+        <div class="info-header">
+            <i class="fa-solid fa-envelope"></i>
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-user"></i>
+            <img src="https://avatars.githubusercontent.com/u/94180306?s=40&v=4" alt="User" class="user-icon">
+        </div>
+    </header>
+    <!-- Fim Header -->
+
+    <!-- Início Sidebar -->
     <div class="sidebar" id="sidebar">
         <ul class="sidebar-menu">
             <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
@@ -29,6 +47,9 @@ require_once 'db_connection.php';
             <li><a href="logout.php">Sair</a></li>
         </ul>
     </div>
+    <!-- Fim Sidebar -->
+
+    <!-- Início Main Content -->
     <div class="main-content" id="main-content">
         <button class="menu-toggle" id="menu-toggle">☰</button>
         <div class="content-wrapper">
@@ -266,6 +287,8 @@ require_once 'db_connection.php';
             </div>
         </div>
     </div>
+    <!-- Fim Main Content -->
+
     <script src="./js/script.js"></script>
 </body>
 </html>

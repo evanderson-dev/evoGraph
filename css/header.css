@@ -1,0 +1,35 @@
+header{
+    background-color: #73b4ff;
+    padding: 20px 2%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo h3{
+    cursor: pointer;
+}
+
+.icons-header{
+    cursor: pointer;
+}
+
+.info-header{
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.info-header img{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin:0 8px;
+}
+
+.info-header svg{
+    margin:0 10px;
+}
+
+.icons-header{
+    margin-left: 10px;
+}
