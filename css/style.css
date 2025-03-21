@@ -35,14 +35,18 @@ header {
 }
 
 .info-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    margin: 0 8px;
+    width: 40px; /* Tamanho da imagem */
+    height: 40px; /* Tamanho da imagem */
+    border-radius: 20px; /* Borda circular */
+    margin: 0 8px; /* Espaço entre imagem e texto */
 }
 
 .info-header svg {
-    margin: 0 10px;
+    margin: 0 10px; /* Espaço entre ícone e texto */
+}
+
+.info-header i {
+    margin: 0 10px; /* Espaço entre ícone e texto */
 }
 
 .main {
