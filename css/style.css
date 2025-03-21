@@ -12,7 +12,7 @@ html, body {
 
 header {
     background-color: #73b4ff;
-    padding: 20px 2%;
+    padding: 10px 2%;
     display: flex;
     justify-content: space-between;
     position: fixed; /* Fixa o header no topo */
