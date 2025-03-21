@@ -73,7 +73,7 @@ header {
     font-weight: bold;
 }
 
-.sidebar a.sidebar-active > i { /* Ícone do item ativo */
+.sidebar a.sidebar-active > svg { /* Ícone do item ativo */
     color: #777;
 }
 
@@ -86,7 +86,7 @@ header {
 .sidebar a { /* Estilo dos itens da sidebar */
     display: block; /* Transforma o link em bloco */
     text-decoration: none; /* Remove sublinhado */
-    padding: 10px 15px; /* Espaçamento interno */
+    padding: 10px 10px; /* Espaçamento interno AlturaPx EsquerdaPx*/
     color: #444; /* Cor do texto */
 }
 
