@@ -19,6 +19,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
+    height: 50px; /* Altura fixa para o header */
     z-index: 1000; /* Acima da sidebar e do conteúdo */
 }
 
