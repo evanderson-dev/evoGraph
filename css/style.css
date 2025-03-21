@@ -11,17 +11,16 @@ html, body {
 }
 
 header {
-    background-color: #73b4ff;
-    padding: 10px 2%;
-    display: flex;
-    justify-content: space-between;
+    background-color: #73b4ff; /* Cor de fundo do header */
+    padding: 20px 2%; /* 20px acima e abaixo, 2% nas laterais */
+    display: flex; /* Alinha os elementos horizontalmente */
+    justify-content: space-between; /* Espaço entre os elementos */
     position: fixed; /* Fixa o header no topo */
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 0; /* Alinhado ao topo */
+    left: 0; /* Alinhado à esquerda */
+    width: 100%; /* Largura total */
     height: 50px; /* Altura fixa para o header */
-    z-index: 1000; /* Acima da sidebar e do conteúdo */
-    align-items: center; /* Centraliza verticalmente o conteúdo */
+    z-index: 1000; /* Acima da sidebar e do conteúdo */    
 }
 
 .logo h3 {
@@ -42,7 +41,7 @@ header {
     margin: 0 8px;
 }
 
-.info-header i {
+.info-header svg {
     margin: 0 10px;
 }
 
@@ -53,17 +52,17 @@ header {
 }
 
 .sidebar {
-    width: 190px;
-    background-color: white;
+    width: 190px; /* Largura da sidebar */
+    background-color: white; /* Cor de fundo da sidebar */
     height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
-    border-width: 0 1px 0 0;
-    border-style: solid;
-    border-color: #73b4ff;
+    border-width: 0 1px 0 0; /* Borda à direita */
+    border-style: solid; /* Borda sólida */
+    border-color: #73b4ff; /* Cor da borda */
     position: fixed; /* Fixa a sidebar à esquerda */
-    top: 60px; /* Alinhado abaixo do header */
-    left: 0;
+    top: 50px; /* Alinhado abaixo do header */
+    left: 0; /* Alinhado à esquerda */
     z-index: 999; /* Abaixo do header, acima do conteúdo */
-    margin-top: 20px;
+    margin-top: 0px; /* Espaço acima da sidebar */
 }
 
 .sidebar a.sidebar-active {
@@ -109,10 +108,10 @@ header {
 .content {
     width: calc(100% - 190px); /* Ocupa o espaço restante ao lado da sidebar */
     margin-left: 190px; /* Desloca para a direita da sidebar fixa */
-    background-color: rgb(245, 245, 245);
-    padding: 20px;
+    background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
+    padding: 20px; /* Espaçamento interno */
     min-height: calc(100vh - 60px); /* Garante que o conteúdo preencha a altura disponível */
-    margin-top: 20px;
+    margin-top: 20px; /* Espaço acima do conteúdo */
 }
 
 .titulo-secao {
