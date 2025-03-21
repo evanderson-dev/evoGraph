@@ -129,8 +129,8 @@ header { /* Cabeçalho da página */
     font-size: 14px; /* Tamanho da fonte */
 }
 
-.titulo-secao svg { /* Ícone do título */
-    color: #73b4ff; /* Cor do ícone */
+.content .titulo-secao svg { /* Ícone do título */
+    color: red; /* Cor do ícone */
     margin-right: 5px; /* Espaço entre ícone e texto */
 }
 
