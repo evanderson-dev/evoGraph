@@ -41,18 +41,14 @@ header {
     margin: 0 8px; /* Espaço entre imagem e texto */
 }
 
-.info-header svg {
-    margin: 0 10px; /* Espaço entre ícone e texto */
-}
-
-.info-header i {
+.info-header svg, i { /* Ícone do usuário */
     margin: 0 10px; /* Espaço entre ícone e texto */
 }
 
 .main {
-    display: flex;
-    height: 100%;
-    padding-top: 60px; /* Espaço para o header fixo */
+    display: flex; /* Alinha os elementos horizontalmente */
+    height: 100%; /* Altura total */
+    padding-top: 50px; /* Espaço para o header fixo */
 }
 
 .sidebar {
@@ -69,82 +65,81 @@ header {
     margin-top: 0px; /* Espaço acima da sidebar */
 }
 
-.sidebar a.sidebar-active {
+.sidebar a.sidebar-active { /* Estilo do item ativo */
     border-left: 3px solid #73b4ff;
     background-color: rgb(245, 245, 245);
     color: #777;
     font-weight: bold;
 }
 
-.sidebar a.sidebar-active > i {
+.sidebar a.sidebar-active > i { /* Ícone do item ativo */
     color: #777;
 }
 
-.sidebar h3 {
+.sidebar h3 { /* Título da sidebar */
     color: #333;
     font-size: 20px;
     margin: 10px;
 }
 
-.sidebar a {
+.sidebar a { /* Estilo dos itens da sidebar */
     display: block;
     text-decoration: none;
     padding: 10px 15px;
     color: #444;
 }
 
-.sidebar a:hover {
+.sidebar a:hover { /* Efeito de hover nos itens da sidebar */
     border-left: 3px solid #73b4ff;
     background-color: rgb(245, 245, 245);
     color: #777;
     font-weight: bold;
 }
 
-.sidebar a:hover > i {
+.sidebar a:hover > i { /* Ícone do item em hover */
     color: #777;
 }
 
-.sidebar a > i {
+.sidebar a > i { /* Ícone dos itens da sidebar */
     color: #444;
     margin-right: 10px; /* Espaço entre ícone e texto */
 }
 
-.content {
+.content { /* Conteúdo principal */
     width: calc(100% - 190px); /* Ocupa o espaço restante ao lado da sidebar */
     margin-left: 190px; /* Desloca para a direita da sidebar fixa */
     background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
     padding: 20px; /* Espaçamento interno */
-    min-height: calc(100vh - 60px); /* Garante que o conteúdo preencha a altura disponível */
-    margin-top: 20px; /* Espaço acima do conteúdo */
+    margin-top: 0px; /* Espaço acima da sidebar */
 }
 
-.titulo-secao {
+.titulo-secao { /* Título das seções */
     border-radius: 10px;
     background-color: white;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.titulo-secao h2 {
+.titulo-secao h2 { /* Título principal */
     font-size: 19px;
 }
 
-.titulo-secao p {
+.titulo-secao p { /* Subtítulo */
     font-size: 14px;
 }
 
-.titulo-secao i {
+.titulo-secao i { /* Ícone do título */
     color: #73b4ff;
     margin-right: 5px; /* Espaço entre ícone e texto */
 }
 
-.separator {
+.separator { /* Separador horizontal */
     width: 100%;
     height: 1px;
     background-color: #73b4ff;
 }
 
-.box-turmas {
+.box-turmas { /* Caixas de turmas */
     width: 100%;
     margin-top: 20px;
     display: flex;
@@ -152,7 +147,7 @@ header {
     flex-wrap: wrap;
 }
 
-.box-turmas-single {
+.box-turmas-single { /* Caixa de turma individual */
     display: flex;
     justify-content: space-between;
     width: 30%;
@@ -165,21 +160,21 @@ header {
     transition: transform 0.2s;
 }
 
-.box-turmas-single:hover {
+.box-turmas-single:hover { /* Efeito de hover */
     transform: scale(1.05);
 }
 
-.box-turmas-single h3 {
+.box-turmas-single h3 { /* Título da turma */
     font-size: 16px;
     color: #333;
 }
 
-.box-turmas-single p {
+.box-turmas-single p { /* Descrição da turma */
     font-size: 14px;
     color: #777;
 }
 
-.tabela-turma-selecionada {
+.tabela-turma-selecionada { /* Tabela da turma selecionada */
     background-color: white;
     width: 100%;
     padding: 20px;
@@ -217,7 +212,7 @@ header {
 
     .content {
         width: calc(100% - 150px); /* Ajusta o conteúdo */
-        margin-left: 150px;
+        margin-left: 150px; /* Desloca para a direita da sidebar fixa */
     }
 
     .box-turmas-single {
@@ -231,8 +226,8 @@ header {
     }
 
     .content {
-        width: calc(100% - 100px);
-        margin-left: 100px;
+        width: calc(100% - 100px); /* Ajusta o conteúdo */
+        margin-left: 100px; /* Desloca para a direita da sidebar fixa */
     }
 
     .box-turmas-single {
