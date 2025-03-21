@@ -63,6 +63,7 @@ header {
     left: 0; /* Alinhado à esquerda */
     z-index: 999; /* Abaixo do header, acima do conteúdo */
     margin-top: 0px; /* Espaço acima da sidebar */
+    font-size: 15px; /* Tamanho da fonte */
 }
 
 .sidebar a.sidebar-active { /* Estilo do item ativo */
@@ -83,10 +84,10 @@ header {
 }
 
 .sidebar a { /* Estilo dos itens da sidebar */
-    display: block;
-    text-decoration: none;
-    padding: 10px 15px;
-    color: #444;
+    display: block; /* Transforma o link em bloco */
+    text-decoration: none; /* Remove sublinhado */
+    padding: 10px 15px; /* Espaçamento interno */
+    color: #444; /* Cor do texto */
 }
 
 .sidebar a:hover { /* Efeito de hover nos itens da sidebar */
@@ -96,13 +97,13 @@ header {
     font-weight: bold;
 }
 
-.sidebar a:hover > i { /* Ícone do item em hover */
+.sidebar a:hover > svg { /* Ícone do item em hover */
     color: #777;
 }
 
-.sidebar a > i { /* Ícone dos itens da sidebar */
-    color: #444;
-    margin-right: 10px; /* Espaço entre ícone e texto */
+.sidebar a > svg { /* Ícone dos itens da sidebar */
+    color: #444; /* Cor do ícone */
+    margin-right: 0px; /* Espaço entre ícone e texto */
 }
 
 .content { /* Conteúdo principal */
