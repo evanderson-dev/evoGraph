@@ -25,6 +25,7 @@ $cargo = $_SESSION["cargo"];
 <body>
     <header>
         <div class="info-header">
+            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
             <div class="logo">
                 <h3>evoGraph</h3>
             </div>
@@ -52,7 +53,6 @@ $cargo = $_SESSION["cargo"];
         </div><!-- FIM SIDEBAR -->
 
         <div class="content" id="content">
-            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
             <div class="titulo-secao">
                 <h2>Dashboard <?php echo htmlspecialchars($cargo); ?></h2><br>
                 <div class="separator"></div><br>
@@ -211,7 +211,7 @@ $cargo = $_SESSION["cargo"];
     <script>
         $(document).ready(function() {
             // Menu Hambúrguer
-            $('#menu-toggle').click(function() {
+            $('#menu-toggle').on('click', function() {
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
             });
