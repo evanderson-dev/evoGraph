@@ -38,7 +38,7 @@ $cargo = $_SESSION["cargo"];
     </header><!-- FIM HEADER -->
 
     <section class="main">
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i> Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
             <a href="#"><i class="fa-solid fa-cog"></i> Configurações</a>
@@ -51,7 +51,8 @@ $cargo = $_SESSION["cargo"];
             <div class="separator"></div><br>
         </div><!-- FIM SIDEBAR -->
 
-        <div class="content">
+        <div class="content" id="content">
+            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
             <div class="titulo-secao">
                 <h2>Dashboard <?php echo htmlspecialchars($cargo); ?></h2><br>
                 <div class="separator"></div><br>
@@ -209,9 +210,15 @@ $cargo = $_SESSION["cargo"];
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Menu Hambúrguer
+            $('#menu-toggle').click(function() {
+                $('#sidebar').toggleClass('active');
+                $('#content').toggleClass('shifted');
+            });
+
+            // AJAX para turmas
             $('.box-turmas-single').click(function() {
                 var turmaId = $(this).data('turma-id');
-
                 $.ajax({
                     url: 'fetch_alunos.php',
                     method: 'POST',

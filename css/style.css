@@ -20,7 +20,7 @@ header { /* Cabeçalho da página */
     left: 0; /* Alinhado à esquerda */
     width: 100%; /* Largura total */
     height: 50px; /* Altura fixa para o header */
-    z-index: 1000; /* Acima da sidebar e do conteúdo */    
+    z-index: 1000; /* Acima da sidebar e do conteúdo */
 }
 
 .logo h3 { /* Título da logo */
@@ -60,10 +60,14 @@ header { /* Cabeçalho da página */
     border-color: #73b4ff; /* Cor da borda */
     position: fixed; /* Fixa a sidebar à esquerda */
     top: 50px; /* Alinhado abaixo do header */
-    left: 0; /* Alinhado à esquerda */
+    left: -190px; /* Inicialmente oculta à esquerda */
     z-index: 999; /* Abaixo do header, acima do conteúdo */
-    margin-top: 0px; /* Espaço acima da sidebar */
     font-size: 15px; /* Tamanho da fonte */
+    transition: 0.3s; /* Animação de transição */
+}
+
+.sidebar.active {
+    left: 0; /* Exibe a sidebar quando ativa */
 }
 
 .sidebar a.sidebar-active { /* Estilo do item ativo */
@@ -86,7 +90,7 @@ header { /* Cabeçalho da página */
 .sidebar a { /* Estilo dos itens da sidebar */
     display: block; /* Transforma o link em bloco */
     text-decoration: none; /* Remove sublinhado */
-    padding: 10px 10px; /* Espaçamento interno AlturaPx EsquerdaPx*/
+    padding: 10px 10px; /* Espaçamento interno AlturaPx EsquerdaPx */
     color: #444; /* Cor do texto */
 }
 
@@ -107,11 +111,27 @@ header { /* Cabeçalho da página */
 }
 
 .content { /* Conteúdo principal */
-    width: calc(100% - 190px); /* Ocupa o espaço restante ao lado da sidebar */
-    margin-left: 190px; /* Desloca para a direita da sidebar fixa */
+    width: 100%; /* Ocupa toda a largura por padrão */
+    margin-left: 0; /* Sem deslocamento inicial */
     background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
     padding: 20px; /* Espaçamento interno */
-    margin-top: 0px; /* Espaço acima da sidebar */
+    transition: 0.3s; /* Animação de transição */
+}
+
+.content.shifted {
+    margin-left: 190px; /* Desloca o conteúdo quando a sidebar está ativa */
+}
+
+.menu-toggle {
+    position: fixed;
+    top: 60px; /* Alinhado abaixo do header */
+    left: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1001; /* Acima da sidebar e do conteúdo */
+    color: #333; /* Cor do ícone */
 }
 
 .titulo-secao { /* Título das seções */
@@ -209,11 +229,15 @@ header { /* Cabeçalho da página */
 @media (max-width: 768px) {
     .sidebar { /* Ajusta a sidebar para telas menores */
         width: 150px; /* Reduz a largura da sidebar */
+        left: -150px; /* Ajustado para a nova largura */
     }
     
-    .content {
-        width: calc(100% - 150px); /* Ajusta o conteúdo */
-        margin-left: 150px; /* Desloca para a direita da sidebar fixa */
+    .sidebar.active {
+        left: 0;
+    }
+
+    .content.shifted {
+        margin-left: 150px; /* Ajusta o conteúdo */
     }
 
     .box-turmas-single { /* Ajusta as caixas de turmas */
@@ -225,11 +249,15 @@ header { /* Cabeçalho da página */
 @media (max-width: 480px) {
     .sidebar { /* Ajusta a sidebar para telas menores ainda */
         width: 100px; /* Sidebar ainda mais estreita */
+        left: -100px; /* Ajustado para a nova largura */
     }
 
-    .content {
-        width: calc(100% - 100px); /* Ajusta o conteúdo */
-        margin-left: 100px; /* Desloca para a direita da sidebar fixa */
+    .sidebar.active {
+        left: 0;
+    }
+
+    .content.shifted {
+        margin-left: 100px; /* Ajusta o conteúdo */
     }
 
     .box-turmas-single { 
