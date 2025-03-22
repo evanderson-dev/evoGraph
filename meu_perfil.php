@@ -12,7 +12,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
 $cargo = $_SESSION["cargo"];
 
 // Buscar dados atuais do usuário
-$sql = "SELECT nome, sobrenome, email FROM funcionarios WHERE id = ?";
+$sql = "SELECT nome, sobrenome, email, rf, data_nascimento, cargo FROM funcionarios WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $funcionario_id);
 $stmt->execute();
@@ -22,23 +22,31 @@ $stmt->close();
 
 // Atualizar perfil se o formulário for enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nome = trim($_POST["nome"]);
     $sobrenome = trim($_POST["sobrenome"]);
+    $nome = trim($_POST["nome"]);
     $email = trim($_POST["email"]);
+    $rf = trim($_POST["rf"]);
+    $data_nascimento = trim($_POST["data_nascimento"]);
     $new_password = trim($_POST["new_password"]);
 
-    $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?" . (!empty($new_password) ? ", senha = ?" : "") . " WHERE id = ?";
+    $sql = "UPDATE funcionarios SET sobrenome = ?, nome = ?, email = ?, rf = ?, data_nascimento = ?" . (!empty($new_password) ? ", senha = ?" : "") . " WHERE id = ?";
     $stmt = $conn->prepare($sql);
 
     if (!empty($new_password)) {
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        $stmt->bind_param("ssssi", $nome, $sobrenome, $email, $hashed_password, $funcionario_id);
+        $stmt->bind_param("ssssssi", $sobrenome, $nome, $email, $rf, $data_nascimento, $hashed_password, $funcionario_id);
     } else {
-        $stmt->bind_param("sssi", $nome, $sobrenome, $email, $funcionario_id);
+        $stmt->bind_param("sssssi", $sobrenome, $nome, $email, $rf, $data_nascimento, $funcionario_id);
     }
 
     if ($stmt->execute()) {
         $success_message = "Perfil atualizado com sucesso!";
+        // Atualizar $user com os novos dados
+        $user['sobrenome'] = $sobrenome;
+        $user['nome'] = $nome;
+        $user['email'] = $email;
+        $user['rf'] = $rf;
+        $user['data_nascimento'] = $data_nascimento;
     } else {
         $error_message = "Erro ao atualizar perfil: " . $stmt->error;
     }
@@ -103,16 +111,25 @@ $conn->close();
 
             <div class="profile-form">
                 <form method="POST" action="meu_perfil.php" id="profile-form">
-                    <label for="nome">Nome:</label><br>
-                    <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($user['nome']); ?>" disabled required><br><br>
-
                     <label for="sobrenome">Sobrenome:</label><br>
                     <input type="text" id="sobrenome" name="sobrenome" value="<?php echo htmlspecialchars($user['sobrenome']); ?>" disabled required><br><br>
+
+                    <label for="nome">Nome:</label><br>
+                    <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($user['nome']); ?>" disabled required><br><br>
 
                     <label for="email">E-mail:</label><br>
                     <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" disabled required><br><br>
 
-                    <label for="new_password">Nova Senha (opcional):</label><br>
+                    <label for="rf">RF Funcionário:</label><br>
+                    <input type="text" id="rf" name="rf" value="<?php echo htmlspecialchars($user['rf'] ?? ''); ?>" disabled required><br><br>
+
+                    <label for="data_nascimento">Data de Nascimento:</label><br>
+                    <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($user['data_nascimento'] ?? ''); ?>" disabled required><br><br>
+
+                    <label for="cargo">Cargo:</label><br>
+                    <input type="text" id="cargo" name="cargo" value="<?php echo htmlspecialchars($user['cargo']); ?>" disabled readonly><br><br>
+
+                    <label for="new_password">Nova Senha:</label><br>
                     <input type="password" id="new_password" name="new_password" disabled><br><br>
 
                     <button type="button" id="edit-btn" class="btn">Editar</button>
@@ -125,15 +142,13 @@ $conn->close();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
             });
 
-            // Botão Editar
             $('#edit-btn').on('click', function() {
-                $('#profile-form input').prop('disabled', false);
+                $('#profile-form input:not(#cargo)').prop('disabled', false); // Cargo não editável
                 $('#save-btn').prop('disabled', false);
                 $('#edit-btn').prop('disabled', true);
             });
