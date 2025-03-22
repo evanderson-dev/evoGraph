@@ -25,11 +25,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = trim($_POST["nome"]);
     $sobrenome = trim($_POST["sobrenome"]);
     $email = trim($_POST["email"]);
+    $new_password = trim($_POST["new_password"]);
 
-    $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ? WHERE id = ?";
+    $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?" . (!empty($new_password) ? ", senha = ?" : "") . " WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssi", $nome, $sobrenome, $email, $funcionario_id);
-    
+
+    if (!empty($new_password)) {
+        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+        $stmt->bind_param("ssssi", $nome, $sobrenome, $email, $hashed_password, $funcionario_id);
+    } else {
+        $stmt->bind_param("sssi", $nome, $sobrenome, $email, $funcionario_id);
+    }
+
     if ($stmt->execute()) {
         $success_message = "Perfil atualizado com sucesso!";
     } else {
@@ -71,7 +78,7 @@ $conn->close();
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php"><i class="fa-solid fa-house"></i> Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
-            <a class="sidebar-active" href="configuracoes.php"><i class="fa-solid fa-user-gear"></i> Meu Perfil</a>
+            <a class="sidebar-active" href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i> Meu Perfil</a>
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
                 <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i> Cadastrar Turma</a>
                 <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i> Cadastrar Funcionário</a>
@@ -95,17 +102,21 @@ $conn->close();
             <?php endif; ?>
 
             <div class="profile-form">
-                <form method="POST" action="configuracoes.php">
+                <form method="POST" action="meu_perfil.php" id="profile-form">
                     <label for="nome">Nome:</label><br>
-                    <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($user['nome']); ?>" required><br><br>
+                    <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($user['nome']); ?>" disabled required><br><br>
 
                     <label for="sobrenome">Sobrenome:</label><br>
-                    <input type="text" id="sobrenome" name="sobrenome" value="<?php echo htmlspecialchars($user['sobrenome']); ?>" required><br><br>
+                    <input type="text" id="sobrenome" name="sobrenome" value="<?php echo htmlspecialchars($user['sobrenome']); ?>" disabled required><br><br>
 
                     <label for="email">E-mail:</label><br>
-                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required><br><br>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" disabled required><br><br>
 
-                    <button type="submit">Salvar Alterações</button>
+                    <label for="new_password">Nova Senha (opcional):</label><br>
+                    <input type="password" id="new_password" name="new_password" disabled><br><br>
+
+                    <button type="button" id="edit-btn" class="btn">Editar</button>
+                    <button type="submit" id="save-btn" class="btn" disabled>Salvar</button>
                 </form>
             </div>
         </div>
@@ -114,9 +125,17 @@ $conn->close();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
+            });
+
+            // Botão Editar
+            $('#edit-btn').on('click', function() {
+                $('#profile-form input').prop('disabled', false);
+                $('#save-btn').prop('disabled', false);
+                $('#edit-btn').prop('disabled', true);
             });
         });
     </script>

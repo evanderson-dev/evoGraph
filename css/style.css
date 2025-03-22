@@ -246,7 +246,12 @@ header { /* Cabeçalho da página */
     font-size: 14px;
 }
 
-.profile-form button {
+.profile-form input:disabled {
+    background-color: #f5f5f5;
+    color: #777;
+}
+
+.btn {
     background-color: #73b4ff;
     color: white;
     padding: 10px 20px;
@@ -255,10 +260,16 @@ header { /* Cabeçalho da página */
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s;
+    margin-right: 10px;
 }
 
-.profile-form button:hover {
+.btn:hover:not(:disabled) {
     background-color: #5599e6;
+}
+
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
 }
 
 /* Media Query para telas menores */
