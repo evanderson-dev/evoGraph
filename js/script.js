@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Evento para o formulário de login (somente no index.html)
+    // Evento para o formulário de login (somente no index.php)
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', function(event) {
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Mostrar/esconder o formulário de redefinição (somente no index.html)
+    // Mostrar/esconder o formulário de redefinição (somente no index.php)
     const showResetForm = document.getElementById('show-reset-form');
     if (showResetForm) {
         showResetForm.addEventListener('click', function(event) {
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Processar a redefinição de senha (somente no index.html)
+    // Processar a redefinição de senha (somente no index.php)
     const resetForm = document.getElementById('reset-form');
     if (resetForm) {
         resetForm.addEventListener('submit', function(event) {
