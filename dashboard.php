@@ -207,11 +207,21 @@ $cargo = $_SESSION["cargo"];
         </div><!-- FIM CONTENT -->
     </section><!-- FIM MAIN -->
 
+    <!-- jQuery com fallback -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        // Fallback caso o CDN falhe
+        if (typeof jQuery == 'undefined') {
+            document.write('<script src="./js/jquery-3.6.0.min.js"><\/script>');
+        }
+    </script>
+    <script>
         $(document).ready(function() {
+            console.log("jQuery carregado com sucesso!");
+            
             // Menu Hambúrguer
             $('#menu-toggle').on('click', function() {
+                console.log("Botão hambúrguer clicado!");
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
             });
@@ -237,6 +247,7 @@ $cargo = $_SESSION["cargo"];
             }
         });
     </script>
+
 </body>
 </html>
 <?php $conn->close(); ?>
