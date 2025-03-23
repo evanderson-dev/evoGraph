@@ -176,17 +176,24 @@ $conn->close();
                 new_password: $('#new_password').val()
             };
 
+            // Adicionar classe no-transition ao carregar
+            $('#sidebar').addClass('no-transition');
+
             // Verificar estado salvo da sidebar
             if (localStorage.getItem('sidebarActive') === 'true') {
                 $('#sidebar').addClass('active');
                 $('#content').addClass('shifted');
             }
 
+            // Remover no-transition após aplicar o estado inicial
+            setTimeout(function() {
+                $('#sidebar').removeClass('no-transition');
+            }, 0);
+
             // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
-                // Salvar estado no localStorage
                 localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
             });
 
@@ -199,7 +206,6 @@ $conn->close();
 
             // Botão Cancelar
             $('#cancel-btn').on('click', function() {
-                // Restaurar valores originais
                 $('#nome').val(originalValues.nome);
                 $('#sobrenome').val(originalValues.sobrenome);
                 $('#email').val(originalValues.email);
@@ -207,7 +213,6 @@ $conn->close();
                 $('#data_nascimento').val(originalValues.data_nascimento);
                 $('#new_password').val(originalValues.new_password);
 
-                // Bloquear campos e botões
                 $('#profile-form input:not(#cargo)').prop('disabled', true);
                 $('#save-btn, #cancel-btn').prop('disabled', true);
                 $('#edit-btn').prop('disabled', false);

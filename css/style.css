@@ -71,6 +71,14 @@ header { /* Cabeçalho da página */
     left: 0; /* Exibe a sidebar quando ativa */
 }
 
+.sidebar.no-transition {
+    transition: none; /* Desativa a transição */
+}
+
+.content.no-transition {
+    transition: none; /* Desativa a transição no conteúdo também */
+}
+
 .sidebar a.sidebar-active { /* Estilo do item ativo */
     border-left: 3px solid #73b4ff;
     background-color: rgb(245, 245, 245);
