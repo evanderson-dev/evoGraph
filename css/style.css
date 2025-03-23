@@ -64,7 +64,7 @@ header { /* Cabeçalho da página */
     left: -190px; /* Inicialmente oculta à esquerda */
     z-index: 999; /* Abaixo do header, acima do conteúdo */
     font-size: 15px; /* Tamanho da fonte */
-    transition: left 0.3s ease; /* Animação suave */
+    /*transition: left 0.3s ease; /* Animação suave */
 }
 
 .sidebar.active {
@@ -120,7 +120,7 @@ header { /* Cabeçalho da página */
     margin-left: 0; /* Sem deslocamento inicial */
     background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
     padding: 20px; /* Espaçamento interno */
-    transition: margin-left 0.3s ease; /* Animação suave */
+    /*transition: margin-left 0.3s ease; /* Animação suave */
 }
 
 .content.shifted {
