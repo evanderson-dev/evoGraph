@@ -210,10 +210,18 @@ $cargo = $_SESSION["cargo"];
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Menu Hambúrguer
+            // Verificar estado salvo da sidebar
+            if (localStorage.getItem('sidebarActive') === 'true') {
+                $('#sidebar').addClass('active');
+                $('#content').addClass('shifted');
+            }
+
+            // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
+                // Salvar estado no localStorage
+                localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
             });
 
             // AJAX para turmas

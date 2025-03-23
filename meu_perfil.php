@@ -176,10 +176,18 @@ $conn->close();
                 new_password: $('#new_password').val()
             };
 
+            // Verificar estado salvo da sidebar
+            if (localStorage.getItem('sidebarActive') === 'true') {
+                $('#sidebar').addClass('active');
+                $('#content').addClass('shifted');
+            }
+
             // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
+                // Salvar estado no localStorage
+                localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
             });
 
             // Botão Editar
