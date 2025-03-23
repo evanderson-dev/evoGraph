@@ -210,25 +210,24 @@ $cargo = $_SESSION["cargo"];
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Adicionar classe no-transition ao carregar
-            $('#sidebar').addClass('no-transition');
-
-            // Verificar estado salvo da sidebar
+            // Aplicar estado inicial sem transição
             if (localStorage.getItem('sidebarActive') === 'true') {
                 $('#sidebar').addClass('active');
                 $('#content').addClass('shifted');
             }
 
-            // Remover no-transition após aplicar o estado inicial
-            setTimeout(function() {
-                $('#sidebar').removeClass('no-transition');
-            }, 0);
-
             // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
+                $('#sidebar').addClass('transition-enabled'); // Ativar transição
+                $('#content').addClass('transition-enabled');
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
                 localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
+                // Remover transição após animação (opcional)
+                setTimeout(function() {
+                    $('#sidebar').removeClass('transition-enabled');
+                    $('#content').removeClass('transition-enabled');
+                }, 300); // Duração da transição (0.3s)
             });
 
             // AJAX para turmas

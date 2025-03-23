@@ -71,12 +71,8 @@ header { /* Cabeçalho da página */
     left: 0; /* Exibe a sidebar quando ativa */
 }
 
-.sidebar.no-transition {
-    transition: none; /* Desativa a transição */
-}
-
-.content.no-transition {
-    transition: none; /* Desativa a transição no conteúdo também */
+.sidebar.transition-enabled {
+    transition: left 0.3s ease; /* Transição só quando ativada */
 }
 
 .sidebar a.sidebar-active { /* Estilo do item ativo */
@@ -129,6 +125,10 @@ header { /* Cabeçalho da página */
 
 .content.shifted {
     margin-left: 190px; /* Desloca o conteúdo quando a sidebar está ativa */
+}
+
+.content.transition-enabled {
+    transition: margin-left 0.3s ease; /* Transição só quando ativada */
 }
 
 .menu-toggle {

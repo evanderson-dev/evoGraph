@@ -176,25 +176,23 @@ $conn->close();
                 new_password: $('#new_password').val()
             };
 
-            // Adicionar classe no-transition ao carregar
-            $('#sidebar').addClass('no-transition');
-
-            // Verificar estado salvo da sidebar
+            // Aplicar estado inicial sem transição
             if (localStorage.getItem('sidebarActive') === 'true') {
                 $('#sidebar').addClass('active');
                 $('#content').addClass('shifted');
             }
 
-            // Remover no-transition após aplicar o estado inicial
-            setTimeout(function() {
-                $('#sidebar').removeClass('no-transition');
-            }, 0);
-
             // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
+                $('#sidebar').addClass('transition-enabled');
+                $('#content').addClass('transition-enabled');
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
                 localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
+                setTimeout(function() {
+                    $('#sidebar').removeClass('transition-enabled');
+                    $('#content').removeClass('transition-enabled');
+                }, 300); // Duração da transição (0.3s)
             });
 
             // Botão Editar
