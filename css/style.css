@@ -221,25 +221,37 @@ header { /* Cabeçalho da página */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
-.tabela-turma-selecionada table { /* Tabela da turma selecionada */
-    width: 100%; /* Largura total */
-    border-collapse: collapse; /* Remove espaçamento entre células */
+.tabela-turma-selecionada table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .tabela-turma-selecionada th,
 .tabela-turma-selecionada td { /* Cabeçalho e células da tabela */
-    padding: 10px; /* Espaçamento interno */
+    padding: 12px 15px; /* Espaçamento interno */
     text-align: left; /* Alinhamento à esquerda */
     border-bottom: 1px solid #ddd; /* Borda inferior */
 }
 
 .tabela-turma-selecionada th { /* Cabeçalho da tabela */
     background-color: #73b4ff; /* Cor de fundo */
-    color: white; /* Cor do texto */
+    font-weight: bold; /* Texto em negrito */
+    color: #333; /* Cor do texto */
 }
 
 .tabela-turma-selecionada td { /* Células da tabela */
     color: #333; /* Cor do texto */
+}
+
+.tabela-turma-selecionada tbody tr { /* Linhas da tabela */
+    transition: background-color 0.3s ease; /* Transição suave como na sidebar */
+}
+
+.tabela-turma-selecionada tbody tr:hover { /* Efeito de hover nas linhas */
+    background-color: #e9ecef; /* Mesmo tom de hover da sidebar */
 }
 
 .profile-form {
