@@ -56,7 +56,7 @@ $cargo = $_SESSION["cargo"];
             <div class="titulo-secao">
                 <h2>Dashboard <?php echo htmlspecialchars($cargo); ?></h2><br>
                 <div class="separator"></div><br>
-                <p><i class="fa-solid fa-house"></i> / <?php echo htmlspecialchars($cargo === "Professor" ? "Minhas Turmas" : "Gerenciamento"); ?></p>
+                <p><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ <?php echo htmlspecialchars($cargo === "Professor" ? "Minhas Turmas" : "Gerenciamento"); ?></p>
             </div>
 
             <?php if ($cargo === "Professor"): ?>
