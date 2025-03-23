@@ -229,18 +229,39 @@ header { /* Cabeçalho da página */
     margin-top: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+    max-width: 600px; /* Aumentado para caber os campos lado a lado */
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.form-group:last-child {
+    margin-right: 0;
+}
+
+.form-group.full-width {
+    flex: none;
+    width: 100%;
 }
 
 .profile-form label {
     font-weight: bold;
     color: #333;
+    display: block;
+    margin-bottom: 5px;
 }
 
 .profile-form input {
     width: 100%;
     padding: 8px;
-    margin-top: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
@@ -249,6 +270,11 @@ header { /* Cabeçalho da página */
 .profile-form input:disabled {
     background-color: #f5f5f5;
     color: #777;
+}
+
+.form-buttons {
+    margin-top: 20px;
+    text-align: right;
 }
 
 .btn {
@@ -260,7 +286,7 @@ header { /* Cabeçalho da página */
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .btn:hover:not(:disabled) {
