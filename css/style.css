@@ -286,7 +286,7 @@ header { /* Cabeçalho da página */
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s;
-    margin-left: 10px;
+    margin-left: 10px; /* Espaçamento entre botões */
 }
 
 .btn:hover:not(:disabled) {

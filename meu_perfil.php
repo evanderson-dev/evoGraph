@@ -156,6 +156,7 @@ $conn->close();
                     <div class="form-buttons">
                         <button type="button" id="edit-btn" class="btn">Editar</button>
                         <button type="submit" id="save-btn" class="btn" disabled>Salvar</button>
+                        <button type="button" id="cancel-btn" class="btn" disabled>Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -165,15 +166,43 @@ $conn->close();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Valores originais do formulário
+            const originalValues = {
+                nome: $('#nome').val(),
+                sobrenome: $('#sobrenome').val(),
+                email: $('#email').val(),
+                rf: $('#rf').val(),
+                data_nascimento: $('#data_nascimento').val(),
+                new_password: $('#new_password').val()
+            };
+
+            // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
                 $('#sidebar').toggleClass('active');
                 $('#content').toggleClass('shifted');
             });
 
+            // Botão Editar
             $('#edit-btn').on('click', function() {
                 $('#profile-form input:not(#cargo)').prop('disabled', false);
-                $('#save-btn').prop('disabled', false);
+                $('#save-btn, #cancel-btn').prop('disabled', false);
                 $('#edit-btn').prop('disabled', true);
+            });
+
+            // Botão Cancelar
+            $('#cancel-btn').on('click', function() {
+                // Restaurar valores originais
+                $('#nome').val(originalValues.nome);
+                $('#sobrenome').val(originalValues.sobrenome);
+                $('#email').val(originalValues.email);
+                $('#rf').val(originalValues.rf);
+                $('#data_nascimento').val(originalValues.data_nascimento);
+                $('#new_password').val(originalValues.new_password);
+
+                // Bloquear campos e botões
+                $('#profile-form input:not(#cargo)').prop('disabled', true);
+                $('#save-btn, #cancel-btn').prop('disabled', true);
+                $('#edit-btn').prop('disabled', false);
             });
         });
     </script>
