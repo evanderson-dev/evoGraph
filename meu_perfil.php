@@ -99,7 +99,7 @@ $conn->close();
             <div class="titulo-secao">
                 <h2>Meu Perfil</h2><br>
                 <div class="separator"></div><br>
-                <p><i class="fa-solid fa-house"></i> / Meu Perfil</p>
+                <p><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Meu Perfil</p>
             </div>
 
             <?php if (isset($success_message)): ?>

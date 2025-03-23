@@ -166,6 +166,17 @@ header { /* Cabeçalho da página */
     background-color: #73b4ff; /* Cor do separador */
 }
 
+.home-link {
+    color: #333; /* Cor padrão do ícone */
+    text-decoration: none; /* Remove sublinhado */
+    font-size: 16px; /* Tamanho do ícone */
+    transition: color 0.3s ease; /* Transição suave para hover */
+}
+
+.home-link:hover {
+    color: #5599e6; /* Azul mais escuro ao passar o mouse, consistente com .btn:hover */
+}
+
 .box-turmas { /* Caixas de turmas */
     width: 100%; /* Largura total */
     margin-top: 20px; /* Espaço acima das caixas */
