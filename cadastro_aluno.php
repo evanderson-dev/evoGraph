@@ -23,17 +23,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sobrenome = trim($_POST["sobrenome"]);
     $data_nascimento = trim($_POST["data_nascimento"]);
     $matricula = trim($_POST["matricula"]);
-    $data_matricula = trim($_POST["data_matricula"]);
+    $data_matricula = empty(trim($_POST["data_matricula"])) ? null : trim($_POST["data_matricula"]);
+    $nome_pai = trim($_POST["nome_pai"]);
+    $nome_mae = trim($_POST["nome_mae"]);
     $turma_id = trim($_POST["turma_id"]);
 
-    // Validar campos (exemplo básico)
-    if (empty($nome) || empty($sobrenome) || empty($matricula) || empty($turma_id)) {
-        $error_message = "Preencha todos os campos obrigatórios.";
+    // Validar campos obrigatórios
+    if (empty($nome) || empty($sobrenome) || empty($data_nascimento) || empty($matricula) || empty($turma_id)) {
+        $error_message = "Preencha todos os campos obrigatórios (Nome, Sobrenome, Data de Nascimento, Matrícula e Turma).";
     } else {
-        $sql = "INSERT INTO alunos (nome, sobrenome, data_nascimento, matricula, data_matricula, turma_id) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO alunos (nome, sobrenome, data_nascimento, matricula, data_matricula, nome_pai, nome_mae, turma_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssi", $nome, $sobrenome, $data_nascimento, $matricula, $data_matricula, $turma_id);
+        $stmt->bind_param("sssssssi", $nome, $sobrenome, $data_nascimento, $matricula, $data_matricula, $nome_pai, $nome_mae, $turma_id);
         
         if ($stmt->execute()) {
             $success_message = "Aluno cadastrado com sucesso!";
@@ -122,7 +124,7 @@ while ($row = $result->fetch_assoc()) {
                     <div class="form-row">
                         <div class="form-group">
                             <label for="data_nascimento">Data de Nascimento:</label>
-                            <input type="date" id="data_nascimento" name="data_nascimento">
+                            <input type="date" id="data_nascimento" name="data_nascimento" required>
                         </div>
                         <div class="form-group">
                             <label for="matricula">Matrícula:</label>
@@ -132,8 +134,22 @@ while ($row = $result->fetch_assoc()) {
 
                     <div class="form-row">
                         <div class="form-group full-width">
-                            <label for="data_matricula">Data de Matrícula:</label>
+                            <label for="data_matricula">Data de Matrícula (opcional):</label>
                             <input type="date" id="data_matricula" name="data_matricula">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="nome_pai">Nome do Pai (opcional):</label>
+                            <input type="text" id="nome_pai" name="nome_pai">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="nome_mae">Nome da Mãe (opcional):</label>
+                            <input type="text" id="nome_mae" name="nome_mae">
                         </div>
                     </div>
 
@@ -162,13 +178,11 @@ while ($row = $result->fetch_assoc()) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Aplicar estado inicial sem transição
             if (localStorage.getItem('sidebarActive') === 'true') {
                 $('#sidebar').addClass('active');
                 $('#content').addClass('shifted');
             }
 
-            // Menu hambúrguer
             $('#menu-toggle').on('click', function() {
                 $('#sidebar').addClass('transition-enabled');
                 $('#content').addClass('transition-enabled');
