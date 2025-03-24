@@ -257,7 +257,7 @@ header { /* Cabeçalho da página */
 
 .tabela-turma-selecionada tbody tr:hover td {
     font-weight: bold; /* Negrito no hover */
-    color: red; /* Cor do texto no hover */
+    color: #777; /* Cor do texto no hover */
     transition: color 0.3s ease, font-weight 0.3s ease; /* Transição para cor e negrito */
 }
 
