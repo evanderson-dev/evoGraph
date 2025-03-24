@@ -194,7 +194,7 @@ $cargo = $_SESSION["cargo"];
                 </div>
 
                 <!-- Lista de Turmas -->
-                <h3 class="section-title">Turmas</h3>
+                <h3 class="section-title"><i class="fa-solid fa-users"></i> Turmas</h3>
                 <div class="box-turmas">
                     <?php
                     $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
@@ -218,7 +218,6 @@ $cargo = $_SESSION["cargo"];
                         echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
                         echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
                         echo "<p>{$quantidade} alunos</p>";
-                        echo "<button class='btn-edit' onclick='editTurma({$turma['id']})'>Editar</button>";
                         echo "</div>";
                     }
                     if (empty($turmas)) {
