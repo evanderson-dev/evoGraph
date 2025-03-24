@@ -265,6 +265,7 @@ header { /* Cabeçalho da página */
     transition: color 0.3s ease, font-weight 0.3s ease; /* Transição para cor e negrito */
 }
 
+/* Estilo do formulário de perfil */
 .profile-form {
     background-color: white;
     padding: 20px;
@@ -272,6 +273,16 @@ header { /* Cabeçalho da página */
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 600px; /* Aumentado para caber os campos lado a lado */
+}
+
+/* Estilo do formulário de cadastro */
+.cadastro-form {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
 }
 
 .form-row {
@@ -301,7 +312,8 @@ header { /* Cabeçalho da página */
     margin-bottom: 5px;
 }
 
-.profile-form input {
+.profile-form input,
+.cadastro-form select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
