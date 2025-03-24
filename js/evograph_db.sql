@@ -29,6 +29,7 @@ CREATE TABLE alunos (
     nome VARCHAR(100) NOT NULL,
     sobrenome VARCHAR(50) NOT NULL,
     data_nascimento DATE NOT NULL,
+    data_matricula DATE DEFAULT CURRENT_TIMESTAMP,
     matricula VARCHAR(20) UNIQUE NOT NULL,
     nome_pai VARCHAR(100),
     nome_mae VARCHAR(100),

@@ -97,67 +97,127 @@ if (isset($_GET["edit_id"])) {
 
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./css/global.css" rel="stylesheet" />
-    <link href="./css/cadastro.css" rel="stylesheet" />
-    <title>evoGraph - <?php echo $edit_mode ? "Editar" : "Cadastrar"; ?> Aluno</title>
-</head>
-<body>
-    <div class="container">
-        <h2><?php echo $edit_mode ? "Editar Aluno" : "Cadastrar Novo Aluno"; ?></h2>
-        <form method="POST" class="turma-form">
-            <div class="form-group">
-                <label for="nome">Nome *</label>
-                <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($nome); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="sobrenome">Sobrenome *</label>
-                <input type="text" id="sobrenome" name="sobrenome" value="<?php echo htmlspecialchars($sobrenome); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="data_nascimento">Data de Nascimento *</label>
-                <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($data_nascimento); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="matricula">Matrícula *</label>
-                <input type="text" id="matricula" name="matricula" value="<?php echo htmlspecialchars($matricula); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="nome_pai">Nome do Pai</label>
-                <input type="text" id="nome_pai" name="nome_pai" value="<?php echo htmlspecialchars($nome_pai); ?>">
-            </div>
-            <div class="form-group">
-                <label for="nome_mae">Nome da Mãe</label>
-                <input type="text" id="nome_mae" name="nome_mae" value="<?php echo htmlspecialchars($nome_mae); ?>">
-            </div>
-            <div class="form-group">
-                <label for="turma_id">Turma *</label>
-                <select id="turma_id" name="turma_id" required>
-                    <option value="">Selecione uma turma</option>
-                    <?php
-                    $turmas_result = $conn->query("SELECT id, nome, ano FROM turmas");
-                    while ($turma = $turmas_result->fetch_assoc()) {
-                        $selected = $turma_id == $turma["id"] ? "selected" : "";
-                        echo "<option value='" . $turma["id"] . "' $selected>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            <?php if ($edit_mode): ?>
-                <input type="hidden" name="edit_id" value="<?php echo $aluno_id; ?>">
-            <?php endif; ?>
-            <button type="submit" class="login-button"><?php echo $edit_mode ? "Salvar" : "Cadastrar"; ?></button>
-            <a href="dashboard.php" class="cancel-button">Cancelar</a>
-        </form>
-    </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="./css/style.css" rel="stylesheet" />
+        <link href="./css/cadastro.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <title>evoGraph - <?php echo $edit_mode ? "Editar" : "Cadastrar"; ?> Aluno</title>
+    </head>
 
-    <?php if (!empty($error_message)): ?>
+    
+    <body>
+        <header>
+            <div class="info-header">
+                <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="logo">
+                    <h3>evoGraph</h3>
+                </div>
+            </div>
+            <div class="info-header">
+                <i class="fa-solid fa-envelope"></i>
+                <i class="fa-solid fa-bell"></i>
+                <i class="fa-solid fa-user"></i>
+                <img src="https://avatars.githubusercontent.com/u/94180306?s=40&v=4" alt="User" class="user-icon">
+            </div>
+        </header><!-- FIM HEADER -->
+
+        <section class="main">
+            <div class="sidebar" id="sidebar">
+                <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="#"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
+                <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i> Meu Perfil</a> <!-- Alterado aqui -->
+                <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+                    <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i> Cadastrar Turma</a>
+                    <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i> Cadastrar Funcionário</a>
+                    <a href="cadastro_aluno.php"><i class="fa-solid fa-graduation-cap"></i> Cadastrar Aluno</a>
+                <?php endif; ?>
+                <a href="logout.php"><i class="fa-solid fa-sign-out"></i> Sair</a>
+                <div class="separator"></div><br>
+            </div><!-- FIM SIDEBAR -->
+
+            <div class="content" id="content">
+                <div class="titulo-secao">
+                    <h2>Dashboard <?php echo htmlspecialchars($cargo); ?></h2><br>
+                    <div class="separator"></div><br>
+                    <p><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ <?php echo htmlspecialchars($cargo === "Professor" ? "Minhas Turmas" : "Gerenciamento"); ?></p>
+                </div>
+
+                <div class="container">
+                    <h2><?php echo $edit_mode ? "Editar Aluno" : "Cadastrar Novo Aluno"; ?></h2>
+                    <form method="POST" class="turma-form">
+                        <div class="form-group">
+                            <label for="nome">Nome *</label>
+                            <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($nome); ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sobrenome">Sobrenome *</label>
+                            <input type="text" id="sobrenome" name="sobrenome" value="<?php echo htmlspecialchars($sobrenome); ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="data_nascimento">Data de Nascimento *</label>
+                            <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($data_nascimento); ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="matricula">Matrícula *</label>
+                            <input type="text" id="matricula" name="matricula" value="<?php echo htmlspecialchars($matricula); ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nome_pai">Nome do Pai</label>
+                            <input type="text" id="nome_pai" name="nome_pai" value="<?php echo htmlspecialchars($nome_pai); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="nome_mae">Nome da Mãe</label>
+                            <input type="text" id="nome_mae" name="nome_mae" value="<?php echo htmlspecialchars($nome_mae); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="turma_id">Turma *</label>
+                            <select id="turma_id" name="turma_id" required>
+                                <option value="">Selecione uma turma</option>
+                                <?php
+                                $turmas_result = $conn->query("SELECT id, nome, ano FROM turmas");
+                                while ($turma = $turmas_result->fetch_assoc()) {
+                                    $selected = $turma_id == $turma["id"] ? "selected" : "";
+                                    echo "<option value='" . $turma["id"] . "' $selected>" . htmlspecialchars($turma["nome"]) . " - Ano " . $turma["ano"] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <?php if ($edit_mode): ?>
+                            <input type="hidden" name="edit_id" value="<?php echo $aluno_id; ?>">
+                        <?php endif; ?>
+                        <button type="submit" class="login-button"><?php echo $edit_mode ? "Salvar" : "Cadastrar"; ?></button>
+                        <a href="dashboard.php" class="cancel-button">Cancelar</a>
+                    </form>
+                </div>
+            </div> <!-- FIM CONTENT -->
+        </section> <!-- FIM MAIN -->
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            alert("<?php echo htmlspecialchars($error_message); ?>");
+            $(document).ready(function() {
+                // Aplicar estado inicial sem transição
+                if (localStorage.getItem('sidebarActive') === 'true') {
+                    $('#sidebar').addClass('active');
+                    $('#content').addClass('shifted');
+                }
+
+                // Menu hambúrguer
+                $('#menu-toggle').on('click', function() {
+                    $('#sidebar').addClass('transition-enabled'); // Ativar transição
+                    $('#content').addClass('transition-enabled');
+                    $('#sidebar').toggleClass('active');
+                    $('#content').toggleClass('shifted');
+                    localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
+                    // Remover transição após animação (opcional)
+                    setTimeout(function() {
+                        $('#sidebar').removeClass('transition-enabled');
+                        $('#content').removeClass('transition-enabled');
+                    }, 300); // Duração da transição (0.3s)
+                });            
+            });
         </script>
-    <?php endif; ?>
-</body>
+    </body>
 </html>
 <?php $conn->close(); ?>
