@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
                 WHERE a.turma_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $turma_id);
-        $colspan = 7; // Inclui a coluna Ações
+        $colspan = 7;
     }
 
     if (!$stmt) {
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
             $data_nascimento = $row["data_nascimento"] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
             $data_matricula = $row["data_matricula"] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
 
-            $html .= "<tr>";
+            $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula='" . htmlspecialchars($data_matricula) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "'>";
             $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
@@ -54,9 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
                 $html .= "<td>" . htmlspecialchars($row["nome_pai"] ?? 'N/A') . "</td>";
                 $html .= "<td>" . htmlspecialchars($row["nome_mae"] ?? 'N/A') . "</td>";
                 $html .= "<td>";
-                $html .= "<button class='action-btn details-btn' title='Detalhes' onclick=\"viewAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-eye'></i></button>";
                 $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"editAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
-                $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"deleteAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-trash'></i></button>";
+                $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"showDeleteModal('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-trash'></i></button>";
                 $html .= "</td>";
             }
             $html .= "</tr>";

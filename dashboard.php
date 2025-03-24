@@ -246,66 +246,134 @@ $cargo = $_SESSION["cargo"];
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Modal de Detalhes do Aluno -->
+                <div id="modal-detalhes-aluno" class="modal">
+                    <div class="modal-content">
+                        <span class="close-btn">&times;</span>
+                        <h2>Detalhes do Aluno</h2>
+                        <div id="detalhes-aluno-content"></div>
+                    </div>
+                </div>
+
+                <!-- Modal de Confirmação de Exclusão -->
+                <div id="modal-confirm-delete" class="modal">
+                    <div class="modal-content">
+                        <span class="close-btn">&times;</span>
+                        <h2>Confirmar Exclusão</h2>
+                        <p>Tem certeza que deseja excluir o aluno com matrícula <span id="delete-matricula"></span>?</p>
+                        <div class="modal-buttons">
+                            <button id="confirm-delete-btn" class="btn">Sim</button>
+                            <button id="cancel-delete-btn" class="btn">Não</button>
+                        </div>
+                    </div>
+                </div>
             <?php endif; ?>
         </div><!-- FIM CONTENT -->
     </section><!-- FIM MAIN -->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        if (localStorage.getItem('sidebarActive') === 'true') {
-            $('#sidebar').addClass('active');
-            $('#content').addClass('shifted');
-        }
+    <script>
+        $(document).ready(function() {
+            if (localStorage.getItem('sidebarActive') === 'true') {
+                $('#sidebar').addClass('active');
+                $('#content').addClass('shifted');
+            }
 
-        $('#menu-toggle').on('click', function() {
-            $('#sidebar').addClass('transition-enabled');
-            $('#content').addClass('transition-enabled');
-            $('#sidebar').toggleClass('active');
-            $('#content').toggleClass('shifted');
-            localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
-            setTimeout(function() {
-                $('#sidebar').removeClass('transition-enabled');
-                $('#content').removeClass('transition-enabled');
-            }, 300);
-        });
+            $('#menu-toggle').on('click', function() {
+                $('#sidebar').addClass('transition-enabled');
+                $('#content').addClass('transition-enabled');
+                $('#sidebar').toggleClass('active');
+                $('#content').toggleClass('shifted');
+                localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
+                setTimeout(function() {
+                    $('#sidebar').removeClass('transition-enabled');
+                    $('#content').removeClass('transition-enabled');
+                }, 300);
+            });
 
-        // Clique nas turmas
-        $('.box-turmas-single').click(function() {
-            var turmaId = $(this).data('turma-id');
-            $.ajax({
-                url: 'fetch_alunos.php',
-                method: 'POST',
-                data: { turma_id: turmaId },
-                success: function(response) {
-                    $('#tabela-alunos').html(response);
-                },
-                error: function(xhr, status, error) {
-                    $('#tabela-alunos').html('<tr><td colspan="7">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
+            // Clique nas turmas
+            $('.box-turmas-single').click(function() {
+                var turmaId = $(this).data('turma-id');
+                $.ajax({
+                    url: 'fetch_alunos.php',
+                    method: 'POST',
+                    data: { turma_id: turmaId },
+                    success: function(response) {
+                        $('#tabela-alunos').html(response);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#tabela-alunos').html('<tr><td colspan="7">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
+                    }
+                });
+            });
+
+            if ($('.box-turmas-single').length > 0) {
+                $('.box-turmas-single').first().click();
+            }
+
+            // Clique na linha do aluno para abrir modal de detalhes
+            $(document).on('click', '.aluno-row', function(e) {
+                if (!$(e.target).hasClass('action-btn') && !$(e.target).parent().hasClass('action-btn')) {
+                    var matricula = $(this).data('matricula');
+                    var nome = $(this).data('nome');
+                    var nascimento = $(this).data('nascimento');
+                    var matriculaData = $(this).data('matricula');
+                    var dataMatricula = $(this).data('matricula');
+                    var pai = $(this).data('pai');
+                    var mae = $(this).data('mae');
+
+                    var content = `
+                        <p><strong>Nome:</strong> ${nome}</p>
+                        <p><strong>Data de Nascimento:</strong> ${nascimento}</p>
+                        <p><strong>Matrícula:</strong> ${matricula}</p>
+                        <p><strong>Data de Matrícula:</strong> ${dataMatricula}</p>
+                        <p><strong>Nome do Pai:</strong> ${pai}</p>
+                        <p><strong>Nome da Mãe:</strong> ${mae}</p>
+                    `;
+                    $('#detalhes-aluno-content').html(content);
+                    $('#modal-detalhes-aluno').css('display', 'block');
                 }
             });
+
+            // Fechar modal de detalhes
+            $('.close-btn, #cancel-delete-btn').click(function() {
+                $('.modal').css('display', 'none');
+            });
+
+            // Função para abrir modal de exclusão
+            window.showDeleteModal = function(matricula) {
+                $('#delete-matricula').text(matricula);
+                $('#modal-confirm-delete').css('display', 'block');
+                $('#confirm-delete-btn').off('click').on('click', function() {
+                    $.ajax({
+                        url: 'delete_aluno.php',
+                        method: 'POST',
+                        data: { matricula: matricula },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                alert(response.message);
+                                $('.box-turmas-single').first().click(); // Recarrega a tabela
+                            } else {
+                                alert(response.message);
+                            }
+                            $('#modal-confirm-delete').css('display', 'none');
+                        },
+                        error: function() {
+                            alert('Erro ao comunicar com o servidor.');
+                            $('#modal-confirm-delete').css('display', 'none');
+                        }
+                    });
+                });
+            };
+
+            // Função placeholder para Editar
+            window.editAluno = function(matricula) {
+                alert('Editar aluno com matrícula: ' + matricula);
+            };
         });
-
-        if ($('.box-turmas-single').length > 0) {
-            $('.box-turmas-single').first().click();
-        }
-
-        // Funções para ações dos alunos (Diretor)
-        window.viewAluno = function(matricula) {
-            alert('Visualizar detalhes do aluno com matrícula: ' + matricula);
-        };
-
-        window.editAluno = function(matricula) {
-            alert('Editar aluno com matrícula: ' + matricula);
-        };
-
-        window.deleteAluno = function(matricula) {
-            if (confirm('Deseja excluir o aluno com matrícula ' + matricula + '?')) {
-                alert('Aluno com matrícula ' + matricula + ' excluído (funcionalidade a implementar).');
-            }
-        };
-    });
-</script>
+    </script>
 </body>
 </html>
 <?php $conn->close(); ?>

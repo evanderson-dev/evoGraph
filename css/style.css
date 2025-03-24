@@ -256,7 +256,7 @@ header { /* Cabeçalho da página */
 
 .tabela-turma-selecionada th { /* Cabeçalho da tabela */
     background-color: #73b4ff; /* Cor de fundo */
-    font-weight: bold; /* Texto em negrito */
+    /*font-weight: bold; /* Texto em negrito */
     color: #333; /* Cor do texto */
 }
 
@@ -457,6 +457,72 @@ header { /* Cabeçalho da página */
 
 .delete-btn:hover {
     color: #cc0000;
+}
+
+/* Botão Editar nas Turmas */
+.btn-edit { /* Botão de edição */
+    background-color: #ffca2c;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-edit:hover { /* Efeito de hover */
+    background-color: #e6b800;
+}
+
+/*#############################################################*/
+/*########################### MODAL ###########################*/
+/*#############################################################*/
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 500px;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.modal-buttons .btn {
+    margin-left: 10px;
 }
 
 /* Media Query para telas menores */
