@@ -194,8 +194,8 @@ $cargo = $_SESSION["cargo"];
                 </div>
 
                 <!-- Lista de Turmas -->
+                <h3 class="section-title">Turmas</h3>
                 <div class="box-turmas">
-                    <h3>Turmas</h3><br>
                     <?php
                     $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
                             FROM turmas t 

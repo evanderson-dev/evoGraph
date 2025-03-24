@@ -177,6 +177,13 @@ header { /* Cabeçalho da página */
     color: #5599e6; /* Azul mais escuro ao passar o mouse, consistente com .btn:hover */
 }
 
+/* Título das Seções */
+.section-title {
+    font-size: 24px;
+    color: #333;
+    margin: 20px 0 10px;
+}
+
 .box-turmas { /* Caixas de turmas */
     width: 100%; /* Largura total */
     margin-top: 20px; /* Espaço acima das caixas */
