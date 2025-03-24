@@ -252,8 +252,11 @@ header { /* Cabeçalho da página */
 
 .tabela-turma-selecionada tbody tr:hover { /* Efeito de hover nas linhas */
     background-color: #e9ecef; /* Mesmo tom de hover da sidebar */
-    font-weight: bold; /* Texto em negrito */
-    color: red; /* Cor do texto */
+}
+
+.tabela-turma-selecionada tbody tr:hover td {
+    font-weight: bold; /* Negrito no hover */
+    color: red; /* Cor do texto no hover (teste) */
 }
 
 .profile-form {
