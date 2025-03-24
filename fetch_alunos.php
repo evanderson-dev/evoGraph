@@ -12,8 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     $turma_id = $_POST['turma_id'];
     $funcionario_id = $_SESSION["funcionario_id"];
 
-    // Verificar se a turma pertence ao professor logado (segurança)
-    $sql = "SELECT a.nome, a.sobrenome, a.matricula 
+    // Buscar dados dos alunos, incluindo data_nascimento e data_matricula
+    $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula 
             FROM alunos a 
             JOIN turmas t ON a.turma_id = t.id 
             WHERE t.id = ? AND t.professor_id = ?";
@@ -27,11 +27,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
         while ($row = $result->fetch_assoc()) {
             $html .= "<tr>";
             $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
+            $html .= "<td>" . htmlspecialchars($row["data_nascimento"] ?? 'N/A') . "</td>";
             $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
+            $html .= "<td>" . htmlspecialchars($row["data_matricula"] ?? 'N/A') . "</td>";
             $html .= "</tr>";
         }
     } else {
-        $html .= "<tr><td colspan='2'>Nenhum aluno cadastrado nesta turma.</td></tr>";
+        $html .= "<tr><td colspan='4'>Nenhum aluno cadastrado nesta turma.</td></tr>";
     }
 
     $stmt->close();

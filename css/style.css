@@ -212,6 +212,10 @@ header { /* Cabeçalho da página */
     color: #777; /* Cor do texto */
 }
 
+/*#############################################################*/
+/*################# ESTILO DA TABELA DE ALUNOS ################*/
+/*#############################################################*/
+
 .tabela-turma-selecionada { /* Tabela da turma selecionada */
     background-color: white; /* Cor de fundo */
     width: 100%; /* Largura total */

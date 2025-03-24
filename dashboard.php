@@ -99,7 +99,9 @@ $cargo = $_SESSION["cargo"];
                         <thead>
                             <tr>
                                 <th>Nome</th>
+                                <th>Data de Nascimento</th>
                                 <th>Matrícula</th>
+                                <th>Data de Matrícula</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-alunos">
