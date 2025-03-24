@@ -160,12 +160,6 @@ $cargo = $_SESSION["cargo"];
 
                 <?php elseif ($cargo === "Diretor"): ?>
                 <!-- Dashboard do Diretor -->
-                <div class="titulo-secao">
-                    <h2>Dashboard Diretor</h2><br>
-                    <div class="separator"></div><br>
-                    <p><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a> / Gerenciamento</p>
-                </div>
-
                 <!-- Visão Geral -->
                 <div class="overview">
                     <?php
@@ -201,7 +195,7 @@ $cargo = $_SESSION["cargo"];
 
                 <!-- Lista de Turmas -->
                 <div class="box-turmas">
-                    <h3>Turmas</h3>
+                    <h3>Turmas</h3><br>
                     <?php
                     $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
                             FROM turmas t 
