@@ -12,27 +12,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     $turma_id = $_POST['turma_id'];
     $funcionario_id = $_SESSION["funcionario_id"];
 
-    // Buscar dados dos alunos, incluindo data_nascimento e data_matricula
+    // Buscar dados dos alunos
     $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula 
             FROM alunos a 
             JOIN turmas t ON a.turma_id = t.id 
             WHERE t.id = ? AND t.professor_id = ?";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        die("Erro na preparação da query: " . $conn->error);
+    }
     $stmt->bind_param("ii", $turma_id, $funcionario_id);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        die("Erro ao executar a query: " . $stmt->error);
+    }
     $result = $stmt->get_result();
 
     $html = '';
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            // Converter data_nascimento para DD/MM/YYYY
-            $data_nascimento = $row["data_nascimento"] 
-                ? DateTime::createFromFormat('Y-m-d', $row["data_nascimento"])->format('d/m/Y') 
-                : 'N/A';
-            // Converter data_matricula para DD/MM/YYYY
-            $data_matricula = $row["data_matricula"] 
-                ? DateTime::createFromFormat('Y-m-d', $row["data_matricula"])->format('d/m/Y') 
-                : 'N/A';
+            // Formatar datas para DD/MM/YYYY
+            $data_nascimento = $row["data_nascimento"] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
+            $data_matricula = $row["data_matricula"] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
 
             $html .= "<tr>";
             $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
@@ -47,6 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
 
     $stmt->close();
     echo $html;
+} else {
+    echo "<tr><td colspan='4'>Requisição inválida.</td></tr>";
 }
 
 $conn->close();

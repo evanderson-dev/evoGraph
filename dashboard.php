@@ -210,49 +210,46 @@ $cargo = $_SESSION["cargo"];
     </section><!-- FIM MAIN -->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Aplicar estado inicial sem transição
-            if (localStorage.getItem('sidebarActive') === 'true') {
-                $('#sidebar').addClass('active');
-                $('#content').addClass('shifted');
-            }
+<script>
+    $(document).ready(function() {
+        if (localStorage.getItem('sidebarActive') === 'true') {
+            $('#sidebar').addClass('active');
+            $('#content').addClass('shifted');
+        }
 
-            // Menu hambúrguer
-            $('#menu-toggle').on('click', function() {
-                $('#sidebar').addClass('transition-enabled'); // Ativar transição
-                $('#content').addClass('transition-enabled');
-                $('#sidebar').toggleClass('active');
-                $('#content').toggleClass('shifted');
-                localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
-                // Remover transição após animação (opcional)
-                setTimeout(function() {
-                    $('#sidebar').removeClass('transition-enabled');
-                    $('#content').removeClass('transition-enabled');
-                }, 300); // Duração da transição (0.3s)
-            });
-
-            // AJAX para turmas
-            $('.box-turmas-single').click(function() {
-                var turmaId = $(this).data('turma-id');
-                $.ajax({
-                    url: 'fetch_alunos.php',
-                    method: 'POST',
-                    data: { turma_id: turmaId },
-                    success: function(response) {
-                        $('#tabela-alunos').html(response);
-                    },
-                    error: function() {
-                        $('#tabela-alunos').html('<tr><td colspan="2">Erro ao carregar alunos.</td></tr>');
-                    }
-                });
-            });
-
-            if ($('.box-turmas-single').length > 0) {
-                $('.box-turmas-single').first().click();
-            }
+        $('#menu-toggle').on('click', function() {
+            $('#sidebar').addClass('transition-enabled');
+            $('#content').addClass('transition-enabled');
+            $('#sidebar').toggleClass('active');
+            $('#content').toggleClass('shifted');
+            localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
+            setTimeout(function() {
+                $('#sidebar').removeClass('transition-enabled');
+                $('#content').removeClass('transition-enabled');
+            }, 300);
         });
-    </script>
+
+        // AJAX para turmas
+        $('.box-turmas-single').click(function() {
+            var turmaId = $(this).data('turma-id');
+            $.ajax({
+                url: 'fetch_alunos.php',
+                method: 'POST',
+                data: { turma_id: turmaId },
+                success: function(response) {
+                    $('#tabela-alunos').html(response);
+                },
+                error: function(xhr, status, error) {
+                    $('#tabela-alunos').html('<tr><td colspan="4">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
+                }
+            });
+        });
+
+        if ($('.box-turmas-single').length > 0) {
+            $('.box-turmas-single').first().click();
+        }
+    });
+</script>
 </body>
 </html>
 <?php $conn->close(); ?>
