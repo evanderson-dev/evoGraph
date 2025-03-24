@@ -178,10 +178,18 @@ header { /* Cabeçalho da página */
 }
 
 /* Título das Seções */
+/* Título das Seções */
 .section-title {
+    width: 100%;
     font-size: 24px;
     color: #333;
     margin: 20px 0 10px;
+    background-color: #73b4ff; /* Azul claro, consistente com o sistema */
+    padding: 10px 15px; /* Espaçamento interno */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    display : inline-block; /* Exibe como bloco */
+    font-weight: bold; /* Negrito para destaque */
 }
 
 .box-turmas { /* Caixas de turmas */
