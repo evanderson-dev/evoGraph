@@ -336,7 +336,7 @@ $cargo = $_SESSION["cargo"];
                 }
             });
 
-            // Fechar modal de detalhes
+            // Fechar modais
             $('.close-btn, #cancel-delete-btn').click(function() {
                 $('.modal').css('display', 'none');
             });
@@ -352,17 +352,43 @@ $cargo = $_SESSION["cargo"];
                         data: { matricula: matricula },
                         dataType: 'json',
                         success: function(response) {
+                            var modalContent = $('#modal-confirm-delete .modal-content');
                             if (response.success) {
-                                alert(response.message);
+                                modalContent.html(`
+                                    <span class="close-btn">×</span>
+                                    <h2>Exclusão Concluída</h2>
+                                    <p>${response.message}</p>
+                                    <div class="modal-buttons">
+                                        <button class="btn close-modal-btn">Fechar</button>
+                                    </div>
+                                `);
                                 $('.box-turmas-single').first().click(); // Recarrega a tabela
                             } else {
-                                alert(response.message);
+                                modalContent.html(`
+                                    <span class="close-btn">×</span>
+                                    <h2>Erro</h2>
+                                    <p>${response.message}</p>
+                                    <div class="modal-buttons">
+                                        <button class="btn close-modal-btn">Fechar</button>
+                                    </div>
+                                `);
                             }
-                            $('#modal-confirm-delete').css('display', 'none');
+                            $('.close-modal-btn, .close-btn').click(function() {
+                                $('#modal-confirm-delete').css('display', 'none');
+                            });
                         },
                         error: function() {
-                            alert('Erro ao comunicar com o servidor.');
-                            $('#modal-confirm-delete').css('display', 'none');
+                            $('#modal-confirm-delete .modal-content').html(`
+                                <span class="close-btn">×</span>
+                                <h2>Erro</h2>
+                                <p>Erro ao comunicar com o servidor.</p>
+                                <div class="modal-buttons">
+                                    <button class="btn close-modal-btn">Fechar</button>
+                                </div>
+                            `);
+                            $('.close-modal-btn, .close-btn').click(function() {
+                                $('#modal-confirm-delete').css('display', 'none');
+                            });
                         }
                     });
                 });
