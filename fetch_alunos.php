@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
                 WHERE a.turma_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $turma_id);
-        $colspan = 6;
+        $colspan = 7; // Inclui a coluna Ações
     }
 
     if (!$stmt) {
@@ -53,6 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
             if ($cargo !== "Professor") {
                 $html .= "<td>" . htmlspecialchars($row["nome_pai"] ?? 'N/A') . "</td>";
                 $html .= "<td>" . htmlspecialchars($row["nome_mae"] ?? 'N/A') . "</td>";
+                $html .= "<td>";
+                $html .= "<button class='action-btn details-btn' title='Detalhes' onclick=\"viewAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-eye'></i></button>";
+                $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"editAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
+                $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"deleteAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-trash'></i></button>";
+                $html .= "</td>";
             }
             $html .= "</tr>";
         }
@@ -63,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     $stmt->close();
     echo $html;
 } else {
-    echo "<tr><td colspan='6'>Requisição inválida.</td></tr>";
+    echo "<tr><td colspan='7'>Requisição inválida.</td></tr>";
 }
 
 $conn->close();

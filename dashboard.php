@@ -238,6 +238,7 @@ $cargo = $_SESSION["cargo"];
                                 <th>Data de Matrícula</th>
                                 <th>Nome do Pai</th>
                                 <th>Nome da Mãe</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-alunos">
@@ -269,7 +270,7 @@ $cargo = $_SESSION["cargo"];
             }, 300);
         });
 
-        // AJAX para turmas
+        // Clique nas turmas
         $('.box-turmas-single').click(function() {
             var turmaId = $(this).data('turma-id');
             $.ajax({
@@ -280,7 +281,7 @@ $cargo = $_SESSION["cargo"];
                     $('#tabela-alunos').html(response);
                 },
                 error: function(xhr, status, error) {
-                    $('#tabela-alunos').html('<tr><td colspan="4">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
+                    $('#tabela-alunos').html('<tr><td colspan="7">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
                 }
             });
         });
@@ -288,6 +289,21 @@ $cargo = $_SESSION["cargo"];
         if ($('.box-turmas-single').length > 0) {
             $('.box-turmas-single').first().click();
         }
+
+        // Funções para ações dos alunos (Diretor)
+        window.viewAluno = function(matricula) {
+            alert('Visualizar detalhes do aluno com matrícula: ' + matricula);
+        };
+
+        window.editAluno = function(matricula) {
+            alert('Editar aluno com matrícula: ' + matricula);
+        };
+
+        window.deleteAluno = function(matricula) {
+            if (confirm('Deseja excluir o aluno com matrícula ' + matricula + '?')) {
+                alert('Aluno com matrícula ' + matricula + ' excluído (funcionalidade a implementar).');
+            }
+        };
     });
 </script>
 </body>

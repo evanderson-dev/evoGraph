@@ -313,23 +313,6 @@ header { /* Cabeçalho da página */
     color: #777;
 }
 
-/* Botão Editar nas Turmas */
-.btn-edit { /* Botão de edição */
-    background-color: #ffca2c;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-}
-
-.btn-edit:hover { /* Efeito de hover */
-    background-color: #e6b800;
-}
-
 /* Estilo do formulário de perfil */
 .profile-form {
     background-color: white;
@@ -399,6 +382,27 @@ header { /* Cabeçalho da página */
     text-align: right;
 }
 
+/*#############################################################*/
+/*########################### BOTÕES ##########################*/
+/*#############################################################*/
+
+/* Botão Editar nas Turmas */
+.btn-edit { /* Botão de edição */
+    background-color: #ffca2c;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-edit:hover { /* Efeito de hover */
+    background-color: #e6b800;
+}
+
 .btn {
     background-color: #73b4ff;
     color: white;
@@ -418,6 +422,41 @@ header { /* Cabeçalho da página */
 .btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
+}
+
+/* Botões de Ação */
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    padding: 5px;
+    transition: color 0.3s;
+}
+
+.details-btn {
+    color: #5599e6; /* Azul escuro */
+}
+
+.details-btn:hover {
+    color: #73b4ff;
+}
+
+.edit-btn {
+    color: #ffca2c; /* Amarelo */
+}
+
+.edit-btn:hover {
+    color: #e6b800;
+}
+
+.delete-btn {
+    color: #ff4444; /* Vermelho */
+}
+
+.delete-btn:hover {
+    color: #cc0000;
 }
 
 /* Media Query para telas menores */
