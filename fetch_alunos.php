@@ -25,11 +25,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     $html = '';
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+            // Converter data_nascimento para DD/MM/YYYY
+            $data_nascimento = $row["data_nascimento"] 
+                ? DateTime::createFromFormat('Y-m-d', $row["data_nascimento"])->format('d/m/Y') 
+                : 'N/A';
+            // Converter data_matricula para DD/MM/YYYY
+            $data_matricula = $row["data_matricula"] 
+                ? DateTime::createFromFormat('Y-m-d', $row["data_matricula"])->format('d/m/Y') 
+                : 'N/A';
+
             $html .= "<tr>";
             $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
-            $html .= "<td>" . htmlspecialchars($row["data_nascimento"] ?? 'N/A') . "</td>";
+            $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
-            $html .= "<td>" . htmlspecialchars($row["data_matricula"] ?? 'N/A') . "</td>";
+            $html .= "<td>" . htmlspecialchars($data_matricula) . "</td>";
             $html .= "</tr>";
         }
     } else {
