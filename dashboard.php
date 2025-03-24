@@ -158,9 +158,50 @@ $cargo = $_SESSION["cargo"];
                     </table>
                 </div>
 
-            <?php elseif ($cargo === "Diretor"): ?>
+                <?php elseif ($cargo === "Diretor"): ?>
                 <!-- Dashboard do Diretor -->
+                <div class="titulo-secao">
+                    <h2>Dashboard Diretor</h2><br>
+                    <div class="separator"></div><br>
+                    <p><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a> / Gerenciamento</p>
+                </div>
+
+                <!-- Visão Geral -->
+                <div class="overview">
+                    <?php
+                    $sql = "SELECT COUNT(*) as total_turmas FROM turmas";
+                    $total_turmas = $conn->query($sql)->fetch_assoc()['total_turmas'];
+
+                    $sql = "SELECT COUNT(*) as total_alunos FROM alunos";
+                    $total_alunos = $conn->query($sql)->fetch_assoc()['total_alunos'];
+
+                    $sql = "SELECT COUNT(*) as total_professores FROM funcionarios WHERE cargo = 'Professor'";
+                    $total_professores = $conn->query($sql)->fetch_assoc()['total_professores'];
+
+                    $sql = "SELECT COUNT(*) as total_funcionarios FROM funcionarios";
+                    $total_funcionarios = $conn->query($sql)->fetch_assoc()['total_funcionarios'];
+                    ?>
+                    <div class="overview-box">
+                        <h3><?php echo $total_turmas; ?></h3>
+                        <p>Total de Turmas</p>
+                    </div>
+                    <div class="overview-box">
+                        <h3><?php echo $total_alunos; ?></h3>
+                        <p>Total de Alunos</p>
+                    </div>
+                    <div class="overview-box">
+                        <h3><?php echo $total_professores; ?></h3>
+                        <p>Total de Professores</p>
+                    </div>
+                    <div class="overview-box">
+                        <h3><?php echo $total_funcionarios; ?></h3>
+                        <p>Total de Funcionários</p>
+                    </div>
+                </div>
+
+                <!-- Lista de Turmas -->
                 <div class="box-turmas">
+                    <h3>Turmas</h3>
                     <?php
                     $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
                             FROM turmas t 
@@ -176,14 +217,14 @@ $cargo = $_SESSION["cargo"];
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param("i", $turma['id']);
                         $stmt->execute();
-                        $result = $stmt->get_result();
-                        $quantidade = $result->fetch_assoc()['quantidade'];
+                        $quantidade = $stmt->get_result()->fetch_assoc()['quantidade'];
                         $stmt->close();
 
                         echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
-                        echo "<h3>{$turma['nome']}</h3>";
+                        echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
                         echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
                         echo "<p>{$quantidade} alunos</p>";
+                        echo "<button class='btn-edit' onclick='editTurma({$turma['id']})'>Editar</button>";
                         echo "</div>";
                     }
                     if (empty($turmas)) {
@@ -192,12 +233,18 @@ $cargo = $_SESSION["cargo"];
                     ?>
                 </div>
 
+                <!-- Tabela de Alunos -->
                 <div class="tabela-turma-selecionada">
+                    <h3>Alunos da Turma Selecionada</h3>
                     <table>
                         <thead>
                             <tr>
                                 <th>Nome</th>
+                                <th>Data de Nascimento</th>
                                 <th>Matrícula</th>
+                                <th>Data de Matrícula</th>
+                                <th>Nome do Pai</th>
+                                <th>Nome da Mãe</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-alunos">

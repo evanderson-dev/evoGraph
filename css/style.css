@@ -265,6 +265,57 @@ header { /* Cabeçalho da página */
     transition: color 0.3s ease, font-weight 0.3s ease; /* Transição para cor e negrito */
 }
 
+/*#############################################################*/
+/*#################### DASHBOARD DO DIRETOR ###################*/
+/*#############################################################*/
+
+/* Visão Geral */
+.overview { /* Caixas de visão geral */
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.overview-box { /* Caixa de visão geral individual */
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+    margin: 0 10px 20px 0;
+    min-width: 150px;
+}
+
+.overview-box h3 { /* Título da caixa */
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.overview-box p { /* Descrição da caixa */
+    margin: 5px 0 0;
+    color: #777;
+}
+
+/* Botão Editar nas Turmas */
+.btn-edit { /* Botão de edição */
+    background-color: #ffca2c;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-edit:hover { /* Efeito de hover */
+    background-color: #e6b800;
+}
+
 /* Estilo do formulário de perfil */
 .profile-form {
     background-color: white;
