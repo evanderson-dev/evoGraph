@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sobrenome = trim($_POST["sobrenome"]);
     $data_nascimento = trim($_POST["data_nascimento"]);
     $matricula = trim($_POST["matricula"]);
-    $data_matricula = empty(trim($_POST["data_matricula"])) ? null : trim($_POST["data_matricula"]);
+    $data_matricula = trim($_POST["data_matricula"]);
     $nome_pai = trim($_POST["nome_pai"]);
     $nome_mae = trim($_POST["nome_mae"]);
     $turma_id = trim($_POST["turma_id"]);
@@ -32,15 +32,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($nome) || empty($sobrenome) || empty($data_nascimento) || empty($matricula) || empty($turma_id)) {
         $error_message = "Preencha todos os campos obrigatórios (Nome, Sobrenome, Data de Nascimento, Matrícula e Turma).";
     } else {
-        $sql = "INSERT INTO alunos (nome, sobrenome, data_nascimento, matricula, data_matricula, nome_pai, nome_mae, turma_id) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // Verificar se a matrícula já existe
+        $sql = "SELECT id FROM alunos WHERE matricula = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssi", $nome, $sobrenome, $data_nascimento, $matricula, $data_matricula, $nome_pai, $nome_mae, $turma_id);
-        
-        if ($stmt->execute()) {
-            $success_message = "Aluno cadastrado com sucesso!";
+        $stmt->bind_param("s", $matricula);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $error_message = "A matrícula '$matricula' já está cadastrada.";
         } else {
-            $error_message = "Erro ao cadastrar aluno: " . $stmt->error;
+            // Montar a query dinamicamente para incluir data_matricula só se preenchida
+            $fields = "nome, sobrenome, data_nascimento, matricula, turma_id";
+            $values = "?, ?, ?, ?, ?";
+            $types = "sssss";
+            $params = [&$nome, &$sobrenome, &$data_nascimento, &$matricula, &$turma_id];
+
+            if (!empty($data_matricula)) {
+                $fields .= ", data_matricula";
+                $values .= ", ?";
+                $types .= "s";
+                $params[] = &$data_matricula;
+            }
+            if (!empty($nome_pai)) {
+                $fields .= ", nome_pai";
+                $values .= ", ?";
+                $types .= "s";
+                $params[] = &$nome_pai;
+            }
+            if (!empty($nome_mae)) {
+                $fields .= ", nome_mae";
+                $values .= ", ?";
+                $types .= "s";
+                $params[] = &$nome_mae;
+            }
+
+            $sql = "INSERT INTO alunos ($fields) VALUES ($values)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param($types, ...$params);
+
+            if ($stmt->execute()) {
+                $success_message = "Aluno cadastrado com sucesso!";
+            } else {
+                $error_message = "Erro ao cadastrar aluno: " . $stmt->error;
+            }
         }
         $stmt->close();
     }
