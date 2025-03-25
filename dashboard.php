@@ -382,9 +382,9 @@ $cargo = $_SESSION["cargo"];
                 $('#modal-confirm-delete').css('display', 'block');
                 $('#confirm-delete-btn').off('click').on('click', function() {
                     $.ajax({
-                        url: 'delete_aluno.php',
+                        url: 'delete_and_fetch.php',
                         method: 'POST',
-                        data: { matricula: matricula },
+                        data: { matricula: matricula, turma_id: turmaId },
                         dataType: 'json',
                         success: function(response) {
                             var modalContent = $('#modal-confirm-delete .modal-content');
@@ -396,34 +396,10 @@ $cargo = $_SESSION["cargo"];
                                         <button class="btn close-modal-btn">Fechar</button>
                                     </div>
                                 `);
-                                // Recarregar a tabela da turma atual
-                                $.ajax({
-                                    url: 'fetch_alunos.php',
-                                    method: 'POST',
-                                    data: { turma_id: turmaId },
-                                    success: function(response) {
-                                        $('#tabela-alunos').html(response);
-                                    }
-                                });
-                                // Atualizar o total de alunos na Visão Geral
-                                $.ajax({
-                                    url: 'fetch_totals.php',
-                                    method: 'GET',
-                                    dataType: 'json',
-                                    success: function(data) {
-                                        $('#total-alunos').text(data.total_alunos);
-                                    }
-                                });
-                                // Atualizar a quantidade de alunos na caixa da turma
-                                $.ajax({
-                                    url: 'fetch_turma_count.php',
-                                    method: 'POST',
-                                    data: { turma_id: turmaId },
-                                    dataType: 'json',
-                                    success: function(data) {
-                                        $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${data.quantidade} alunos`);
-                                    }
-                                });
+                                // Atualizar a tabela, total geral e quantidade da turma
+                                $('#tabela-alunos').html(response.tabela_alunos);
+                                $('#total-alunos').text(response.total_alunos);
+                                $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${response.quantidade_turma} alunos`);
                             } else {
                                 modalContent.html(`
                                     <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
