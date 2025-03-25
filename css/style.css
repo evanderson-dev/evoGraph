@@ -120,11 +120,10 @@ header { /* Cabeçalho da página */
     margin-left: 0; /* Sem deslocamento inicial */
     background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
     padding: 20px; /* Espaçamento interno */
-    /*transition: margin-left 0.3s ease; /* Animação suave */
 }
 
 .content.shifted {
-    margin-left: 190px; /* Desloca o conteúdo quando a sidebar está ativa */
+    margin-left: 210px; /* Desloca o conteúdo quando a sidebar está ativa */
 }
 
 .content.transition-enabled {
@@ -273,8 +272,8 @@ header { /* Cabeçalho da página */
     background-color: #e9ecef; /* Mesmo tom de hover da sidebar */
 }
 
-.tabela-turma-selecionada tbody tr:hover td {
-    font-weight: bold; /* Negrito no hover */
+.tabela-turma-selecionada tbody tr:hover td { /* Efeito de hover nas células */
+    /*font-weight: bold; /* Negrito no hover */
     color: #777; /* Cor do texto no hover */
     transition: color 0.3s ease, font-weight 0.3s ease; /* Transição para cor e negrito */
 }
