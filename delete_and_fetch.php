@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
 
     // Buscar os dados da tabela de alunos da turma
     if ($cargo === "Professor") {
-        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula 
+        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae 
                 FROM alunos a 
                 JOIN turmas t ON a.turma_id = t.id 
                 WHERE t.id = ? AND t.professor_id = ?";
