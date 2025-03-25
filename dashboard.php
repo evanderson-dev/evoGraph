@@ -330,20 +330,32 @@ $cargo = $_SESSION["cargo"];
                 }, 300);
             });
 
-            // Clique nas turmas
-            $('.box-turmas-single').click(function() {
-                var turmaId = $(this).data('turma-id');
+            // Função para carregar os dados da turma
+            function loadTurma(turmaId) {
                 $.ajax({
-                    url: 'fetch_alunos.php',
+                    url: 'delete_and_fetch.php',
                     method: 'POST',
                     data: { turma_id: turmaId },
+                    dataType: 'json',
                     success: function(response) {
-                        $('#tabela-alunos').html(response);
+                        if (response.success) {
+                            $('#tabela-alunos').html(response.tabela_alunos);
+                            $('#total-alunos').text(response.total_alunos);
+                            $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${response.quantidade_turma} alunos`);
+                        } else {
+                            $('#tabela-alunos').html('<tr><td colspan="5">Erro: ' + response.message + '</td></tr>');
+                        }
                     },
                     error: function(xhr, status, error) {
                         $('#tabela-alunos').html('<tr><td colspan="5">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
                     }
                 });
+            }
+
+            // Clique nas turmas
+            $('.box-turmas-single').click(function() {
+                var turmaId = $(this).data('turma-id');
+                loadTurma(turmaId);
             });
 
             if ($('.box-turmas-single').length > 0) {
