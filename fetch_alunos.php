@@ -43,9 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $data_nascimento = $row["data_nascimento"] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
-            $data_matricula = $row["data_matricula"] ? date("d/m/Y H:i", strtotime($row["data_matricula"])) : 'N/A';
+            $data_matricula = $row["data_matricula"] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
+            $data_matricula_com_hora = $row["data_matricula"] ? date("d/m/Y H:i", strtotime($row["data_matricula"])) : 'N/A';
 
-            $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula-data='" . htmlspecialchars($data_matricula) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "'>";
+            $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula-data='" . htmlspecialchars($data_matricula_com_hora) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "'>";
             $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
