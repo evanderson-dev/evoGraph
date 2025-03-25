@@ -311,6 +311,9 @@ $cargo = $_SESSION["cargo"];
     </section><!-- FIM MAIN -->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/modals.js"></script>
+    <script src="js/ajax.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>
