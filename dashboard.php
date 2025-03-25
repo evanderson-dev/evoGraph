@@ -42,7 +42,7 @@ $cargo = $_SESSION["cargo"];
         <div class="sidebar" id="sidebar">
             <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i> Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
-            <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i> Meu Perfil</a> <!-- Alterado aqui -->
+            <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i> Meu Perfil</a>
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
                 <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i> Cadastrar Turma</a>
                 <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i> Cadastrar Funcionário</a>
@@ -158,158 +158,161 @@ $cargo = $_SESSION["cargo"];
                     </table>
                 </div>
 
-                <?php elseif ($cargo === "Diretor"): ?>
-                    <!-- Dashboard do Diretor -->
-                    <!-- Visão Geral -->
-                    <div class="overview">
-                        <?php
-                        $sql = "SELECT COUNT(*) as total_turmas FROM turmas";
-                        $total_turmas = $conn->query($sql)->fetch_assoc()['total_turmas'];
+            <?php elseif ($cargo === "Diretor"): ?>
+                <!-- Dashboard do Diretor -->
+                <!-- Visão Geral -->
+                <div class="overview">
+                    <?php
+                    $sql = "SELECT COUNT(*) as total_turmas FROM turmas";
+                    $total_turmas = $conn->query($sql)->fetch_assoc()['total_turmas'];
 
-                        $sql = "SELECT COUNT(*) as total_alunos FROM alunos";
-                        $total_alunos = $conn->query($sql)->fetch_assoc()['total_alunos'];
+                    $sql = "SELECT COUNT(*) as total_alunos FROM alunos";
+                    $total_alunos = $conn->query($sql)->fetch_assoc()['total_alunos'];
 
-                        $sql = "SELECT COUNT(*) as total_professores FROM funcionarios WHERE cargo = 'Professor'";
-                        $total_professores = $conn->query($sql)->fetch_assoc()['total_professores'];
+                    $sql = "SELECT COUNT(*) as total_professores FROM funcionarios WHERE cargo = 'Professor'";
+                    $total_professores = $conn->query($sql)->fetch_assoc()['total_professores'];
 
-                        $sql = "SELECT COUNT(*) as total_funcionarios FROM funcionarios";
-                        $total_funcionarios = $conn->query($sql)->fetch_assoc()['total_funcionarios'];
-                        ?>
-                        <div class="overview-box">
-                            <h3><?php echo $total_turmas; ?></h3>
-                            <p>Total de Turmas</p>
-                        </div>
-                        <div class="overview-box">
-                            <h3 id="total-alunos"><?php echo $total_alunos; ?></h3>
-                            <p>Total de Alunos</p>
-                        </div>
-                        <div class="overview-box">
-                            <h3><?php echo $total_professores; ?></h3>
-                            <p>Total de Professores</p>
-                        </div>
-                        <div class="overview-box">
-                            <h3><?php echo $total_funcionarios; ?></h3>
-                            <p>Total de Funcionários</p>
-                        </div>
+                    $sql = "SELECT COUNT(*) as total_funcionarios FROM funcionarios";
+                    $total_funcionarios = $conn->query($sql)->fetch_assoc()['total_funcionarios'];
+                    ?>
+                    <div class="overview-box">
+                        <h3><?php echo $total_turmas; ?></h3>
+                        <p>Total de Turmas</p>
                     </div>
-
-                    <!-- Lista de Turmas -->
-                    <h3 class="section-title"><i class="fa-solid fa-users"></i> Turmas</h3>
-                    <div class="box-turmas">
-                        <?php
-                        $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
-                                FROM turmas t 
-                                LEFT JOIN funcionarios f ON t.professor_id = f.id";
-                        $result = $conn->query($sql);
-                        $turmas = [];
-                        while ($row = $result->fetch_assoc()) {
-                            $turmas[] = $row;
-                        }
-
-                        foreach ($turmas as $turma) {
-                            $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
-                            $stmt = $conn->prepare($sql);
-                            $stmt->bind_param("i", $turma['id']);
-                            $stmt->execute();
-                            $quantidade = $stmt->get_result()->fetch_assoc()['quantidade'];
-                            $stmt->close();
-
-                            echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
-                            echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
-                            echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
-                            echo "<p>{$quantidade} alunos</p>";
-                            echo "</div>";
-                        }
-                        if (empty($turmas)) {
-                            echo "<p>Nenhuma turma cadastrada.</p>";
-                        }
-                        ?>
+                    <div class="overview-box">
+                        <h3 id="total-alunos"><?php echo $total_alunos; ?></h3>
+                        <p>Total de Alunos</p>
                     </div>
-
-                    <!-- Tabela de Alunos -->
-                    <div class="tabela-turma-selecionada">
-                        <h3>Alunos da Turma Selecionada</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Data de Nascimento</th>
-                                    <th>Matrícula</th>
-                                    <th>Data de Matrícula</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-alunos">
-                                <!-- Dados dos alunos serão inseridos aqui -->
-                            </tbody>
-                        </table>
+                    <div class="overview-box">
+                        <h3><?php echo $total_professores; ?></h3>
+                        <p>Total de Professores</p>
                     </div>
-
-                    <!-- Modal de Detalhes do Aluno -->
-                    <div id="modal-detalhes-aluno" class="modal">
-                        <div class="modal-content">
-                            <h2>Detalhes do Aluno</h2>
-                            <div class="cadastro-form detalhes-form">
-                                <div class="form-row">
-                                    <div class="form-group foto-placeholder">
-                                        <label>Foto do Aluno</label>
-                                        <div class="foto-box">Foto não disponível</div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="detalhes-nome">Nome:</label>
-                                        <input type="text" id="detalhes-nome" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="detalhes-nascimento">Data de Nascimento:</label>
-                                        <input type="text" id="detalhes-nascimento" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="detalhes-matricula">Matrícula:</label>
-                                        <input type="text" id="detalhes-matricula" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="detalhes-data-matricula">Data de Matrícula:</label>
-                                        <input type="text" id="detalhes-data-matricula" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group full-width">
-                                        <label for="detalhes-pai">Nome do Pai:</label>
-                                        <input type="text" id="detalhes-pai" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group full-width">
-                                        <label for="detalhes-mae">Nome da Mãe:</label>
-                                        <input type="text" id="detalhes-mae" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-buttons">
-                                    <button class="btn close-modal-btn">Fechar</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="overview-box">
+                        <h3><?php echo $total_funcionarios; ?></h3>
+                        <p>Total de Funcionários</p>
                     </div>
+                </div>
 
-                    <!-- Modal de Confirmação de Exclusão -->
-                    <div id="modal-confirm-delete" class="modal">
-                        <div class="modal-content">
-                            <h2>Confirmar Exclusão</h2>
-                            <p>Tem certeza que deseja excluir o aluno com matrícula <span id="delete-matricula"></span>?</p>
-                            <div class="modal-buttons">
-                                <button id="confirm-delete-btn" class="btn">Sim</button>
-                                <button id="cancel-delete-btn" class="btn">Não</button>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                <!-- Lista de Turmas -->
+                <h3 class="section-title"><i class="fa-solid fa-users"></i> Turmas</h3>
+                <div class="box-turmas">
+                    <?php
+                    $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
+                            FROM turmas t 
+                            LEFT JOIN funcionarios f ON t.professor_id = f.id";
+                    $result = $conn->query($sql);
+                    $turmas = [];
+                    while ($row = $result->fetch_assoc()) {
+                        $turmas[] = $row;
+                    }
+
+                    foreach ($turmas as $turma) {
+                        $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("i", $turma['id']);
+                        $stmt->execute();
+                        $quantidade = $stmt->get_result()->fetch_assoc()['quantidade'];
+                        $stmt->close();
+
+                        echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
+                        echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
+                        echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
+                        echo "<p>{$quantidade} alunos</p>";
+                        echo "</div>";
+                    }
+                    if (empty($turmas)) {
+                        echo "<p>Nenhuma turma cadastrada.</p>";
+                    }
+                    ?>
+                </div>
+
+                <!-- Tabela de Alunos -->
+                <div class="tabela-turma-selecionada">
+                    <h3>Alunos da Turma Selecionada</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Data de Nascimento</th>
+                                <th>Matrícula</th>
+                                <th>Data de Matrícula</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-alunos">
+                            <!-- Dados dos alunos serão inseridos aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
         </div><!-- FIM CONTENT -->
     </section><!-- FIM MAIN -->
 
+    <!-- Modal de Detalhes do Aluno (compartilhado entre cargos) -->
+    <div id="modal-detalhes-aluno" class="modal">
+        <div class="modal-content">
+            <h2>Detalhes do Aluno</h2>
+            <div class="cadastro-form detalhes-form">
+                <div class="form-row">
+                    <div class="form-group foto-placeholder">
+                        <label>Foto do Aluno</label>
+                        <div class="foto-box">Foto não disponível</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="detalhes-nome">Nome:</label>
+                        <input type="text" id="detalhes-nome" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="detalhes-nascimento">Data de Nascimento:</label>
+                        <input type="text" id="detalhes-nascimento" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="detalhes-matricula">Matrícula:</label>
+                        <input type="text" id="detalhes-matricula" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="detalhes-data-matricula">Data de Matrícula:</label>
+                        <input type="text" id="detalhes-data-matricula" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="detalhes-pai">Nome do Pai:</label>
+                        <input type="text" id="detalhes-pai" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="detalhes-mae">Nome da Mãe:</label>
+                        <input type="text" id="detalhes-mae" readonly>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button class="btn close-modal-btn">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão (exclusivo do Diretor) -->
+    <?php if ($cargo === "Diretor"): ?>
+    <div id="modal-confirm-delete" class="modal">
+        <div class="modal-content">
+            <h2>Confirmar Exclusão</h2>
+            <p>Tem certeza que deseja excluir o aluno com matrícula <span id="delete-matricula"></span>?</p>
+            <div class="modal-buttons">
+                <button id="confirm-delete-btn" class="btn">Sim</button>
+                <button id="cancel-delete-btn" class="btn">Não</button>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/modals.js"></script>
