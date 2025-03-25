@@ -377,7 +377,7 @@ $cargo = $_SESSION["cargo"];
             });
 
             // Função para abrir modal de exclusão
-            window.showDeleteModal = function(matricula) {
+            window.showDeleteModal = function(matricula, turmaId) {
                 $('#delete-matricula').text(matricula);
                 $('#modal-confirm-delete').css('display', 'block');
                 $('#confirm-delete-btn').off('click').on('click', function() {
@@ -396,18 +396,32 @@ $cargo = $_SESSION["cargo"];
                                         <button class="btn close-modal-btn">Fechar</button>
                                     </div>
                                 `);
-                                // Recarregar a tabela
-                                $('.box-turmas-single').first().click();
-                                // Atualizar o total de alunos
+                                // Recarregar a tabela da turma atual
+                                $.ajax({
+                                    url: 'fetch_alunos.php',
+                                    method: 'POST',
+                                    data: { turma_id: turmaId },
+                                    success: function(response) {
+                                        $('#tabela-alunos').html(response);
+                                    }
+                                });
+                                // Atualizar o total de alunos na Visão Geral
                                 $.ajax({
                                     url: 'fetch_totals.php',
                                     method: 'GET',
                                     dataType: 'json',
                                     success: function(data) {
                                         $('#total-alunos').text(data.total_alunos);
-                                    },
-                                    error: function() {
-                                        console.log('Erro ao atualizar o total de alunos');
+                                    }
+                                });
+                                // Atualizar a quantidade de alunos na caixa da turma
+                                $.ajax({
+                                    url: 'fetch_turma_count.php',
+                                    method: 'POST',
+                                    data: { turma_id: turmaId },
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${data.quantidade} alunos`);
                                     }
                                 });
                             } else {
