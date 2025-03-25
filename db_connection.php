@@ -1,5 +1,4 @@
 <?php
-date_default_timezone_set('America/Sao_Paulo');
 
 // Configurações do banco de dados
 $host = "localhost";

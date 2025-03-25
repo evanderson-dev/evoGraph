@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sobrenome = trim($_POST["sobrenome"]);
     $data_nascimento = trim($_POST["data_nascimento"]);
     $matricula = trim($_POST["matricula"]);
-    $data_matricula = trim($_POST["data_matricula"]);
+    $data_matricula = trim($_POST["data_matricula_hidden"]); // Campo oculto com data e hora
     $nome_pai = trim($_POST["nome_pai"]);
     $nome_mae = trim($_POST["nome_mae"]);
     $turma_id = trim($_POST["turma_id"]);
@@ -41,18 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             $error_message = "A matrícula '$matricula' já está cadastrada.";
         } else {
-            // Montar a query dinamicamente para incluir data_matricula só se preenchida
-            $fields = "nome, sobrenome, data_nascimento, matricula, turma_id";
-            $values = "?, ?, ?, ?, ?";
-            $types = "sssss";
-            $params = [&$nome, &$sobrenome, &$data_nascimento, &$matricula, &$turma_id];
+            // Montar a query dinamicamente
+            $fields = "nome, sobrenome, data_nascimento, matricula, data_matricula, turma_id";
+            $values = "?, ?, ?, ?, ?, ?";
+            $types = "ssssss";
+            $params = [&$nome, &$sobrenome, &$data_nascimento, &$matricula, &$data_matricula, &$turma_id];
 
-            if (!empty($data_matricula)) {
-                $fields .= ", data_matricula";
-                $values .= ", ?";
-                $types .= "s";
-                $params[] = &$data_matricula;
-            }
             if (!empty($nome_pai)) {
                 $fields .= ", nome_pai";
                 $values .= ", ?";
@@ -143,7 +137,7 @@ while ($row = $result->fetch_assoc()) {
             <?php endif; ?>
 
             <div class="cadastro-form">
-                <form method="POST" action="cadastro_aluno.php">
+                <form method="POST" action="cadastro_aluno.php" id="cadastro-aluno-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="nome">Nome:</label>
@@ -163,13 +157,6 @@ while ($row = $result->fetch_assoc()) {
                         <div class="form-group">
                             <label for="matricula">Matrícula:</label>
                             <input type="text" id="matricula" name="matricula" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="data_matricula">Data de Matrícula (opcional):</label>
-                            <input type="date" id="data_matricula" name="data_matricula">
                         </div>
                     </div>
 
@@ -201,6 +188,8 @@ while ($row = $result->fetch_assoc()) {
                         </div>
                     </div>
 
+                    <input type="hidden" id="data_matricula_hidden" name="data_matricula_hidden">
+
                     <div class="form-buttons">
                         <button type="submit" class="btn">Cadastrar</button>
                     </div>
@@ -227,6 +216,19 @@ while ($row = $result->fetch_assoc()) {
                     $('#sidebar').removeClass('transition-enabled');
                     $('#content').removeClass('transition-enabled');
                 }, 300);
+            });
+
+            // Capturar data e hora do computador do usuário ao enviar o formulário
+            $('#cadastro-aluno-form').on('submit', function() {
+                var now = new Date();
+                var year = now.getFullYear();
+                var month = String(now.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
+                var day = String(now.getDate()).padStart(2, '0');
+                var hours = String(now.getHours()).padStart(2, '0');
+                var minutes = String(now.getMinutes()).padStart(2, '0');
+                var seconds = String(now.getSeconds()).padStart(2, '0');
+                var dataMatricula = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                $('#data_matricula_hidden').val(dataMatricula);
             });
         });
     </script>
