@@ -180,7 +180,7 @@ $cargo = $_SESSION["cargo"];
                             <p>Total de Turmas</p>
                         </div>
                         <div class="overview-box">
-                            <h3><?php echo $total_alunos; ?></h3>
+                            <h3 id="total-alunos"><?php echo $total_alunos; ?></h3>
                             <p>Total de Alunos</p>
                         </div>
                         <div class="overview-box">
@@ -306,7 +306,7 @@ $cargo = $_SESSION["cargo"];
                             </div>
                         </div>
                     </div>
-            <?php endif; ?>
+                <?php endif; ?>
         </div><!-- FIM CONTENT -->
     </section><!-- FIM MAIN -->
 
@@ -396,7 +396,20 @@ $cargo = $_SESSION["cargo"];
                                         <button class="btn close-modal-btn">Fechar</button>
                                     </div>
                                 `);
-                                $('.box-turmas-single').first().click(); // Recarrega a tabela
+                                // Recarregar a tabela
+                                $('.box-turmas-single').first().click();
+                                // Atualizar o total de alunos
+                                $.ajax({
+                                    url: 'fetch_totals.php',
+                                    method: 'GET',
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        $('#total-alunos').text(data.total_alunos);
+                                    },
+                                    error: function() {
+                                        console.log('Erro ao atualizar o total de alunos');
+                                    }
+                                });
                             } else {
                                 modalContent.html(`
                                     <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
