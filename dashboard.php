@@ -248,9 +248,50 @@ $cargo = $_SESSION["cargo"];
                     <!-- Modal de Detalhes do Aluno -->
                     <div id="modal-detalhes-aluno" class="modal">
                         <div class="modal-content">
-                            <span class="close-btn">×</span>
                             <h2>Detalhes do Aluno</h2>
-                            <div id="detalhes-aluno-content"></div>
+                            <div class="cadastro-form detalhes-form">
+                                <div class="form-row">
+                                    <div class="form-group foto-placeholder">
+                                        <label>Foto do Aluno</label>
+                                        <div class="foto-box">Foto não disponível</div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="detalhes-nome">Nome:</label>
+                                        <input type="text" id="detalhes-nome" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="detalhes-nascimento">Data de Nascimento:</label>
+                                        <input type="text" id="detalhes-nascimento" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="detalhes-matricula">Matrícula:</label>
+                                        <input type="text" id="detalhes-matricula" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="detalhes-data-matricula">Data de Matrícula:</label>
+                                        <input type="text" id="detalhes-data-matricula" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group full-width">
+                                        <label for="detalhes-pai">Nome do Pai:</label>
+                                        <input type="text" id="detalhes-pai" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group full-width">
+                                        <label for="detalhes-mae">Nome da Mãe:</label>
+                                        <input type="text" id="detalhes-mae" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-buttons">
+                                    <button class="btn close-modal-btn">Fechar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -265,7 +306,7 @@ $cargo = $_SESSION["cargo"];
                             </div>
                         </div>
                     </div>
-                <?php endif; ?>
+            <?php endif; ?>
         </div><!-- FIM CONTENT -->
     </section><!-- FIM MAIN -->
 
@@ -315,25 +356,23 @@ $cargo = $_SESSION["cargo"];
                     var matricula = $(this).data('matricula');
                     var nome = $(this).data('nome');
                     var nascimento = $(this).data('nascimento');
-                    var dataMatricula = $(this).data('matricula-data'); // Corrigido para data-matricula
+                    var dataMatricula = $(this).data('matricula-data');
                     var pai = $(this).data('pai');
                     var mae = $(this).data('mae');
 
-                    var content = `
-                        <p><strong>Nome:</strong> ${nome}</p>
-                        <p><strong>Data de Nascimento:</strong> ${nascimento}</p>
-                        <p><strong>Matrícula:</strong> ${matricula}</p>
-                        <p><strong>Data de Matrícula:</strong> ${dataMatricula}</p>
-                        <p><strong>Nome do Pai:</strong> ${pai}</p>
-                        <p><strong>Nome da Mãe:</strong> ${mae}</p>
-                    `;
-                    $('#detalhes-aluno-content').html(content);
+                    $('#detalhes-nome').val(nome);
+                    $('#detalhes-nascimento').val(nascimento);
+                    $('#detalhes-matricula').val(matricula);
+                    $('#detalhes-data-matricula').val(dataMatricula);
+                    $('#detalhes-pai').val(pai);
+                    $('#detalhes-mae').val(mae);
+
                     $('#modal-detalhes-aluno').css('display', 'block');
                 }
             });
 
             // Fechar modais
-            $('.close-btn, #cancel-delete-btn').click(function() {
+            $('.close-btn, #cancel-delete-btn, .close-modal-btn').click(function() {
                 $('.modal').css('display', 'none');
             });
 
