@@ -501,6 +501,44 @@ header { /* Cabeçalho da página */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     width: 80%;
     max-width: 500px;
+    text-align: center;
+}
+
+.modal-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.modal-title.success {
+    color: #28a745; /* Verde */
+}
+
+.modal-title.success i {
+    margin-right: 10px;
+}
+
+.modal-title.error {
+    color: #dc3545; /* Vermelho */
+}
+
+.modal-title.error i {
+    margin-right: 10px;
+}
+
+.modal-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+}
+
+.modal-buttons .btn {
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .close-btn {

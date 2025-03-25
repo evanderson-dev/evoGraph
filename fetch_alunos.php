@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
                 WHERE a.turma_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $turma_id);
-        $colspan = 7;
+        $colspan = 5; // Reduzido de 7 para 5
     }
 
     if (!$stmt) {
@@ -45,14 +45,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
             $data_nascimento = $row["data_nascimento"] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
             $data_matricula = $row["data_matricula"] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
 
-            $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula='" . htmlspecialchars($data_matricula) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "'>";
+            $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula-data='" . htmlspecialchars($data_matricula) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "'>";
             $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($data_matricula) . "</td>";
             if ($cargo !== "Professor") {
-                $html .= "<td>" . htmlspecialchars($row["nome_pai"] ?? 'N/A') . "</td>";
-                $html .= "<td>" . htmlspecialchars($row["nome_mae"] ?? 'N/A') . "</td>";
                 $html .= "<td>";
                 $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"editAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
                 $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"showDeleteModal('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-trash'></i></button>";
@@ -67,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     $stmt->close();
     echo $html;
 } else {
-    echo "<tr><td colspan='7'>Requisição inválida.</td></tr>";
+    echo "<tr><td colspan='5'>Requisição inválida.</td></tr>";
 }
 
 $conn->close();
