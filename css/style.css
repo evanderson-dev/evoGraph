@@ -276,6 +276,7 @@ header { /* Cabeçalho da página */
     /*font-weight: bold; /* Negrito no hover */
     color: #777; /* Cor do texto no hover */
     transition: color 0.3s ease, font-weight 0.3s ease; /* Transição para cor e negrito */
+    cursor: pointer; /* Transforma em ponteiro ao passar o mouse */
 }
 
 /*#############################################################*/
