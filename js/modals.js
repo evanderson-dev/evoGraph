@@ -1,4 +1,4 @@
-/* Responsabilidade: Gerencia os modais de detalhes e exclusão, além da função de edição. */
+/* Responsabilidade: Gerencia os modais de detalhes, exclusão e edição de alunos. */
 $(document).on('click', '.aluno-row', function(e) {
     if (!$(e.target).hasClass('action-btn') && !$(e.target).parent().hasClass('action-btn')) {
         var matricula = $(this).data('matricula');
@@ -44,9 +44,8 @@ window.showDeleteModal = function(matricula, turmaId) {
                             <button class="btn close-modal-btn">Fechar</button>
                         </div>
                     `);
-                    // Atualizar a tabela, total geral e quantidade da turma
                     $('#tabela-alunos').html(response.tabela_alunos);
-                    if (response.total_alunos !== undefined) { // Só atualizar se retornado (Diretor)
+                    if (response.total_alunos !== undefined) {
                         $('#total-alunos').text(response.total_alunos);
                     }
                     $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${response.quantidade_turma} alunos`);
@@ -79,7 +78,7 @@ window.showDeleteModal = function(matricula, turmaId) {
     });
 };
 
-// Função placeholder para Editar
+// Função placeholder para Editar (será substituída por ajax.js, mas mantida como fallback)
 window.editAluno = function(matricula) {
     alert('Editar aluno com matrícula: ' + matricula);
 };
@@ -93,7 +92,7 @@ window.openEditModal = function(matricula, turmaId) {
         dataType: 'json',
         success: function(response) {
             if (response.success) {
-                resetEditModal(); // Reseta o modal antes de abrir
+                resetEditModal(); // Reseta o modal e associa eventos
                 $('#edit-nome').val(response.aluno.nome);
                 $('#edit-sobrenome').val(response.aluno.sobrenome);
                 $('#edit-data_nascimento').val(response.aluno.data_nascimento);
@@ -114,7 +113,7 @@ window.openEditModal = function(matricula, turmaId) {
     });
 };
 
-// Função para resetar o modal de edição ao estado inicial
+// Função para resetar o modal de edição ao estado inicial e associar eventos
 function resetEditModal() {
     var modalContent = $('#modal-editar-aluno .modal-content');
     modalContent.html(`
@@ -170,6 +169,7 @@ function resetEditModal() {
             </form>
         </div>
     `);
+
     // Carrega as opções de turmas dinamicamente
     $.ajax({
         url: 'fetch_turmas.php',
@@ -178,7 +178,7 @@ function resetEditModal() {
         success: function(response) {
             if (response.success) {
                 var select = $('#edit-turma_id');
-                select.empty(); // Limpa opções existentes
+                select.empty();
                 select.append('<option value="">Selecione uma turma</option>');
                 response.turmas.forEach(function(turma) {
                     select.append(`<option value="${turma.id}">${turma.nome} (${turma.ano})</option>`);
@@ -189,64 +189,69 @@ function resetEditModal() {
             console.error('Erro ao carregar turmas.');
         }
     });
-};
 
-// Fechar o modal de edição
-$('#modal-editar-aluno .close-modal-btn').click(function() {
-    $('#modal-editar-aluno').css('display', 'none');
-});
+    // Associa o evento de submit ao formulário recém-criado
+    $('#editar-aluno-form').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        var turmaId = $('#modal-editar-aluno').data('turma-id');
+        var novaTurmaId = $('#edit-turma_id').val();
+        var formData = {
+            action: 'update',
+            matricula: $('#edit-matricula').val(),
+            nome: $('#edit-nome').val(),
+            sobrenome: $('#edit-sobrenome').val(),
+            data_nascimento: $('#edit-data_nascimento').val(),
+            data_matricula: $('#edit-data_matricula_hidden').val(),
+            nome_pai: $('#edit-nome_pai').val() || null,
+            nome_mae: $('#edit-nome_mae').val() || null,
+            turma_id: novaTurmaId,
+            turma_id_atual: turmaId
+        };
 
-// Processar o formulário de edição
-$('#editar-aluno-form').submit(function(e) {
-    e.preventDefault();
-    var turmaId = $('#modal-editar-aluno').data('turma-id');
-    var novaTurmaId = $('#edit-turma_id').val();
-    var formData = {
-        action: 'update',
-        matricula: $('#edit-matricula').val(),
-        nome: $('#edit-nome').val(),
-        sobrenome: $('#edit-sobrenome').val(),
-        data_nascimento: $('#edit-data_nascimento').val(),
-        data_matricula: $('#edit-data_matricula_hidden').val(),
-        nome_pai: $('#edit-nome_pai').val() || null,
-        nome_mae: $('#edit-nome_mae').val() || null,
-        turma_id: novaTurmaId,
-        turma_id_atual: turmaId
-    };
-
-    $.ajax({
-        url: 'delete_and_fetch.php',
-        method: 'POST',
-        data: formData,
-        dataType: 'json',
-        success: function(response) {
-            var modalContent = $('#modal-editar-aluno .modal-content');
-            if (response.success) {
-                modalContent.html(`
-                    <h2 class="modal-title success"><i class="fa-solid fa-check-circle"></i> Sucesso</h2>
-                    <p class="modal-message">Aluno atualizado com sucesso!</p>
-                    <div class="modal-buttons">
-                        <button class="btn close-modal-btn">Fechar</button>
-                    </div>
-                `);
-                // Atualiza a tabela
-                $('#tabela-alunos').html(response.tabela_alunos);
-                if (response.total_alunos !== undefined) {
-                    $('#total-alunos').text(response.total_alunos);
+        $.ajax({
+            url: 'delete_and_fetch.php',
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                var modalContent = $('#modal-editar-aluno .modal-content');
+                if (response.success) {
+                    modalContent.html(`
+                        <h2 class="modal-title success"><i class="fa-solid fa-check-circle"></i> Sucesso</h2>
+                        <p class="modal-message">Aluno atualizado com sucesso!</p>
+                        <div class="modal-buttons">
+                            <button class="btn close-modal-btn">Fechar</button>
+                        </div>
+                    `);
+                    $('#tabela-alunos').html(response.tabela_alunos);
+                    if (response.total_alunos !== undefined) {
+                        $('#total-alunos').text(response.total_alunos);
+                    }
+                    updateAllTurmas();
+                    setTimeout(function() {
+                        $('#modal-editar-aluno').css('display', 'none');
+                    }, 2000);
+                    $('#modal-editar-aluno .close-modal-btn').click(function() {
+                        $('#modal-editar-aluno').css('display', 'none');
+                    });
+                } else {
+                    modalContent.html(`
+                        <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
+                        <p class="modal-message">${response.message}</p>
+                        <div class="modal-buttons">
+                            <button class="btn close-modal-btn">Fechar</button>
+                        </div>
+                    `);
+                    $('#modal-editar-aluno .close-modal-btn').click(function() {
+                        $('#modal-editar-aluno').css('display', 'none');
+                    });
                 }
-                // Atualiza todas as caixas de turmas
-                updateAllTurmas();
-                // Fecha o modal após 2 segundos
-                setTimeout(function() {
-                    $('#modal-editar-aluno').css('display', 'none');
-                }, 2000);
-                $('#modal-editar-aluno .close-modal-btn').click(function() {
-                    $('#modal-editar-aluno').css('display', 'none');
-                });
-            } else {
+            },
+            error: function(xhr, status, error) {
+                var modalContent = $('#modal-editar-aluno .modal-content');
                 modalContent.html(`
                     <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
-                    <p class="modal-message">${response.message}</p>
+                    <p class="modal-message">Erro ao comunicar com o servidor: ${xhr.statusText}</p>
                     <div class="modal-buttons">
                         <button class="btn close-modal-btn">Fechar</button>
                     </div>
@@ -255,22 +260,14 @@ $('#editar-aluno-form').submit(function(e) {
                     $('#modal-editar-aluno').css('display', 'none');
                 });
             }
-        },
-        error: function() {
-            var modalContent = $('#modal-editar-aluno .modal-content');
-            modalContent.html(`
-                <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
-                <p class="modal-message">Erro ao comunicar com o servidor.</p>
-                <div class="modal-buttons">
-                    <button class="btn close-modal-btn">Fechar</button>
-                </div>
-            `);
-            $('#modal-editar-aluno .close-modal-btn').click(function() {
-                $('#modal-editar-aluno').css('display', 'none');
-            });
-        }
+        });
     });
-});
+
+    // Associa o evento de fechar ao botão "Cancelar"
+    $('#modal-editar-aluno .close-modal-btn').off('click').on('click', function() {
+        $('#modal-editar-aluno').css('display', 'none');
+    });
+}
 
 // Função para atualizar todas as caixas de turmas
 function updateAllTurmas() {
