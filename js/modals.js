@@ -83,3 +83,78 @@ window.showDeleteModal = function(matricula, turmaId) {
 window.editAluno = function(matricula) {
     alert('Editar aluno com matrícula: ' + matricula);
 };
+
+// Função para abrir o modal de edição e carregar os dados do aluno
+window.openEditModal = function(matricula, turmaId) {
+    $.ajax({
+        url: 'delete_and_fetch.php',
+        method: 'POST',
+        data: { action: 'fetch_aluno', matricula: matricula },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                $('#edit-nome').val(response.aluno.nome);
+                $('#edit-sobrenome').val(response.aluno.sobrenome);
+                $('#edit-data_nascimento').val(response.aluno.data_nascimento);
+                $('#edit-matricula').val(response.aluno.matricula);
+                $('#edit-nome_pai').val(response.aluno.nome_pai || '');
+                $('#edit-nome_mae').val(response.aluno.nome_mae || '');
+                $('#edit-turma_id').val(response.aluno.turma_id);
+                $('#edit-data_matricula_hidden').val(response.aluno.data_matricula);
+                $('#modal-editar-aluno').data('turma-id', turmaId); // Armazena a turma atual
+                $('#modal-editar-aluno').css('display', 'block');
+            } else {
+                alert('Erro ao carregar dados do aluno: ' + response.message);
+            }
+        },
+        error: function() {
+            alert('Erro ao comunicar com o servidor.');
+        }
+    });
+};
+
+// Fechar o modal de edição
+$('#modal-editar-aluno .close-modal-btn').click(function() {
+    $('#modal-editar-aluno').css('display', 'none');
+});
+
+// Processar o formulário de edição
+$('#editar-aluno-form').submit(function(e) {
+    e.preventDefault();
+    var turmaId = $('#modal-editar-aluno').data('turma-id');
+    var formData = {
+        action: 'update',
+        matricula: $('#edit-matricula').val(),
+        nome: $('#edit-nome').val(),
+        sobrenome: $('#edit-sobrenome').val(),
+        data_nascimento: $('#edit-data_nascimento').val(),
+        data_matricula: $('#edit-data_matricula_hidden').val(),
+        nome_pai: $('#edit-nome_pai').val() || null,
+        nome_mae: $('#edit-nome_mae').val() || null,
+        turma_id: $('#edit-turma_id').val(),
+        turma_id_atual: turmaId
+    };
+
+    $.ajax({
+        url: 'delete_and_fetch.php',
+        method: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                alert('Aluno atualizado com sucesso!');
+                $('#modal-editar-aluno').css('display', 'none');
+                $('#tabela-alunos').html(response.tabela_alunos);
+                if (response.total_alunos !== undefined) {
+                    $('#total-alunos').text(response.total_alunos);
+                }
+                $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${response.quantidade_turma} alunos`);
+            } else {
+                alert('Erro ao atualizar aluno: ' + response.message);
+            }
+        },
+        error: function() {
+            alert('Erro ao salvar as alterações.');
+        }
+    });
+});

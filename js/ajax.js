@@ -22,13 +22,22 @@ function loadTurma(turmaId) {
     });
 }
 
+// Função para abrir o modal de edição (chamada pelo botão na tabela)
+window.editAluno = function(matricula) {
+    var turmaId = $('.box-turmas-single.active').data('turma-id') || $('#tabela-alunos tr[data-matricula="' + matricula + '"]').data('turma-id');
+    openEditModal(matricula, turmaId); // Chama a função do modals.js
+};
+
 $(document).ready(function() {
     // Clique nas turmas
     $('.box-turmas-single').click(function() {
+        $('.box-turmas-single').removeClass('active'); // Remove a classe active de todas as turmas
+        $(this).addClass('active'); // Adiciona a classe active à turma clicada
         var turmaId = $(this).data('turma-id');
         loadTurma(turmaId);
     });
 
+    // Carrega a primeira turma automaticamente ao abrir o dashboard
     if ($('.box-turmas-single').length > 0) {
         $('.box-turmas-single').first().click();
     }

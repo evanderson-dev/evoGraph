@@ -11,12 +11,58 @@ require_once 'db_connection.php';
 $cargo = $_SESSION["cargo"];
 $funcionario_id = $_SESSION["funcionario_id"];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
-    $turma_id = $_POST['turma_id'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $turma_id = isset($_POST['turma_id']) ? $_POST['turma_id'] : null;
     $matricula = isset($_POST['matricula']) ? $_POST['matricula'] : null;
+    $action = isset($_POST['action']) ? $_POST['action'] : null;
+
+    // Ação para buscar dados de um aluno específico (para o modal de edição)
+    if ($action === 'fetch_aluno' && $matricula && ($cargo === "Diretor" || $cargo === "Coordenador")) {
+        $sql = "SELECT nome, sobrenome, data_nascimento, matricula, data_matricula, nome_pai, nome_mae, turma_id 
+                FROM alunos WHERE matricula = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $matricula);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            echo json_encode(['success' => true, 'aluno' => $row]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Aluno não encontrado.']);
+        }
+        $stmt->close();
+        $conn->close();
+        exit;
+    }
+
+    // Ação de atualização (edição do aluno)
+    if ($action === 'update' && $matricula && ($cargo === "Diretor" || $cargo === "Coordenador")) {
+        $nome = $_POST['nome'];
+        $sobrenome = $_POST['sobrenome'];
+        $data_nascimento = $_POST['data_nascimento'];
+        $data_matricula = $_POST['data_matricula_hidden']; // Usamos o campo hidden como no cadastro
+        $nome_pai = $_POST['nome_pai'] ?: null;
+        $nome_mae = $_POST['nome_mae'] ?: null;
+        $novo_turma_id = $_POST['turma_id'];
+
+        $sql = "UPDATE alunos SET nome = ?, sobrenome = ?, data_nascimento = ?, data_matricula = ?, nome_pai = ?, nome_mae = ?, turma_id = ? WHERE matricula = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssssis", $nome, $sobrenome, $data_nascimento, $data_matricula, $nome_pai, $nome_mae, $novo_turma_id, $matricula);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        if (!$success) {
+            echo json_encode(['success' => false, 'message' => 'Erro ao atualizar aluno: ' . $conn->error]);
+            $conn->close();
+            exit;
+        }
+    } elseif ($action === 'update' && $cargo !== "Diretor" && $cargo !== "Coordenador") {
+        echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
+        $conn->close();
+        exit;
+    }
 
     // Exclusão (apenas para Diretor)
-    if ($matricula && $cargo === "Diretor") {
+    if ($matricula && $action === "delete" && $cargo === "Diretor") {
         $sql = "DELETE FROM alunos WHERE matricula = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $matricula);
@@ -28,82 +74,91 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
             $conn->close();
             exit;
         }
-    } elseif ($matricula && $cargo !== "Diretor") {
+    } elseif ($matricula && $action === "delete" && $cargo !== "Diretor") {
         echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
         $conn->close();
         exit;
     }
 
-    // Buscar o total de alunos (apenas Diretor vê isso)
-    $total_alunos = null;
-    if ($cargo === "Diretor") {
-        $sql = "SELECT COUNT(*) as total_alunos FROM alunos";
-        $total_alunos = $conn->query($sql)->fetch_assoc()['total_alunos'];
-    }
+    // Após exclusão ou atualização, ou apenas carregamento da tabela
+    if ($turma_id) {
+        // Buscar o total de alunos (apenas Diretor vê isso)
+        $total_alunos = null;
+        if ($cargo === "Diretor") {
+            $sql = "SELECT COUNT(*) as total_alunos FROM alunos";
+            $total_alunos = $conn->query($sql)->fetch_assoc()['total_alunos'];
+        }
 
-    // Buscar a quantidade de alunos na turma
-    $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $turma_id);
-    $stmt->execute();
-    $quantidade = $stmt->get_result()->fetch_assoc()['quantidade'];
-    $stmt->close();
-
-    // Buscar os dados da tabela de alunos da turma
-    if ($cargo === "Professor") {
-        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae 
-                FROM alunos a 
-                JOIN turmas t ON a.turma_id = t.id 
-                WHERE t.id = ? AND t.professor_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $turma_id, $funcionario_id);
-    } else { // Diretor
-        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae 
-                FROM alunos a 
-                WHERE a.turma_id = ?";
+        // Buscar a quantidade de alunos na turma
+        $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $turma_id);
-    }
-    $stmt->execute();
-    $result = $stmt->get_result();
+        $stmt->execute();
+        $quantidade = $stmt->get_result()->fetch_assoc()['quantidade'];
+        $stmt->close();
 
-    $html = '';
-    $colspan = ($cargo === "Professor") ? 4 : 5;
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $data_nascimento = $row["data_nascimento"] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
-            $data_matricula = $row["data_matricula"] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
-            $data_matricula_com_hora = $row["data_matricula"] ? date("d/m/Y H:i", strtotime($row["data_matricula"])) : 'N/A';
-
-            $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-turma-id='" . htmlspecialchars($turma_id) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula-data='" . htmlspecialchars($data_matricula_com_hora) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "'>";
-            $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
-            $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
-            $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
-            $html .= "<td>" . htmlspecialchars($data_matricula) . "</td>";
-            if ($cargo === "Diretor") {
-                $html .= "<td>";
-                $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"editAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
-                $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"showDeleteModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($turma_id) . "')\"><i class='fa-solid fa-trash'></i></button>";
-                $html .= "</td>";
-            }
-            $html .= "</tr>";
+        // Buscar os dados da tabela de alunos da turma
+        if ($cargo === "Professor") {
+            $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome, f.nome AS professor_nome, f.sobrenome AS professor_sobrenome 
+                    FROM alunos a 
+                    JOIN turmas t ON a.turma_id = t.id 
+                    LEFT JOIN funcionarios f ON t.professor_id = f.id 
+                    WHERE t.id = ? AND t.professor_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ii", $turma_id, $funcionario_id);
+        } else { // Diretor ou Coordenador
+            $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome, f.nome AS professor_nome, f.sobrenome AS professor_sobrenome 
+                    FROM alunos a 
+                    JOIN turmas t ON a.turma_id = t.id 
+                    LEFT JOIN funcionarios f ON t.professor_id = f.id 
+                    WHERE a.turma_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $turma_id);
         }
-    } else {
-        $html .= "<tr><td colspan='$colspan'>Nenhum aluno cadastrado nesta turma.</td></tr>";
-    }
-    $stmt->close();
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    // Retornar todos os dados em JSON
-    $response = [
-        'success' => true,
-        'message' => $matricula ? 'Aluno excluído com sucesso!' : 'Dados carregados com sucesso.',
-        'quantidade_turma' => $quantidade,
-        'tabela_alunos' => $html
-    ];
-    if ($cargo === "Diretor") {
-        $response['total_alunos'] = $total_alunos;
+        $html = '';
+        $colspan = ($cargo === "Professor") ? 4 : 5;
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $data_nascimento = $row["data_nascimento"] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
+                $data_matricula = $row["data_matricula"] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
+                $data_matricula_com_hora = $row["data_matricula"] ? date("d/m/Y H:i", strtotime($row["data_matricula"])) : 'N/A';
+                $professor = $row['professor_nome'] ? htmlspecialchars($row['professor_nome'] . " " . $row['sobrenome']) : 'Sem professor';
+
+                $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-turma-id='" . htmlspecialchars($row['turma_id']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula-data='" . htmlspecialchars($data_matricula_com_hora) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "' data-turma-nome='" . htmlspecialchars($row['turma_nome']) . "' data-professor='" . $professor . "'>";
+                $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
+                $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
+                $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
+                $html .= "<td>" . htmlspecialchars($data_matricula) . "</td>";
+                if ($cargo === "Diretor") {
+                    $html .= "<td>";
+                    $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"editAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
+                    $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"showDeleteModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($turma_id) . "')\"><i class='fa-solid fa-trash'></i></button>";
+                    $html .= "</td>";
+                }
+                $html .= "</tr>";
+            }
+        } else {
+            $html .= "<tr><td colspan='$colspan'>Nenhum aluno cadastrado nesta turma.</td></tr>";
+        }
+        $stmt->close();
+
+        // Retornar todos os dados em JSON
+        $response = [
+            'success' => true,
+            'message' => $matricula ? ($action === "delete" ? 'Aluno excluído com sucesso!' : 'Aluno atualizado com sucesso!') : 'Dados carregados com sucesso.',
+            'quantidade_turma' => $quantidade,
+            'tabela_alunos' => $html
+        ];
+        if ($cargo === "Diretor") {
+            $response['total_alunos'] = $total_alunos;
+        }
+        echo json_encode($response);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Turma não especificada.']);
     }
-    echo json_encode($response);
 } else {
     echo json_encode(['success' => false, 'message' => 'Requisição inválida.']);
 }
