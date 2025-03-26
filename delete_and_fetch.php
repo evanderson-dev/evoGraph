@@ -47,19 +47,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
 
         $sql = "UPDATE alunos SET nome = ?, sobrenome = ?, data_nascimento = ?, data_matricula = ?, nome_pai = ?, nome_mae = ?, turma_id = ? WHERE matricula = ?";
         $stmt = $conn->prepare($sql);
+
+        if (!$stmt) {
+            echo json_encode(['success' => false, 'message' => 'Erro na preparação da consulta: ' . $conn->error]);
+            $conn->close();
+            exit;
+        }
+
         $stmt->bind_param("ssssssis", $nome, $sobrenome, $data_nascimento, $data_matricula, $nome_pai, $nome_mae, $novo_turma_id, $matricula);
         $success = $stmt->execute();
         $stmt->close();
 
         if (!$success) {
-            echo json_encode(['success' => false, 'message' => 'Erro ao atualizar aluno: ' . $conn->error]);
+            echo json_encode(['success' => false, 'message' => 'Erro ao executar a consulta: ' . $conn->error]);
             $conn->close();
             exit;
         }
-    } elseif ($matricula && $action === "update" && $cargo !== "Diretor" && $cargo !== "Coordenador") {
-        echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
-        $conn->close();
-        exit;
     }
 
     // Buscar o total de alunos (apenas Diretor vê isso)
