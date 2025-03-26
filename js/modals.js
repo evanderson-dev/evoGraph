@@ -141,20 +141,58 @@ $('#editar-aluno-form').submit(function(e) {
         data: formData,
         dataType: 'json',
         success: function(response) {
+            var modalContent = $('#modal-editar-aluno .modal-content');
             if (response.success) {
-                alert('Aluno atualizado com sucesso!');
-                $('#modal-editar-aluno').css('display', 'none');
+                // Substitui o conteúdo do modal por uma mensagem de sucesso
+                modalContent.html(`
+                    <h2 class="modal-title success"><i class="fa-solid fa-check-circle"></i> Sucesso</h2>
+                    <p class="modal-message">Aluno atualizado com sucesso!</p>
+                    <div class="modal-buttons">
+                        <button class="btn close-modal-btn">Fechar</button>
+                    </div>
+                `);
+                // Atualiza a tabela e as turmas
                 $('#tabela-alunos').html(response.tabela_alunos);
                 if (response.total_alunos !== undefined) {
                     $('#total-alunos').text(response.total_alunos);
                 }
                 $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${response.quantidade_turma} alunos`);
+                
+                // Fecha o modal automaticamente após 2 segundos
+                setTimeout(function() {
+                    $('#modal-editar-aluno').css('display', 'none');
+                }, 2000);
+                
+                // Reassocia o evento de fechar ao novo botão
+                $('#modal-editar-aluno .close-modal-btn').click(function() {
+                    $('#modal-editar-aluno').css('display', 'none');
+                });
             } else {
-                alert('Erro ao atualizar aluno: ' + response.message);
+                // Exibe erro no mesmo modal
+                modalContent.html(`
+                    <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
+                    <p class="modal-message">${response.message}</p>
+                    <div class="modal-buttons">
+                        <button class="btn close-modal-btn">Fechar</button>
+                    </div>
+                `);
+                $('#modal-editar-aluno .close-modal-btn').click(function() {
+                    $('#modal-editar-aluno').css('display', 'none');
+                });
             }
         },
         error: function() {
-            alert('Erro ao salvar as alterações.');
+            var modalContent = $('#modal-editar-aluno .modal-content');
+            modalContent.html(`
+                <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
+                <p class="modal-message">Erro ao comunicar com o servidor.</p>
+                <div class="modal-buttons">
+                    <button class="btn close-modal-btn">Fechar</button>
+                </div>
+            `);
+            $('#modal-editar-aluno .close-modal-btn').click(function() {
+                $('#modal-editar-aluno').css('display', 'none');
+            });
         }
     });
 });
