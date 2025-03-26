@@ -252,7 +252,7 @@ $cargo = $_SESSION["cargo"];
     <div id="modal-detalhes-aluno" class="modal">
         <div class="modal-content">
             <h2>Detalhes do Aluno</h2>
-            <div class="cadastro-form detalhes-form">
+            <div class="cadastro-form detalhes-form" id="detalhes-form">
                 <div class="form-row">
                     <div class="form-group foto-placeholder">
                         <label>Foto do Aluno</label>
@@ -280,6 +280,16 @@ $cargo = $_SESSION["cargo"];
                     </div>
                 </div>
                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="detalhes-turma">Turma:</label>
+                        <input type="text" id="detalhes-turma" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="detalhes-professor">Professor:</label>
+                        <input type="text" id="detalhes-professor" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
                     <div class="form-group full-width">
                         <label for="detalhes-pai">Nome do Pai:</label>
                         <input type="text" id="detalhes-pai" readonly>
@@ -292,6 +302,9 @@ $cargo = $_SESSION["cargo"];
                     </div>
                 </div>
                 <div class="form-buttons">
+                    <?php if ($cargo === "Diretor" || $cargo === "Coordenador"): ?>
+                        <button class="btn" id="edit-aluno-btn">Editar</button>
+                    <?php endif; ?>
                     <button class="btn close-modal-btn">Fechar</button>
                 </div>
             </div>

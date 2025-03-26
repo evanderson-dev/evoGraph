@@ -14,9 +14,10 @@ $funcionario_id = $_SESSION["funcionario_id"];
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     $turma_id = $_POST['turma_id'];
     $matricula = isset($_POST['matricula']) ? $_POST['matricula'] : null;
+    $action = isset($_POST['action']) ? $_POST['action'] : null;
 
     // Exclusão (apenas para Diretor)
-    if ($matricula && $cargo === "Diretor") {
+    if ($matricula && $action === "delete" && $cargo === "Diretor") {
         $sql = "DELETE FROM alunos WHERE matricula = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $matricula);
@@ -28,7 +29,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
             $conn->close();
             exit;
         }
-    } elseif ($matricula && $cargo !== "Diretor") {
+    } elseif ($matricula && $action === "delete" && $cargo !== "Diretor") {
+        echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
+        $conn->close();
+        exit;
+    }
+
+    // Edição (Diretor ou Coordenador)
+    if ($matricula && $action === "update" && ($cargo === "Diretor" || $cargo === "Coordenador")) {
+        $nome = $_POST['nome'];
+        $sobrenome = $_POST['sobrenome'];
+        $data_nascimento = $_POST['data_nascimento'];
+        $data_matricula = $_POST['data_matricula'];
+        $nome_pai = $_POST['nome_pai'];
+        $nome_mae = $_POST['nome_mae'];
+        $novo_turma_id = $_POST['turma_id_nova'];
+
+        $sql = "UPDATE alunos SET nome = ?, sobrenome = ?, data_nascimento = ?, data_matricula = ?, nome_pai = ?, nome_mae = ?, turma_id = ? WHERE matricula = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssssis", $nome, $sobrenome, $data_nascimento, $data_matricula, $nome_pai, $nome_mae, $novo_turma_id, $matricula);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        if (!$success) {
+            echo json_encode(['success' => false, 'message' => 'Erro ao atualizar aluno: ' . $conn->error]);
+            $conn->close();
+            exit;
+        }
+    } elseif ($matricula && $action === "update" && $cargo !== "Diretor" && $cargo !== "Coordenador") {
         echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
         $conn->close();
         exit;
@@ -51,15 +79,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
 
     // Buscar os dados da tabela de alunos da turma
     if ($cargo === "Professor") {
-        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae 
+        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome, f.nome AS professor_nome, f.sobrenome AS professor_sobrenome 
                 FROM alunos a 
                 JOIN turmas t ON a.turma_id = t.id 
+                LEFT JOIN funcionarios f ON t.professor_id = f.id 
                 WHERE t.id = ? AND t.professor_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $turma_id, $funcionario_id);
-    } else { // Diretor
-        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae 
+    } else { // Diretor ou Coordenador
+        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome, f.nome AS professor_nome, f.sobrenome AS professor_sobrenome 
                 FROM alunos a 
+                JOIN turmas t ON a.turma_id = t.id 
+                LEFT JOIN funcionarios f ON t.professor_id = f.id 
                 WHERE a.turma_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $turma_id);
@@ -74,8 +105,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
             $data_nascimento = $row["data_nascimento"] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
             $data_matricula = $row["data_matricula"] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
             $data_matricula_com_hora = $row["data_matricula"] ? date("d/m/Y H:i", strtotime($row["data_matricula"])) : 'N/A';
+            $professor = $row['professor_nome'] ? htmlspecialchars($row['professor_nome'] . " " . $row['professor_sobrenome']) : 'Sem professor';
 
-            $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-turma-id='" . htmlspecialchars($turma_id) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula-data='" . htmlspecialchars($data_matricula_com_hora) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "'>";
+            $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-turma-id='" . htmlspecialchars($row['turma_id']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula-data='" . htmlspecialchars($data_matricula_com_hora) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "' data-turma-nome='" . htmlspecialchars($row['turma_nome']) . "' data-professor='" . $professor . "'>";
             $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
@@ -96,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     // Retornar todos os dados em JSON
     $response = [
         'success' => true,
-        'message' => $matricula ? 'Aluno excluído com sucesso!' : 'Dados carregados com sucesso.',
+        'message' => $matricula ? ($action === "delete" ? 'Aluno excluído com sucesso!' : 'Aluno atualizado com sucesso!') : 'Dados carregados com sucesso.',
         'quantidade_turma' => $quantidade,
         'tabela_alunos' => $html
     ];
