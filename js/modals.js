@@ -19,8 +19,8 @@ $(document).on('click', '.aluno-row', function(e) {
     }
 });
 
-// Fechar modais (mantido como fallback global)
-$('.close-btn, #cancel-delete-btn, .close-modal-btn').click(function() {
+// Fechar modais com delegação de eventos
+$(document).on('click', '.close-btn, #cancel-delete-btn, .close-modal-btn', function() {
     $('.modal').css('display', 'none');
 });
 
@@ -78,9 +78,7 @@ window.showDeleteModal = function(matricula, turmaId) {
                         </div>
                     `);
                 }
-                $('.close-modal-btn').off('click').on('click', function() {
-                    $('#modal-confirm-delete').css('display', 'none');
-                });
+                // Evento de fechar já é tratado pelo $(document).on('click', ...)
             },
             error: function(xhr, status, error) {
                 $('#modal-confirm-delete .modal-content').html(`
@@ -90,9 +88,7 @@ window.showDeleteModal = function(matricula, turmaId) {
                         <button class="btn close-modal-btn">Fechar</button>
                     </div>
                 `);
-                $('.close-modal-btn').off('click').on('click', function() {
-                    $('#modal-confirm-delete').css('display', 'none');
-                });
+                // Evento de fechar já é tratado pelo $(document).on('click', ...)
             }
         });
     });
@@ -253,9 +249,6 @@ function resetEditModal() {
                     setTimeout(function() {
                         $('#modal-editar-aluno').css('display', 'none');
                     }, 2000);
-                    $('#modal-editar-aluno .close-modal-btn').click(function() {
-                        $('#modal-editar-aluno').css('display', 'none');
-                    });
                 } else {
                     modalContent.html(`
                         <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
@@ -264,10 +257,8 @@ function resetEditModal() {
                             <button class="btn close-modal-btn">Fechar</button>
                         </div>
                     `);
-                    $('#modal-editar-aluno .close-modal-btn').click(function() {
-                        $('#modal-editar-aluno').css('display', 'none');
-                    });
                 }
+                // Evento de fechar já é tratado pelo $(document).on('click', ...)
             },
             error: function(xhr, status, error) {
                 var modalContent = $('#modal-editar-aluno .modal-content');
@@ -278,9 +269,7 @@ function resetEditModal() {
                         <button class="btn close-modal-btn">Fechar</button>
                     </div>
                 `);
-                $('#modal-editar-aluno .close-modal-btn').click(function() {
-                    $('#modal-editar-aluno').css('display', 'none');
-                });
+                // Evento de fechar já é tratado pelo $(document).on('click', ...)
             }
         });
     });
