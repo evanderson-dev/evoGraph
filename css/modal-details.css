@@ -1,0 +1,48 @@
+/* Estilos específicos para o modal de detalhes do aluno */
+#modal-detalhes-aluno .detalhes-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+#modal-detalhes-aluno .foto-container {
+    flex: 0 0 auto;
+}
+
+#modal-detalhes-aluno #detalhes-foto {
+    width: 120px;  /* Proporção 3x4 */
+    height: 160px; /* Proporção 3x4 */
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#modal-detalhes-aluno .info-container {
+    flex: 1;
+}
+
+#modal-detalhes-aluno .form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#modal-detalhes-aluno .form-group {
+    flex: 1;
+}
+
+#modal-detalhes-aluno .form-group.full-width {
+    flex: 100%;
+}
+
+#modal-detalhes-aluno .form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#modal-detalhes-aluno .form-group input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

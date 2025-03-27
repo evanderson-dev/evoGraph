@@ -19,10 +19,12 @@ $cargo = $_SESSION["cargo"];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/modal-details.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph Dashboard - <?php echo htmlspecialchars($cargo); ?></title>
 </head>
 <body>
+    <!-- HEADER -->
     <header>
         <div class="info-header">
             <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
@@ -36,9 +38,11 @@ $cargo = $_SESSION["cargo"];
             <i class="fa-solid fa-user"></i>
             <img src="https://avatars.githubusercontent.com/u/94180306?s=40&v=4" alt="User" class="user-icon">
         </div>
-    </header><!-- FIM HEADER -->
+    </header>
+    <!-- FIM HEADER -->
 
     <section class="main">
+        <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i> Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
@@ -50,7 +54,8 @@ $cargo = $_SESSION["cargo"];
             <?php endif; ?>
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i> Sair</a>
             <div class="separator"></div><br>
-        </div><!-- FIM SIDEBAR -->
+        </div>
+        <!-- FIM SIDEBAR -->
 
         <div class="content" id="content">
             <div class="titulo-secao">
@@ -250,48 +255,51 @@ $cargo = $_SESSION["cargo"];
     <!-- Modal de Detalhes do Aluno (compartilhado entre cargos) -->
     <div id="modal-detalhes-aluno" class="modal">
         <div class="modal-content">
+            <span class="close-btn">×</span>
             <h2>Detalhes do Aluno</h2>
-            <div class="cadastro-form detalhes-form">
-                <div class="form-row">
-                    <div class="form-group foto-placeholder">
-                        <label>Foto do Aluno</label>
-                        <div class="foto-box">Foto não disponível</div>
-                    </div>
+            <div class="detalhes-container">
+                <div class="foto-container">
+                    <img id="detalhes-foto" src="path/to/default-photo.jpg" alt="Foto do Aluno">
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="detalhes-nome">Nome:</label>
-                        <input type="text" id="detalhes-nome" readonly>
+                <div class="info-container">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="detalhes-nome">Nome:</label>
+                            <input type="text" id="detalhes-nome" readonly>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="detalhes-nascimento">Data de Nascimento:</label>
-                        <input type="text" id="detalhes-nascimento" readonly>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="detalhes-matricula">Matrícula:</label>
+                            <input type="text" id="detalhes-matricula" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="detalhes-nascimento">Data de Nascimento:</label>
+                            <input type="text" id="detalhes-nascimento" readonly>
+                        </div>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="detalhes-matricula">Matrícula:</label>
-                        <input type="text" id="detalhes-matricula" readonly>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="detalhes-data-matricula">Data de Matrícula:</label>
+                            <input type="text" id="detalhes-data-matricula" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="detalhes-turma">Turma:</label>
+                            <input type="text" id="detalhes-turma" readonly>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="detalhes-data-matricula">Data de Matrícula:</label>
-                        <input type="text" id="detalhes-data-matricula" readonly>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="detalhes-pai">Nome do Pai:</label>
+                            <input type="text" id="detalhes-pai" readonly>
+                        </div>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="detalhes-pai">Nome do Pai:</label>
-                        <input type="text" id="detalhes-pai" readonly>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="detalhes-mae">Nome da Mãe:</label>
+                            <input type="text" id="detalhes-mae" readonly>
+                        </div>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="detalhes-mae">Nome da Mãe:</label>
-                        <input type="text" id="detalhes-mae" readonly>
-                    </div>
-                </div>
-                <div class="form-buttons">
-                    <button class="btn close-modal-btn">Fechar</button>
                 </div>
             </div>
         </div>

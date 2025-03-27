@@ -17,9 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $action = isset($_POST['action']) ? $_POST['action'] : null;
 
     // Ação para buscar dados de um aluno específico (para o modal de edição e detalhes)
-    if ($action === 'fetch_aluno' && $matricula) { // Removida a restrição de cargo
-        $sql = "SELECT nome, sobrenome, data_nascimento, matricula, data_matricula, nome_pai, nome_mae, turma_id 
-                FROM alunos WHERE matricula = ?";
+    if ($action === 'fetch_aluno' && $matricula) {
+        $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome 
+                FROM alunos a 
+                LEFT JOIN turmas t ON a.turma_id = t.id 
+                WHERE a.matricula = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $matricula);
         $stmt->execute();

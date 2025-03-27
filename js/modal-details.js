@@ -14,6 +14,7 @@ $(document).on('click', '.aluno-row', function(e) {
                     var nomeCompleto = aluno.nome + " " + aluno.sobrenome;
                     var dataNascimento = aluno.data_nascimento ? new Date(aluno.data_nascimento).toLocaleDateString('pt-BR') : 'N/A';
                     var dataMatricula = aluno.data_matricula ? new Date(aluno.data_matricula).toLocaleDateString('pt-BR') : 'N/A';
+                    var turmaNome = aluno.turma_nome || 'Sem turma';
 
                     $('#detalhes-nome').val(nomeCompleto);
                     $('#detalhes-nascimento').val(dataNascimento);
@@ -21,6 +22,14 @@ $(document).on('click', '.aluno-row', function(e) {
                     $('#detalhes-data-matricula').val(dataMatricula);
                     $('#detalhes-pai').val(aluno.nome_pai || 'N/A');
                     $('#detalhes-mae').val(aluno.nome_mae || 'N/A');
+                    $('#detalhes-turma').val(turmaNome);
+
+                    // Se houver uma foto, ajustar a src (assumindo que o backend retorna um caminho ou URL)
+                    if (aluno.foto) {
+                        $('#detalhes-foto').attr('src', aluno.foto);
+                    } else {
+                        $('#detalhes-foto').attr('src', 'path/to/default-photo.jpg'); // Caminho para uma foto padrão
+                    }
 
                     $('#modal-detalhes-aluno').css('display', 'block');
                 } else {
