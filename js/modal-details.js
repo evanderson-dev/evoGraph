@@ -12,8 +12,8 @@ $(document).on('click', '.aluno-row', function(e) {
                 if (response.success) {
                     var aluno = response.aluno;
                     var nomeCompleto = aluno.nome + " " + aluno.sobrenome;
-                    var dataNascimento = aluno.data_nascimento ? new Date(aluno.data_nascimento).toLocaleDateString('pt-BR') : 'N/A';
-                    var dataMatricula = aluno.data_matricula ? new Date(aluno.data_matricula).toLocaleDateString('pt-BR') : 'N/A';
+                    var dataNascimento = aluno.data_nascimento; // Já vem como dd/mm/yyyy ou 'N/A'
+                    var dataMatricula = aluno.data_matricula;   // Já vem como dd/mm/yyyy ou 'N/A'
                     var turmaNome = aluno.turma_nome || 'Sem turma';
 
                     $('#detalhes-nome').val(nomeCompleto);

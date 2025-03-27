@@ -27,6 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
+            // Formatar as datas no backend
+            $row['data_nascimento'] = $row['data_nascimento'] ? date("d/m/Y", strtotime($row['data_nascimento'])) : 'N/A';
+            $row['data_matricula'] = $row['data_matricula'] ? date("d/m/Y", strtotime($row['data_matricula'])) : 'N/A';
             echo json_encode(['success' => true, 'aluno' => $row]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Aluno não encontrado.']);
