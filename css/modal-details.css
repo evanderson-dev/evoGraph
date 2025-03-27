@@ -1,34 +1,22 @@
 /* Estilos específicos para o modal de detalhes do aluno */
-#modal-detalhes-aluno .detalhes-container {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-}
-
-#modal-detalhes-aluno .foto-container {
-    flex: 0 0 auto;
-}
-
-#modal-detalhes-aluno #detalhes-foto {
-    width: 120px;  /* Proporção 3x4 */
-    height: 160px; /* Proporção 3x4 */
-    object-fit: cover;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#modal-detalhes-aluno .info-container {
-    flex: 1;
+#modal-detalhes-aluno .cadastro-form.detalhes-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
 }
 
 #modal-detalhes-aluno .form-row {
     display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+    gap: 20px;
 }
 
 #modal-detalhes-aluno .form-group {
     flex: 1;
+    min-width: 200px;
 }
 
 #modal-detalhes-aluno .form-group.full-width {
@@ -38,11 +26,58 @@
 #modal-detalhes-aluno .form-group label {
     display: block;
     margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
 }
 
 #modal-detalhes-aluno .form-group input {
     width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Foto do Aluno */
+#modal-detalhes-aluno .foto-placeholder {
+    flex: 0 0 auto;
+}
+
+#modal-detalhes-aluno .foto-placeholder .foto-box {
+    width: 120px;  /* Proporção 3x4 */
+    height: 160px; /* Proporção 3x4 */
+    background-color: #e9ecef;
+    border: 2px dashed #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 14px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#modal-detalhes-aluno .foto-placeholder .foto-box img#detalhes-foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Dados à direita da foto */
+#modal-detalhes-aluno .form-group.info-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Botões */
+#modal-detalhes-aluno .form-buttons {
+    text-align: right;
+    margin-top: 20px;
+}
+
+#modal-detalhes-aluno .form-buttons .btn {
+    padding: 8px 20px;
 }

@@ -24,11 +24,10 @@ $(document).on('click', '.aluno-row', function(e) {
                     $('#detalhes-mae').val(aluno.nome_mae || 'N/A');
                     $('#detalhes-turma').val(turmaNome);
 
-                    // Se houver uma foto, ajustar a src (assumindo que o backend retorna um caminho ou URL)
                     if (aluno.foto) {
                         $('#detalhes-foto').attr('src', aluno.foto);
                     } else {
-                        $('#detalhes-foto').attr('src', 'path/to/default-photo.jpg'); // Caminho para uma foto padrão
+                        $('#detalhes-foto').attr('src', 'path/to/default-photo.jpg');
                     }
 
                     $('#modal-detalhes-aluno').css('display', 'block');

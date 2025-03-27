@@ -255,51 +255,48 @@ $cargo = $_SESSION["cargo"];
     <!-- Modal de Detalhes do Aluno (compartilhado entre cargos) -->
     <div id="modal-detalhes-aluno" class="modal">
         <div class="modal-content">
-            <span class="close-btn">×</span>
             <h2>Detalhes do Aluno</h2>
-            <div class="detalhes-container">
-                <div class="foto-container">
-                    <img id="detalhes-foto" src="path/to/default-photo.jpg" alt="Foto do Aluno">
+            <div class="cadastro-form detalhes-form">
+                <div class="form-row">
+                    <div class="form-group foto-placeholder">
+                        <label>Foto do Aluno</label>
+                        <div class="foto-box">
+                            <img id="detalhes-foto" src="path/to/default-photo.jpg" alt="Foto do Aluno">
+                        </div>
+                    </div>
+                    <div class="form-group info-right">
+                        <label for="detalhes-nome">Nome:</label>
+                        <input type="text" id="detalhes-nome" readonly>
+                        <label for="detalhes-matricula">Matrícula:</label>
+                        <input type="text" id="detalhes-matricula" readonly>
+                        <label for="detalhes-turma">Turma:</label>
+                        <input type="text" id="detalhes-turma" readonly>
+                    </div>
                 </div>
-                <div class="info-container">
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="detalhes-nome">Nome:</label>
-                            <input type="text" id="detalhes-nome" readonly>
-                        </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="detalhes-nascimento">Data de Nascimento:</label>
+                        <input type="text" id="detalhes-nascimento" readonly>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="detalhes-matricula">Matrícula:</label>
-                            <input type="text" id="detalhes-matricula" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="detalhes-nascimento">Data de Nascimento:</label>
-                            <input type="text" id="detalhes-nascimento" readonly>
-                        </div>
+                    <div class="form-group">
+                        <label for="detalhes-data-matricula">Data de Matrícula:</label>
+                        <input type="text" id="detalhes-data-matricula" readonly>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="detalhes-data-matricula">Data de Matrícula:</label>
-                            <input type="text" id="detalhes-data-matricula" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="detalhes-turma">Turma:</label>
-                            <input type="text" id="detalhes-turma" readonly>
-                        </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="detalhes-pai">Nome do Pai:</label>
+                        <input type="text" id="detalhes-pai" readonly>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="detalhes-pai">Nome do Pai:</label>
-                            <input type="text" id="detalhes-pai" readonly>
-                        </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="detalhes-mae">Nome da Mãe:</label>
+                        <input type="text" id="detalhes-mae" readonly>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="detalhes-mae">Nome da Mãe:</label>
-                            <input type="text" id="detalhes-mae" readonly>
-                        </div>
-                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button class="btn close-modal-btn">Fechar</button>
                 </div>
             </div>
         </div>
