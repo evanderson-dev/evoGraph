@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Ação para buscar dados de um aluno específico (para o modal de edição e detalhes)
     if ($action === 'fetch_aluno' && $matricula) {
+        $context = isset($_POST['context']) ? $_POST['context'] : 'details'; // 'details' por padrão
         $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome 
                 FROM alunos a 
                 LEFT JOIN turmas t ON a.turma_id = t.id 
@@ -27,11 +28,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
-            // Log para depuração
-            error_log("Data matricula bruta: " . $row['data_matricula']);
-            $row['data_nascimento'] = $row['data_nascimento'] ? date("d/m/Y", strtotime($row['data_nascimento'])) : 'N/A';
-            $row['data_matricula'] = $row['data_matricula'] ? date("d/m/Y", strtotime($row['data_matricula'])) : 'N/A';
-            error_log("Data matricula formatada: " . $row['data_matricula']);
+            if ($context === 'edit') {
+                // Formato para input type="date" (yyyy-mm-dd)
+                $row['data_nascimento'] = $row['data_nascimento'] ?: 'N/A';
+                $row['data_matricula'] = $row['data_matricula'] ?: 'N/A';
+            } else {
+                // Formato para exibição (dd/mm/yyyy)
+                $row['data_nascimento'] = $row['data_nascimento'] ? date("d/m/Y", strtotime($row['data_nascimento'])) : 'N/A';
+                $row['data_matricula'] = $row['data_matricula'] ? date("d/m/Y", strtotime($row['data_matricula'])) : 'N/A';
+            }
             echo json_encode(['success' => true, 'aluno' => $row]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Aluno não encontrado.']);

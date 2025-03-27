@@ -82,19 +82,19 @@ window.openEditModal = function(matricula, turmaId) {
     $.ajax({
         url: 'delete_and_fetch.php',
         method: 'POST',
-        data: { action: 'fetch_aluno', matricula: matricula },
+        data: { action: 'fetch_aluno', matricula: matricula, context: 'edit' },
         dataType: 'json',
         success: function(response) {
             if (response.success) {
                 resetEditModal();
                 $('#edit-nome').val(response.aluno.nome);
                 $('#edit-sobrenome').val(response.aluno.sobrenome);
-                $('#edit-data_nascimento').val(response.aluno.data_nascimento);
+                $('#edit-data_nascimento').val(response.aluno.data_nascimento === 'N/A' ? '' : response.aluno.data_nascimento);
                 $('#edit-matricula').val(response.aluno.matricula);
                 $('#edit-nome_pai').val(response.aluno.nome_pai || '');
                 $('#edit-nome_mae').val(response.aluno.nome_mae || '');
                 $('#edit-turma_id').val(response.aluno.turma_id);
-                $('#edit-data_matricula_hidden').val(response.aluno.data_matricula || '');
+                $('#edit-data_matricula_hidden').val(response.aluno.data_matricula === 'N/A' ? '' : response.aluno.data_matricula);
                 $('#modal-editar-aluno').data('turma-id', turmaId);
                 $('#modal-editar-aluno').css('display', 'block');
 

@@ -6,12 +6,11 @@ $(document).on('click', '.aluno-row', function(e) {
         $.ajax({
             url: 'delete_and_fetch.php',
             method: 'POST',
-            data: { action: 'fetch_aluno', matricula: matricula },
+            data: { action: 'fetch_aluno', matricula: matricula, context: 'details' },
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
                     var aluno = response.aluno;
-                    console.log("Data matricula recebida: ", aluno.data_matricula); // Log para depuração
                     var nomeCompleto = aluno.nome + " " + aluno.sobrenome;
                     var dataNascimento = aluno.data_nascimento;
                     var dataMatricula = aluno.data_matricula;
