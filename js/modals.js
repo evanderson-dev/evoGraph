@@ -92,7 +92,7 @@ window.openEditModal = function(matricula, turmaId) {
         dataType: 'json',
         success: function(response) {
             if (response.success) {
-                resetEditModal(); // Reseta o modal e associa eventos
+                resetEditModal();
                 $('#edit-nome').val(response.aluno.nome);
                 $('#edit-sobrenome').val(response.aluno.sobrenome);
                 $('#edit-data_nascimento').val(response.aluno.data_nascimento);
@@ -100,8 +100,9 @@ window.openEditModal = function(matricula, turmaId) {
                 $('#edit-nome_pai').val(response.aluno.nome_pai || '');
                 $('#edit-nome_mae').val(response.aluno.nome_mae || '');
                 $('#edit-turma_id').val(response.aluno.turma_id);
-                $('#edit-data_matricula_hidden').val(response.aluno.data_matricula);
-                $('#modal-editar-aluno').data('turma-id', turmaId); // Armazena a turma atual
+                // Garantir que data_matricula seja preenchida corretamente
+                $('#edit-data_matricula_hidden').val(response.aluno.data_matricula || '');
+                $('#modal-editar-aluno').data('turma-id', turmaId);
                 $('#modal-editar-aluno').css('display', 'block');
             } else {
                 alert('Erro ao carregar dados do aluno: ' + response.message);
@@ -157,7 +158,6 @@ function resetEditModal() {
                         <label for="edit-turma_id">Turma:</label>
                         <select id="edit-turma_id" name="turma_id" required>
                             <option value="">Selecione uma turma</option>
-                            <!-- As opções serão preenchidas dinamicamente via fetch_turmas.php -->
                         </select>
                     </div>
                 </div>
@@ -201,7 +201,7 @@ function resetEditModal() {
             nome: $('#edit-nome').val(),
             sobrenome: $('#edit-sobrenome').val(),
             data_nascimento: $('#edit-data_nascimento').val(),
-            data_matricula: $('#edit-data_matricula_hidden').val(),
+            data_matricula: $('#edit-data_matricula_hidden').val() || null, // Garantir que seja enviado mesmo se vazio
             nome_pai: $('#edit-nome_pai').val() || null,
             nome_mae: $('#edit-nome_mae').val() || null,
             turma_id: novaTurmaId,

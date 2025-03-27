@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
+            // Garantir que data_matricula seja incluída, mesmo se NULL
             echo json_encode(['success' => true, 'aluno' => $row]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Aluno não encontrado.']);
@@ -39,10 +40,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nome = $_POST['nome'];
         $sobrenome = $_POST['sobrenome'];
         $data_nascimento = $_POST['data_nascimento'];
-        $data_matricula = $_POST['data_matricula_hidden']; // Usamos o campo hidden como no cadastro
+        $data_matricula = isset($_POST['data_matricula_hidden']) ? $_POST['data_matricula_hidden'] : null;
         $nome_pai = $_POST['nome_pai'] ?: null;
         $nome_mae = $_POST['nome_mae'] ?: null;
         $novo_turma_id = $_POST['turma_id'];
+
+        // Se data_matricula não foi enviada, manter o valor existente no banco
+        if ($data_matricula === null) {
+            $sql = "SELECT data_matricula FROM alunos WHERE matricula = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $matricula);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($row = $result->fetch_assoc()) {
+                $data_matricula = $row['data_matricula'];
+            }
+            $stmt->close();
+        }
 
         $sql = "UPDATE alunos SET nome = ?, sobrenome = ?, data_nascimento = ?, data_matricula = ?, nome_pai = ?, nome_mae = ?, turma_id = ? WHERE matricula = ?";
         $stmt = $conn->prepare($sql);
@@ -145,7 +159,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $stmt->close();
 
-        // Retornar todos os dados em JSON
         $response = [
             'success' => true,
             'message' => $matricula ? ($action === "delete" ? 'Aluno excluído com sucesso!' : 'Aluno atualizado com sucesso!') : 'Dados carregados com sucesso.',
