@@ -24,8 +24,22 @@ $('.close-btn, #cancel-delete-btn, .close-modal-btn').click(function() {
     $('.modal').css('display', 'none');
 });
 
+// Função para resetar o modal de exclusão ao estado inicial
+function resetDeleteModal() {
+    var modalContent = $('#modal-confirm-delete .modal-content');
+    modalContent.html(`
+        <h2 class="modal-title">Confirmar Exclusão</h2>
+        <p class="modal-message">Deseja realmente excluir o aluno com matrícula <span id="delete-matricula"></span>?</p>
+        <div class="modal-buttons">
+            <button class="btn" id="confirm-delete-btn">Confirmar</button>
+            <button class="btn" id="cancel-delete-btn">Cancelar</button>
+        </div>
+    `);
+}
+
 // Função para abrir modal de exclusão
 window.showDeleteModal = function(matricula, turmaId) {
+    resetDeleteModal(); // Reseta o modal antes de abrir
     $('#delete-matricula').text(matricula);
     $('#modal-confirm-delete').css('display', 'block');
     $('#confirm-delete-btn').off('click').on('click', function() {
@@ -33,7 +47,7 @@ window.showDeleteModal = function(matricula, turmaId) {
             url: 'delete_and_fetch.php',
             method: 'POST',
             data: { 
-                action: 'delete', // Adicionado explicitamente
+                action: 'delete',
                 matricula: matricula, 
                 turma_id: turmaId 
             },
