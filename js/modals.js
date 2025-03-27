@@ -32,7 +32,11 @@ window.showDeleteModal = function(matricula, turmaId) {
         $.ajax({
             url: 'delete_and_fetch.php',
             method: 'POST',
-            data: { matricula: matricula, turma_id: turmaId },
+            data: { 
+                action: 'delete', // Adicionado explicitamente
+                matricula: matricula, 
+                turma_id: turmaId 
+            },
             dataType: 'json',
             success: function(response) {
                 var modalContent = $('#modal-confirm-delete .modal-content');
@@ -62,10 +66,10 @@ window.showDeleteModal = function(matricula, turmaId) {
                     $('#modal-confirm-delete').css('display', 'none');
                 });
             },
-            error: function() {
+            error: function(xhr, status, error) {
                 $('#modal-confirm-delete .modal-content').html(`
                     <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
-                    <p class="modal-message">Erro ao comunicar com o servidor.</p>
+                    <p class="modal-message">Erro ao comunicar com o servidor: ${xhr.statusText}</p>
                     <div class="modal-buttons">
                         <button class="btn close-modal-btn">Fechar</button>
                     </div>
@@ -100,7 +104,6 @@ window.openEditModal = function(matricula, turmaId) {
                 $('#edit-nome_pai').val(response.aluno.nome_pai || '');
                 $('#edit-nome_mae').val(response.aluno.nome_mae || '');
                 $('#edit-turma_id').val(response.aluno.turma_id);
-                // Garantir que data_matricula seja preenchida corretamente
                 $('#edit-data_matricula_hidden').val(response.aluno.data_matricula || '');
                 $('#modal-editar-aluno').data('turma-id', turmaId);
                 $('#modal-editar-aluno').css('display', 'block');
@@ -170,7 +173,6 @@ function resetEditModal() {
         </div>
     `);
 
-    // Carrega as opções de turmas dinamicamente
     $.ajax({
         url: 'fetch_turmas.php',
         method: 'GET',
@@ -190,7 +192,6 @@ function resetEditModal() {
         }
     });
 
-    // Associa o evento de submit ao formulário recém-criado
     $('#editar-aluno-form').off('submit').on('submit', function(e) {
         e.preventDefault();
         var turmaId = $('#modal-editar-aluno').data('turma-id');
@@ -201,7 +202,7 @@ function resetEditModal() {
             nome: $('#edit-nome').val(),
             sobrenome: $('#edit-sobrenome').val(),
             data_nascimento: $('#edit-data_nascimento').val(),
-            data_matricula: $('#edit-data_matricula_hidden').val() || null, // Garantir que seja enviado mesmo se vazio
+            data_matricula: $('#edit-data_matricula_hidden').val() || null,
             nome_pai: $('#edit-nome_pai').val() || null,
             nome_mae: $('#edit-nome_mae').val() || null,
             turma_id: novaTurmaId,
@@ -263,7 +264,6 @@ function resetEditModal() {
         });
     });
 
-    // Associa o evento de fechar ao botão "Cancelar"
     $('#modal-editar-aluno .close-modal-btn').off('click').on('click', function() {
         $('#modal-editar-aluno').css('display', 'none');
     });
