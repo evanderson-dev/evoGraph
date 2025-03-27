@@ -16,8 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $matricula = isset($_POST['matricula']) ? $_POST['matricula'] : null;
     $action = isset($_POST['action']) ? $_POST['action'] : null;
 
-    // Ação para buscar dados de um aluno específico (para o modal de edição)
-    if ($action === 'fetch_aluno' && $matricula && ($cargo === "Diretor" || $cargo === "Coordenador")) {
+    // Ação para buscar dados de um aluno específico (para o modal de edição e detalhes)
+    if ($action === 'fetch_aluno' && $matricula) { // Removida a restrição de cargo
         $sql = "SELECT nome, sobrenome, data_nascimento, matricula, data_matricula, nome_pai, nome_mae, turma_id 
                 FROM alunos WHERE matricula = ?";
         $stmt = $conn->prepare($sql);
