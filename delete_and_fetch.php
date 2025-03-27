@@ -25,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
-            // Garantir que data_matricula seja incluída, mesmo se NULL
             echo json_encode(['success' => true, 'aluno' => $row]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Aluno não encontrado.']);
@@ -45,7 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nome_mae = $_POST['nome_mae'] ?: null;
         $novo_turma_id = $_POST['turma_id'];
 
-        // Se data_matricula não foi enviada, manter o valor existente no banco
         if ($data_matricula === null) {
             $sql = "SELECT data_matricula FROM alunos WHERE matricula = ?";
             $stmt = $conn->prepare($sql);
@@ -111,9 +109,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $quantidade = $stmt->get_result()->fetch_assoc()['quantidade'];
         $stmt->close();
 
-        // Buscar os dados da tabela de alunos da turma
+        // Buscar os dados da tabela de alunos da turma (sem data_matricula)
         if ($cargo === "Professor") {
-            $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome, f.nome AS professor_nome, f.sobrenome AS professor_sobrenome 
+            $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.turma_id, t.nome AS turma_nome, f.nome AS professor_nome, f.sobrenome AS professor_sobrenome 
                     FROM alunos a 
                     JOIN turmas t ON a.turma_id = t.id 
                     LEFT JOIN funcionarios f ON t.professor_id = f.id 
@@ -121,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ii", $turma_id, $funcionario_id);
         } else { // Diretor ou Coordenador
-            $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome, f.nome AS professor_nome, f.sobrenome AS professor_sobrenome 
+            $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.turma_id, t.nome AS turma_nome, f.nome AS professor_nome, f.sobrenome AS professor_sobrenome 
                     FROM alunos a 
                     JOIN turmas t ON a.turma_id = t.id 
                     LEFT JOIN funcionarios f ON t.professor_id = f.id 
@@ -133,22 +131,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = $stmt->get_result();
 
         $html = '';
-        $colspan = ($cargo === "Professor") ? 4 : 5;
+        $colspan = ($cargo === "Professor") ? 3 : 4; // Ajustado: 3 colunas para Professor, 4 para Diretor (com ações)
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $data_nascimento = $row["data_nascimento"] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
-                $data_matricula = $row["data_matricula"] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
-                $data_matricula_com_hora = $row["data_matricula"] ? date("d/m/Y H:i", strtotime($row["data_matricula"])) : 'N/A';
                 $professor = $row['professor_nome'] ? htmlspecialchars($row['professor_nome'] . " " . $row['sobrenome']) : 'Sem professor';
 
-                $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-turma-id='" . htmlspecialchars($row['turma_id']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-matricula-data='" . htmlspecialchars($data_matricula_com_hora) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "' data-turma-nome='" . htmlspecialchars($row['turma_nome']) . "' data-professor='" . $professor . "'>";
+                $html .= "<tr class='aluno-row' data-matricula='" . htmlspecialchars($row['matricula']) . "' data-turma-id='" . htmlspecialchars($row['turma_id']) . "' data-nome='" . htmlspecialchars($row['nome'] . " " . $row['sobrenome']) . "' data-nascimento='" . htmlspecialchars($data_nascimento) . "' data-pai='" . htmlspecialchars($row['nome_pai'] ?? 'N/A') . "' data-mae='" . htmlspecialchars($row['nome_mae'] ?? 'N/A') . "' data-turma-nome='" . htmlspecialchars($row['turma_nome']) . "' data-professor='" . $professor . "'>";
                 $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
                 $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
                 $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
-                $html .= "<td>" . htmlspecialchars($data_matricula) . "</td>";
                 if ($cargo === "Diretor") {
                     $html .= "<td>";
-                    $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"editAluno('" . htmlspecialchars($row['matricula']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
+                    $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"openEditModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($turma_id) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
                     $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"showDeleteModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($turma_id) . "')\"><i class='fa-solid fa-trash'></i></button>";
                     $html .= "</td>";
                 }
