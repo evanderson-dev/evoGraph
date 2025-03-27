@@ -19,7 +19,7 @@ $(document).on('click', '.aluno-row', function(e) {
     }
 });
 
-// Fechar modais
+// Fechar modais (mantido como fallback global)
 $('.close-btn, #cancel-delete-btn, .close-modal-btn').click(function() {
     $('.modal').css('display', 'none');
 });
@@ -42,6 +42,8 @@ window.showDeleteModal = function(matricula, turmaId) {
     resetDeleteModal(); // Reseta o modal antes de abrir
     $('#delete-matricula').text(matricula);
     $('#modal-confirm-delete').css('display', 'block');
+    
+    // Associa evento ao botão "Confirmar"
     $('#confirm-delete-btn').off('click').on('click', function() {
         $.ajax({
             url: 'delete_and_fetch.php',
@@ -76,7 +78,7 @@ window.showDeleteModal = function(matricula, turmaId) {
                         </div>
                     `);
                 }
-                $('.close-modal-btn').click(function() {
+                $('.close-modal-btn').off('click').on('click', function() {
                     $('#modal-confirm-delete').css('display', 'none');
                 });
             },
@@ -88,11 +90,16 @@ window.showDeleteModal = function(matricula, turmaId) {
                         <button class="btn close-modal-btn">Fechar</button>
                     </div>
                 `);
-                $('.close-modal-btn').click(function() {
+                $('.close-modal-btn').off('click').on('click', function() {
                     $('#modal-confirm-delete').css('display', 'none');
                 });
             }
         });
+    });
+
+    // Associa evento ao botão "Cancelar"
+    $('#cancel-delete-btn').off('click').on('click', function() {
+        $('#modal-confirm-delete').css('display', 'none');
     });
 };
 
