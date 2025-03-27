@@ -101,7 +101,6 @@ $cargo = $_SESSION["cargo"];
                                 <th>Nome</th>
                                 <th>Data de Nascimento</th>
                                 <th>Matrícula</th>
-                                <th>Data de Matrícula</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-alunos">
@@ -149,6 +148,7 @@ $cargo = $_SESSION["cargo"];
                         <thead>
                             <tr>
                                 <th>Nome</th>
+                                <th>Data de Nascimento</th>
                                 <th>Matrícula</th>
                             </tr>
                         </thead>
@@ -235,7 +235,6 @@ $cargo = $_SESSION["cargo"];
                                 <th>Nome</th>
                                 <th>Data de Nascimento</th>
                                 <th>Matrícula</th>
-                                <th>Data de Matrícula</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
