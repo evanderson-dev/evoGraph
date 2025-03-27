@@ -27,9 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
-            // Formatar as datas no backend
+            // Log para depuração
+            error_log("Data matricula bruta: " . $row['data_matricula']);
             $row['data_nascimento'] = $row['data_nascimento'] ? date("d/m/Y", strtotime($row['data_nascimento'])) : 'N/A';
             $row['data_matricula'] = $row['data_matricula'] ? date("d/m/Y", strtotime($row['data_matricula'])) : 'N/A';
+            error_log("Data matricula formatada: " . $row['data_matricula']);
             echo json_encode(['success' => true, 'aluno' => $row]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Aluno não encontrado.']);

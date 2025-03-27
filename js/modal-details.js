@@ -11,11 +11,12 @@ $(document).on('click', '.aluno-row', function(e) {
             success: function(response) {
                 if (response.success) {
                     var aluno = response.aluno;
+                    console.log("Data matricula recebida: ", aluno.data_matricula); // Log para depuração
                     var nomeCompleto = aluno.nome + " " + aluno.sobrenome;
-                    var dataNascimento = aluno.data_nascimento; // Já vem como dd/mm/yyyy ou 'N/A'
-                    var dataMatricula = aluno.data_matricula;   // Já vem como dd/mm/yyyy ou 'N/A'
+                    var dataNascimento = aluno.data_nascimento;
+                    var dataMatricula = aluno.data_matricula;
                     var turmaNome = aluno.turma_nome || 'Sem turma';
-
+            
                     $('#detalhes-nome').val(nomeCompleto);
                     $('#detalhes-nascimento').val(dataNascimento);
                     $('#detalhes-matricula').val(aluno.matricula);
@@ -23,13 +24,13 @@ $(document).on('click', '.aluno-row', function(e) {
                     $('#detalhes-pai').val(aluno.nome_pai || 'N/A');
                     $('#detalhes-mae').val(aluno.nome_mae || 'N/A');
                     $('#detalhes-turma').val(turmaNome);
-
+            
                     if (aluno.foto) {
                         $('#detalhes-foto').attr('src', aluno.foto);
                     } else {
                         $('#detalhes-foto').attr('src', 'path/to/default-photo.jpg');
                     }
-
+            
                     $('#modal-detalhes-aluno').css('display', 'block');
                 } else {
                     alert('Erro ao carregar detalhes do aluno: ' + response.message);
