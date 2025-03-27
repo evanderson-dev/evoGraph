@@ -385,8 +385,11 @@ $cargo = $_SESSION["cargo"];
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/modal-details.js"></script>
+    <script src="js/modal-delete.js"></script>
+    <script src="js/modal-edit.js"></script>
     <script src="js/sidebar.js"></script>
-    <script src="js/modals.js"></script>
     <script src="js/ajax.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
