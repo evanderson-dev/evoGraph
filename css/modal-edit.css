@@ -1,0 +1,117 @@
+/* Estilos específicos para o modal de edição */
+#modal-editar-aluno.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal-editar-aluno .modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 600px;
+}
+
+#modal-editar-aluno .modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#modal-editar-aluno .cadastro-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+}
+
+#modal-editar-aluno .form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+#modal-editar-aluno .form-group {
+    flex: 1;
+    margin-right: 10px;
+}
+
+#modal-editar-aluno .form-group:last-child {
+    margin-right: 0;
+}
+
+#modal-editar-aluno .form-group.full-width {
+    flex: none;
+    width: 100%;
+}
+
+#modal-editar-aluno .form-group label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+#modal-editar-aluno .form-group input,
+#modal-editar-aluno .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#modal-editar-aluno .form-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+#modal-editar-aluno .form-buttons .btn {
+    background-color: #73b4ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+#modal-editar-aluno .form-buttons .btn:hover:not(:disabled) {
+    background-color: #5599e6;
+}
+
+/* Estilos para mensagens de sucesso ou erro */
+#modal-editar-aluno .modal-title.success {
+    color: #28a745; /* Verde */
+}
+
+#modal-editar-aluno .modal-title.success i {
+    margin-right: 10px;
+}
+
+#modal-editar-aluno .modal-title.error {
+    color: #dc3545; /* Vermelho */
+}
+
+#modal-editar-aluno .modal-title.error i {
+    margin-right: 10px;
+}
+
+#modal-editar-aluno .modal-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}

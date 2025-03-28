@@ -64,6 +64,7 @@ header { /* Cabeçalho da página */
     left: -210px; /* Inicialmente oculta à esquerda */
     z-index: 999; /* Abaixo do header, acima do conteúdo */
     font-size: 15px; /* Tamanho da fonte */
+    /*transition: left 0.3s ease; /* Animação suave */
 }
 
 .sidebar.active {
@@ -172,7 +173,7 @@ header { /* Cabeçalho da página */
 }
 
 .home-link:hover {
-    color: #5599e6; /* Azul mais escuro ao passar o mouse */
+    color: #5599e6; /* Azul mais escuro ao passar o mouse, consistente com .btn:hover */
 }
 
 /* Título das Seções */
@@ -180,13 +181,13 @@ header { /* Cabeçalho da página */
     width: 100%;
     font-size: 18px;
     color: #333;
-    margin: 5px 0 0px;
-    background-color: #73b4ff;
-    padding: 10px 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    font-weight: bold;
+    margin: 5px 0 0px; /* Espaçamento acima e abaixo, 10px abaixo */
+    background-color: #73b4ff; /* Azul claro, consistente com o sistema */
+    padding: 10px 15px; /* Espaçamento interno */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    display : inline-block; /* Exibe como bloco */
+    font-weight: bold; /* Negrito para destaque */
 }
 
 .box-turmas { /* Caixas de turmas */
@@ -254,6 +255,7 @@ header { /* Cabeçalho da página */
 
 .tabela-turma-selecionada th { /* Cabeçalho da tabela */
     background-color: #73b4ff; /* Cor de fundo */
+    /*font-weight: bold; Texto em negrito */
     color: #333; /* Cor do texto */
 }
 
@@ -263,7 +265,7 @@ header { /* Cabeçalho da página */
 }
 
 .tabela-turma-selecionada tbody tr { /* Linhas da tabela */
-    transition: background-color 0.3s ease; /* Transição suave */
+    transition: background-color 0.3s ease; /* Transição suave como na sidebar */
 }
 
 .tabela-turma-selecionada tbody tr:hover { /* Efeito de hover nas linhas */
@@ -271,7 +273,9 @@ header { /* Cabeçalho da página */
 }
 
 .tabela-turma-selecionada tbody tr:hover td { /* Efeito de hover nas células */
+    /*font-weight: bold; /* Negrito no hover */
     color: #777; /* Cor do texto no hover */
+    transition: color 0.3s ease, font-weight 0.3s ease; /* Transição para cor e negrito */
     cursor: pointer; /* Transforma em ponteiro ao passar o mouse */
 }
 
@@ -279,6 +283,7 @@ header { /* Cabeçalho da página */
 /*#################### DASHBOARD DO DIRETOR ###################*/
 /*#############################################################*/
 
+/* Visão Geral */
 .overview { /* Caixas de visão geral */
     display: flex;
     justify-content: space-between;
@@ -308,8 +313,18 @@ header { /* Cabeçalho da página */
     color: #777;
 }
 
-/* Estilo do formulário de perfil (mantido, usado fora dos modais) */
+/* Estilo do formulário de perfil */
 .profile-form {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Aumentado para caber os campos lado a lado */
+}
+
+/* Estilo do formulário de cadastro */
+.cadastro-form {
     background-color: white;
     padding: 20px;
     margin-top: 20px;
@@ -338,7 +353,8 @@ header { /* Cabeçalho da página */
     width: 100%;
 }
 
-.profile-form label {
+.profile-form label,
+.cadastro-form label {
     font-weight: bold;
     color: #333;
     display: block;
@@ -346,7 +362,9 @@ header { /* Cabeçalho da página */
 }
 
 .profile-form input,
-.profile-form select {
+.profile-form select,
+.cadastro-form input,
+.cadastro-form select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
@@ -368,7 +386,8 @@ header { /* Cabeçalho da página */
 /*########################### BOTÕES ##########################*/
 /*#############################################################*/
 
-.btn-edit { /* Botão de edição nas turmas */
+/* Botão Editar nas Turmas */
+.btn-edit { /* Botão de edição */
     background-color: #ffca2c;
     color: white;
     padding: 5px 10px;
@@ -393,7 +412,7 @@ header { /* Cabeçalho da página */
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s;
-    margin-left: 10px;
+    margin-left: 10px; /* Espaçamento entre botões */
 }
 
 .btn:hover:not(:disabled) {
@@ -405,6 +424,7 @@ header { /* Cabeçalho da página */
     cursor: not-allowed;
 }
 
+/* Botões de Ação */
 .action-btn {
     background: none;
     border: none;
@@ -439,11 +459,178 @@ header { /* Cabeçalho da página */
     color: #cc0000;
 }
 
+/* Botão Editar nas Turmas */
+.btn-edit { /* Botão de edição */
+    background-color: #ffca2c;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-edit:hover { /* Efeito de hover */
+    background-color: #e6b800;
+}
+
+/*#############################################################*/
+/*########################### MODAL ###########################*/
+/*#############################################################*/
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 600px;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Formulário de Detalhes */
+.detalhes-form .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.detalhes-form .form-group {
+    flex: 1;
+    min-width: 200px;
+    margin-right: 20px;
+}
+
+.detalhes-form .form-group.full-width {
+    flex: 100%;
+    margin-right: 0;
+}
+
+.detalhes-form .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+.detalhes-form .form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Placeholder da Foto */
+.foto-placeholder .foto-box {
+    width: 150px;
+    height: 150px;
+    background-color: #e9ecef;
+    border: 2px dashed #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+/* Botões do Modal */
+.detalhes-form .form-buttons {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.detalhes-form .form-buttons .btn {
+    padding: 8px 20px;
+}
+
+.modal-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.modal-title.success {
+    color: #28a745; /* Verde */
+}
+
+.modal-title.success i {
+    margin-right: 10px;
+}
+
+.modal-title.error {
+    color: #dc3545; /* Vermelho */
+}
+
+.modal-title.error i {
+    margin-right: 10px;
+}
+
+.modal-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+}
+
+.modal-buttons .btn {
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.modal-buttons .btn {
+    margin-left: 10px;
+}
+
 /* Media Query para telas menores */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 150px;
-        left: -150px;
+    .sidebar { /* Ajusta a sidebar para telas menores */
+        width: 150px; /* Reduz a largura da sidebar */
+        left: -150px; /* Ajustado para a nova largura */
     }
     
     .sidebar.active {
@@ -451,18 +638,19 @@ header { /* Cabeçalho da página */
     }
 
     .content.shifted {
-        margin-left: 150px;
+        margin-left: 150px; /* Ajusta o conteúdo */
     }
 
-    .box-turmas-single {
-        width: 45%;
+    .box-turmas-single { /* Ajusta as caixas de turmas */
+        width: 45%; /* 2 por linha em telas médias */
     }
 }
 
+/* Media Query para telas menores ainda */
 @media (max-width: 480px) {
-    .sidebar {
-        width: 100px;
-        left: -100px;
+    .sidebar { /* Ajusta a sidebar para telas menores ainda */
+        width: 100px; /* Sidebar ainda mais estreita */
+        left: -100px; /* Ajustado para a nova largura */
     }
 
     .sidebar.active {
@@ -470,10 +658,10 @@ header { /* Cabeçalho da página */
     }
 
     .content.shifted {
-        margin-left: 100px;
+        margin-left: 100px; /* Ajusta o conteúdo */
     }
 
-    .box-turmas-single {
-        width: 100%;
+    .box-turmas-single { 
+        width: 100%; /* 1 por linha em telas pequenas */
     }
 }
