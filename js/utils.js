@@ -4,10 +4,10 @@ $(document).on('click', '.close-btn, #cancel-delete-btn, .close-modal-btn', func
 });
 
 function fetchAlunos(turmaId) {
-    $.ajax({ // Atualiza a tabela de alunos
+    $.ajax({
         url: 'fetch_turma_data.php',
         method: 'POST',
-        data: { action: 'fetch', turma_id: turmaId },
+        data: { turma_id: turmaId },
         dataType: 'json',
         success: function(response) {
             if (response.success) {
