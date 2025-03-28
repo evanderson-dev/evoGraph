@@ -263,7 +263,7 @@ $cargo = $_SESSION["cargo"];
                     <div class="form-group foto-placeholder">
                         <label>Foto do Aluno</label>
                         <div class="foto-box">
-                            <img id="detalhes-foto" src="img/default-photo.jpg" alt="Foto do Aluno">
+                            <img id="detalhes-foto" src=".img/default-photo.jpg" alt="Foto do Aluno">
                         </div>
                     </div>
                     <div class="form-group info-right">
