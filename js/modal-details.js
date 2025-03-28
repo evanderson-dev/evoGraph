@@ -27,7 +27,7 @@ $(document).on('click', '.aluno-row', function(e) {
                     if (aluno.foto) {
                         $('#detalhes-foto').attr('src', aluno.foto);
                     } else {
-                        $('#detalhes-foto').attr('src', '.img/default-photo.jpg');
+                        $('#detalhes-foto').attr('src', 'img/default-photo.jpg');
                     }
             
                     $('#modal-detalhes-aluno').css('display', 'block');
