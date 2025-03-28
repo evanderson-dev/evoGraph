@@ -18,7 +18,7 @@ window.showDeleteModal = function(matricula, turmaId) {
     
     $('#confirm-delete-btn').off('click').on('click', function() {
         $.ajax({
-            url: 'delete_and_fetch.php',
+            url: 'delete_aluno.php',
             method: 'POST',
             data: { 
                 action: 'delete',

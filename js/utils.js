@@ -4,8 +4,8 @@ $(document).on('click', '.close-btn, #cancel-delete-btn, .close-modal-btn', func
 });
 
 function fetchAlunos(turmaId) {
-    $.ajax({
-        url: 'delete_and_fetch.php',
+    $.ajax({ // Atualiza a tabela de alunos
+        url: 'fetch_turma_data.php',
         method: 'POST',
         data: { action: 'fetch', turma_id: turmaId },
         dataType: 'json',

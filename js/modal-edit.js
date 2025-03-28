@@ -85,8 +85,8 @@ function resetEditModal() {
 }
 
 window.openEditModal = function(matricula, turmaId) {
-    $.ajax({
-        url: 'delete_and_fetch.php',
+    $.ajax({ // Busca os dados do aluno
+        url: 'fetch_aluno.php',
         method: 'POST',
         data: { action: 'fetch_aluno', matricula: matricula, context: 'edit' },
         dataType: 'json',
@@ -163,11 +163,11 @@ window.openEditModal = function(matricula, turmaId) {
 };
 
 // Função para atualizar todas as caixas de turmas
-function updateAllTurmas() {
+function updateAllTurmas() { // Adicionada no final do arquivo
     $('.box-turmas-single').each(function() {
         var turmaId = $(this).data('turma-id');
         $.ajax({
-            url: 'delete_and_fetch.php',
+            url: 'fetch_turma_data.php',
             method: 'POST',
             data: { turma_id: turmaId },
             dataType: 'json',
