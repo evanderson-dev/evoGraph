@@ -1,6 +1,6 @@
 /* Responsabilidade: Gerencia o modal de edição de alunos */
 window.editAluno = function(matricula) {
-    alert('Editar aluno com matrícula: ' + matricula);
+    alert('Editar aluno com matrícula: ' + matricula); // Pode ser removido se não for mais necessário
 };
 
 function resetEditModal() {
@@ -8,7 +8,7 @@ function resetEditModal() {
     modalContent.html(`
         <h2>Editar Aluno</h2>
         <div class="cadastro-form">
-            <form method="POST" id="editar-aluno-form">
+            <form method="POST" id="editar-aluno-form" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="edit-nome">Nome:</label>
@@ -27,6 +27,12 @@ function resetEditModal() {
                     <div class="form-group">
                         <label for="edit-matricula">Matrícula:</label>
                         <input type="text" id="edit-matricula" name="matricula" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="edit-foto">Foto do Aluno:</label>
+                        <input type="file" id="edit-foto" name="foto" accept="image/*">
                     </div>
                 </div>
                 <div class="form-row">
@@ -100,25 +106,14 @@ window.openEditModal = function(matricula, turmaId) {
 
                 $('#editar-aluno-form').off('submit').on('submit', function(e) {
                     e.preventDefault();
-                    var turmaId = $('#modal-editar-aluno').data('turma-id');
-                    var novaTurmaId = $('#edit-turma_id').val();
-                    var formData = {
-                        action: 'update',
-                        matricula: $('#edit-matricula').val(),
-                        nome: $('#edit-nome').val(),
-                        sobrenome: $('#edit-sobrenome').val(),
-                        data_nascimento: $('#edit-data_nascimento').val(),
-                        data_matricula: $('#edit-data_matricula_hidden').val() || null,
-                        nome_pai: $('#edit-nome_pai').val() || null,
-                        nome_mae: $('#edit-nome_mae').val() || null,
-                        turma_id: novaTurmaId,
-                        turma_id_atual: turmaId
-                    };
+                    var formData = new FormData(this); // Inclui todos os campos, incluindo a foto
 
                     $.ajax({
-                        url: 'delete_and_fetch.php',
+                        url: 'edit_aluno.php', // Novo endpoint para edição com upload
                         method: 'POST',
                         data: formData,
+                        contentType: false,
+                        processData: false,
                         dataType: 'json',
                         success: function(response) {
                             var modalContent = $('#modal-editar-aluno .modal-content');
@@ -130,11 +125,8 @@ window.openEditModal = function(matricula, turmaId) {
                                         <button class="btn close-modal-btn">Fechar</button>
                                     </div>
                                 `);
-                                $('#tabela-alunos').html(response.tabela_alunos);
-                                if (response.total_alunos !== undefined) {
-                                    $('#total-alunos').text(response.total_alunos);
-                                }
-                                updateAllTurmas();
+                                fetchAlunos($('#modal-editar-aluno').data('turma-id')); // Atualiza a tabela
+                                updateAllTurmas(); // Atualiza as caixas de turmas
                                 setTimeout(function() {
                                     $('#modal-editar-aluno').css('display', 'none');
                                 }, 2000);
@@ -190,3 +182,8 @@ function updateAllTurmas() {
         });
     });
 }
+
+// Fechar o modal (mantido globalmente)
+$(document).on('click', '.close-modal-btn', function() {
+    $('#modal-editar-aluno').css('display', 'none');
+});
