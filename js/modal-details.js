@@ -9,6 +9,7 @@ $(document).on('click', '.aluno-row', function(e) {
             data: { action: 'fetch_aluno', matricula: matricula, context: 'details' },
             dataType: 'json',
             success: function(response) {
+                console.log('Resposta de fetch_aluno.php:', response); // Log da resposta
                 if (response.success) {
                     var aluno = response.aluno;
                     var nomeCompleto = aluno.nome + " " + aluno.sobrenome;
@@ -36,6 +37,8 @@ $(document).on('click', '.aluno-row', function(e) {
                 }
             },
             error: function(xhr, status, error) {
+                console.log('Erro AJAX em fetch_aluno.php:', xhr, status, error); // Log do erro
+                console.log('Resposta bruta:', xhr.responseText); // Mostra o que o servidor retornou
                 alert('Erro ao comunicar com o servidor: ' + xhr.statusText);
             }
         });

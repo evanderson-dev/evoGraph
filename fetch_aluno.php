@@ -1,6 +1,3 @@
-<!-- 
-    Este arquivo é responsável por buscar um aluno no banco de dados com base na matrícula fornecida.
-    O aluno é retornado em formato JSON. -->
 <?php
 session_start();
 
@@ -11,6 +8,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 require_once 'db_connection.php';
 
+header('Content-Type: application/json'); // Garantir cabeçalho JSON
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] === 'fetch_aluno' && isset($_POST['matricula'])) {
     $matricula = $_POST['matricula'];
     $context = isset($_POST['context']) ? $_POST['context'] : 'details';
@@ -20,6 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
             LEFT JOIN turmas t ON a.turma_id = t.id 
             WHERE a.matricula = ?";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        echo json_encode(['success' => false, 'message' => 'Erro na preparação da query: ' . $conn->error]);
+        exit;
+    }
     $stmt->bind_param("s", $matricula);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -29,8 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
             $row['data_nascimento'] = $row['data_nascimento'] ?: 'N/A';
             $row['data_matricula'] = $row['data_matricula'] ?: 'N/A';
         } else {
-            $row['data_nascimento'] = $row['data_nascimento'] ? date("d/m/Y", strtotime($row['data_nascimento'])) : 'N/A';
-            $row['data_matricula'] = $row['data_matricula'] ? date("d/m/Y", strtotime($row['data_matricula'])) : 'N/A';
+            $row['data_nascimento'] = $row['data_nascimento'] ? date("d/m/Y", strtotime($row["data_nascimento"])) : 'N/A';
+            $row['data_matricula'] = $row['data_matricula'] ? date("d/m/Y", strtotime($row["data_matricula"])) : 'N/A';
         }
         echo json_encode(['success' => true, 'aluno' => $row]);
     } else {
@@ -39,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
 
     $stmt->close();
 } else {
-    echo json_encode(['success' => false, 'message' => 'Requisição inválida.']);
+    echo json_encode(['success' => false, 'message' => 'Requisição inválida ou parâmetros ausentes.']);
 }
 
 $conn->close();
