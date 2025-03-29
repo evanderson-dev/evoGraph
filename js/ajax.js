@@ -1,7 +1,7 @@
 /* Responsabilidade: Lida com requisições AJAX e eventos relacionados ao carregamento de turmas. */
 function loadTurma(turmaId) {
     $.ajax({
-        url: 'delete_and_fetch.php',
+        url: 'fetch_turma_data.php',
         method: 'POST',
         data: { turma_id: turmaId },
         dataType: 'json',

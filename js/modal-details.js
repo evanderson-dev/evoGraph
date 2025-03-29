@@ -4,7 +4,7 @@ $(document).on('click', '.aluno-row', function(e) {
         var matricula = $(this).data('matricula');
 
         $.ajax({
-            url: 'delete_and_fetch.php',
+            url: 'fetch_aluno.php',
             method: 'POST',
             data: { action: 'fetch_aluno', matricula: matricula, context: 'details' },
             dataType: 'json',
