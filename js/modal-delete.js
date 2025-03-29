@@ -36,11 +36,15 @@ window.showDeleteModal = function(matricula, turmaId) {
                             <button class="btn close-modal-btn">Fechar</button>
                         </div>
                     `);
+                    // Atualizar a tabela e contagens imediatamente
                     $('#tabela-alunos').html(response.tabela_alunos);
                     if (response.total_alunos !== undefined) {
                         $('#total-alunos').text(response.total_alunos);
                     }
                     $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${response.quantidade_turma} alunos`);
+                    setTimeout(function() {
+                        $('#modal-confirm-delete').css('display', 'none');
+                    }, 2000); // Fechar o modal após 2 segundos
                 } else {
                     modalContent.html(`
                         <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
