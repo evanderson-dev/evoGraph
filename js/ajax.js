@@ -6,10 +6,10 @@ function loadTurma(turmaId) {
         data: { turma_id: turmaId },
         dataType: 'json',
         success: function(response) {
-            console.log(response);
+            console.log('Resposta do servidor:', response); // Log da resposta
             if (response.success) {
                 $('#tabela-alunos').html(response.tabela_alunos);
-                if (response.total_alunos !== undefined) { // Só atualizar se retornado (Diretor)
+                if (response.total_alunos !== undefined) {
                     $('#total-alunos').text(response.total_alunos);
                 }
                 $(`.box-turmas-single[data-turma-id="${turmaId}"] p:contains("alunos")`).text(`${response.quantidade_turma} alunos`);
@@ -18,6 +18,8 @@ function loadTurma(turmaId) {
             }
         },
         error: function(xhr, status, error) {
+            console.log('Erro AJAX:', xhr, status, error); // Log do erro
+            console.log('Resposta bruta:', xhr.responseText); // Mostra o conteúdo retornado
             $('#tabela-alunos').html('<tr><td colspan="5">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
         }
     });
