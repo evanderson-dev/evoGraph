@@ -6,6 +6,7 @@ function loadTurma(turmaId) {
         data: { turma_id: turmaId },
         dataType: 'json',
         success: function(response) {
+            console.log(response);
             if (response.success) {
                 $('#tabela-alunos').html(response.tabela_alunos);
                 if (response.total_alunos !== undefined) { // Só atualizar se retornado (Diretor)
