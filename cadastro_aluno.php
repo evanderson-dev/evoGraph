@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Cadastrar Aluno</title>
-    <link rel="stylesheet" href="css/cadastro.css">
+    <link rel="stylesheet" href="./css/cadastro.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
