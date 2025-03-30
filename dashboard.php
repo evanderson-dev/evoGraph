@@ -46,15 +46,15 @@ $cargo = $_SESSION["cargo"];
     <section class="main">
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
-            <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i> Home</a>
-            <a href="#"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
-            <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i> Meu Perfil</a>
+            <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i>Home</a>
+            <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
+            <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
-                <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i> Cadastrar Turma</a>
-                <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i> Cadastrar Funcionário</a>
-                <a href="cadastro_aluno.php"><i class="fa-solid fa-graduation-cap"></i> Cadastrar Aluno</a>
+                <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i>Cadastrar Turma</a>
+                <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i>Cadastrar Funcionário</a>
+                <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Cadastrar Aluno</a>
             <?php endif; ?>
-            <a href="logout.php"><i class="fa-solid fa-sign-out"></i> Sair</a>
+            <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
             <div class="separator"></div><br>
         </div>
         <!-- FIM SIDEBAR -->
@@ -389,11 +389,74 @@ $cargo = $_SESSION["cargo"];
     </div>
     <?php endif; ?>
 
+    <!--  Modal de Cadastro de Aluno (exclusivo para Coordenador e Diretor) -->
+    <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+    <div id="modal-cadastrar-aluno" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Cadastrar Aluno</h2>
+            <form id="cadastro-aluno-form" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-nome">Nome:</label>
+                        <input type="text" id="add-nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-sobrenome">Sobrenome:</label>
+                        <input type="text" id="add-sobrenome" name="sobrenome" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-data_nascimento">Data de Nascimento:</label>
+                        <input type="date" id="add-data_nascimento" name="data_nascimento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-matricula">Matrícula:</label>
+                        <input type="text" id="add-matricula" name="matricula" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-foto">Foto (opcional):</label>
+                        <input type="file" id="add-foto" name="foto" accept="image/*">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="add-nome_pai">Nome do Pai (opcional):</label>
+                        <input type="text" id="add-nome_pai" name="nome_pai">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="add-nome_mae">Nome da Mãe (opcional):</label>
+                        <input type="text" id="add-nome_mae" name="nome_mae">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="add-turma_id">Turma:</label>
+                        <select id="add-turma_id" name="turma_id" required>
+                            <option value="">Selecione uma turma</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" id="add-data_matricula_hidden" name="data_matricula_hidden">
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Cadastrar</button>
+                    <button type="button" class="btn close-modal-btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
+    <script src="./js/modal-add.js"></script>
     <script src="js/modal-edit.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
