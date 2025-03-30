@@ -15,7 +15,7 @@ function openAddModal() {
     $('#add-data_matricula_hidden').val('');
 
     // Carregar turmas
-    $.get('fetch_turmas.php', function(response) {
+    $.get('fetch_turmas.php', { dataType: 'json' }, function(response) {
         console.log('Resposta de fetch_turmas.php:', response);
         if (response.success) {
             let select = $('#add-turma_id');
