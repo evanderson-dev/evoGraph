@@ -17,14 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome_pai = $_POST['nome_pai'] ?? null;
     $nome_mae = $_POST['nome_mae'] ?? null;
     $turma_id = $_POST['turma_id'] ?? '';
-    $data_matricula = date('Y-m-d'); // Data atual como padrão
+    $data_matricula = date('Y-m-d');
 
     if (empty($matricula) || empty($nome) || empty($sobrenome) || empty($data_nascimento) || empty($turma_id)) {
         echo json_encode(['success' => false, 'message' => 'Todos os campos obrigatórios devem ser preenchidos.']);
         exit;
     }
 
-    // Upload da foto
     $foto_path = null;
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
         $upload_dir = 'img/fotos_alunos/';
@@ -36,7 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         move_uploaded_file($_FILES['foto']['tmp_name'], $foto_path);
     }
 
-    // Inserir aluno
     $sql = "INSERT INTO alunos (matricula, nome, sobrenome, data_nascimento, data_matricula, nome_pai, nome_mae, turma_id, foto) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
@@ -70,12 +68,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Cadastrar Aluno</title>
-    <link rel="stylesheet" href="./css/cadastro.css" />
+    <link rel="stylesheet" href="./css/cadastro.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>Cadastrar Novo Aluno</h1>
-    <form id="cadastro-aluno-form" enctype="multipart/form-data">
+    <form id="cadastro-aluno-form" class="cadastro-form" enctype="multipart/form-data">
         <div class="form-group">
             <label for="matricula">Matrícula:</label>
             <input type="text" id="matricula" name="matricula" required>
@@ -110,13 +108,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="">Selecione uma turma</option>
             </select>
         </div>
-        <button type="submit">Cadastrar</button>
+        <button type="submit" class="btn">Cadastrar</button>
     </form>
     <div id="message"></div>
 
     <script>
         $(document).ready(function() {
-            // Carregar turmas no select
             $.get('fetch_turmas.php', function(response) {
                 if (response.success) {
                     let select = $('#turma_id');
@@ -126,7 +123,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             });
 
-            // Enviar formulário via AJAX
             $('#cadastro-aluno-form').on('submit', function(e) {
                 e.preventDefault();
                 let formData = new FormData(this);
@@ -140,7 +136,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     success: function(response) {
                         $('#message').text(response.message).css('color', response.success ? 'green' : 'red');
                         if (response.success) {
-                            // Atualizar dashboard (se aberto)
                             if (window.opener) {
                                 window.opener.$('#tabela-alunos').html(response.tabela_alunos);
                                 if (response.total_alunos) {
@@ -148,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 }
                                 window.opener.$(`.box-turmas-single[data-turma-id="${formData.get('turma_id')}"] p:contains("alunos")`).text(`${response.quantidade_turma} alunos`);
                             }
-                            setTimeout(() => window.close(), 2000); // Fechar janela após 2s
+                            setTimeout(() => window.close(), 2000);
                         }
                     },
                     error: function(xhr) {
