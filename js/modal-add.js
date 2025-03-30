@@ -1,5 +1,9 @@
+/* js/modal-add.js */
 /* Responsabilidade: Gerencia o modal de cadastro de alunos */
+console.log('modal-add.js carregado');
+
 function openAddModal() {
+    console.log('openAddModal chamado');
     $('#add-nome').val('');
     $('#add-sobrenome').val('');
     $('#add-data_nascimento').val('');
@@ -25,6 +29,7 @@ function openAddModal() {
 }
 
 $(document).ready(function() {
+    console.log('document.ready em modal-add.js');
     $('#cadastro-aluno-form').on('submit', function(e) {
         e.preventDefault();
 

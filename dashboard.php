@@ -391,7 +391,7 @@ $cargo = $_SESSION["cargo"];
 
     <!--  Modal de Cadastro de Aluno (exclusivo para Coordenador e Diretor) -->
     <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
-    <div id="modal-cadastrar-aluno" class="modal">
+    <div id="modal-cadastrar-aluno" class="modal" style="display: none;">
         <div class="modal-content">
             <h2 class="modal-title">Cadastrar Aluno</h2>
             <form id="cadastro-aluno-form" enctype="multipart/form-data">
@@ -456,7 +456,7 @@ $cargo = $_SESSION["cargo"];
     <script src="js/utils.js"></script>
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
-    <script src="./js/modal-add.js"></script>
+    <script src="js/modal-add.js"></script>
     <script src="js/modal-edit.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
