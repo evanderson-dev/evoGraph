@@ -15,6 +15,7 @@ while ($row = $result->fetch_assoc()) {
     $turmas[] = $row;
 }
 
+header('Content-Type: application/json');
 echo json_encode(['success' => true, 'turmas' => $turmas]);
 $conn->close();
 ?>

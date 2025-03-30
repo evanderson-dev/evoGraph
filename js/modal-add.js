@@ -15,21 +15,27 @@ function openAddModal() {
     $('#add-data_matricula_hidden').val('');
 
     // Carregar turmas
-    $.get('fetch_turmas.php', { dataType: 'json' }, function(response) {
-        console.log('Resposta de fetch_turmas.php:', response);
-        if (response.success) {
-            let select = $('#add-turma_id');
-            select.empty().append('<option value="">Selecione uma turma</option>');
-            response.turmas.forEach(turma => {
-                select.append(`<option value="${turma.id}">${turma.nome} (${turma.ano})</option>`);
-            });
-        } else {
-            console.log('Erro na resposta: ', response.message);
+    $.ajax({
+        url: 'fetch_turmas.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log('Resposta de fetch_turmas.php:', response);
+            if (response.success) {
+                let select = $('#add-turma_id');
+                select.empty().append('<option value="">Selecione uma turma</option>');
+                response.turmas.forEach(turma => {
+                    select.append(`<option value="${turma.id}">${turma.nome} (${turma.ano})</option>`);
+                });
+            } else {
+                console.log('Erro na resposta: ', response.message);
+                $('#add-turma_id').empty().append('<option value="">Erro ao carregar turmas</option>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('Erro na requisição AJAX:', status, error);
             $('#add-turma_id').empty().append('<option value="">Erro ao carregar turmas</option>');
         }
-    }).fail(function(xhr, status, error) {
-        console.log('Erro na requisição AJAX:', status, error);
-        $('#add-turma_id').empty().append('<option value="">Erro ao carregar turmas</option>');
     });
 
     $('#modal-cadastrar-aluno').css('display', 'block');
