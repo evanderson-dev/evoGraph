@@ -1,4 +1,3 @@
-/* js/modal-add-turma.js */
 /* Responsabilidade: Gerencia o modal de cadastro de turmas */
 function openAddTurmaModal() {
     $('#add-turma-nome').val('');

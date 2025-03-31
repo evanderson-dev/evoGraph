@@ -469,38 +469,11 @@ $cargo = $_SESSION["cargo"];
     <!-- Fim do Modal de Cadastro de Aluno -->
 
     <!-- Modal de Cadastro de Turma (exclusivo para Coordenador e Diretor) -->
-    <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2 class="modal-title">Cadastrar Turma</h2>
-            <form id="cadastro-turma-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="add-turma-nome">Nome da Turma:</label>
-                        <input type="text" id="add-turma-nome" name="nome" placeholder="Ex.: 5º Ano A" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="add-turma-ano">Ano:</label>
-                        <input type="number" id="add-turma-ano" name="ano" placeholder="Ex.: 5" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="add-professor-id">Professor Responsável:</label>
-                        <select id="add-professor-id" name="professor_id" required>
-                            <option value="">Selecione um professor</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-buttons">
-                    <button type="submit" class="btn">Cadastrar</button>
-                    <button type="button" class="btn close-modal-btn">Cancelar</button>
-                </div>
-            </form>
-        </div>
+        <div class="modal-content"></div>
     </div>
     <?php endif; ?>
-    <!-- Fim do Modal de Cadastro de Turma -->
 
     <!-- Modal de Exclusão de Turma (exclusivo para Coordenador e Diretor) -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
@@ -508,7 +481,6 @@ $cargo = $_SESSION["cargo"];
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
-    <!-- Fim do Modal de Exclusão de Turma -->
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
