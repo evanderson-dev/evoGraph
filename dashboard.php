@@ -23,6 +23,7 @@ $cargo = $_SESSION["cargo"];
     <link rel="stylesheet" href="./css/modal-delete.css" />
     <link rel="stylesheet" href="./css/modal-edit.css" />
     <link rel="stylesheet" href="./css/modal-add.css" />
+    <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph Dashboard - <?php echo htmlspecialchars($cargo); ?></title>
 </head>
@@ -50,11 +51,18 @@ $cargo = $_SESSION["cargo"];
             <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
-                <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i>Cadastrar Turma</a>
-                <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i>Cadastrar Funcionário</a>
-                <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Cadastrar Aluno</a>
+            <div class="sidebar-item">
+                <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
+                <div class="submenu">
+                    <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Cadastrar Turma</a>
+                    <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i>Cadastrar Funcionário</a>
+                    <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Cadastrar Aluno</a>
+                </div>
+            </div>
             <?php endif; ?>
+
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
             <div class="separator"></div><br>
         </div>
