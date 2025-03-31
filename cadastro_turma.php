@@ -22,47 +22,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
         exit;
     }
 
-    $insertSql = "INSERT INTO turmas (nome, ano, professor_id) VALUES (?, ?, ?)";
-    $insertStmt = $conn->prepare($insertSql);
-    $insertStmt->bind_param("sii", $nome, $ano, $funcionario_id);
+    try {
+        $insertSql = "INSERT INTO turmas (nome, ano, professor_id) VALUES (?, ?, ?)";
+        $insertStmt = $conn->prepare($insertSql);
+        $insertStmt->bind_param("sii", $nome, $ano, $funcionario_id);
 
-    if ($insertStmt->execute()) {
-        $insertStmt->close();
+        if ($insertStmt->execute()) {
+            $insertStmt->close();
 
-        // Atualizar a lista de turmas
-        $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
-                FROM turmas t 
-                LEFT JOIN funcionarios f ON t.professor_id = f.id";
-        $result = $conn->query($sql);
-        $turmas_html = '';
-        while ($row = $result->fetch_assoc()) {
-            $sql_count = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
-            $stmt_count = $conn->prepare($sql_count);
-            $stmt_count->bind_param("i", $row['id']);
-            $stmt_count->execute();
-            $quantidade = $stmt_count->get_result()->fetch_assoc()['quantidade'];
-            $stmt_count->close();
+            // Atualizar a lista de turmas
+            $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
+                    FROM turmas t 
+                    LEFT JOIN funcionarios f ON t.professor_id = f.id";
+            $result = $conn->query($sql);
+            if ($result === false) {
+                throw new Exception('Erro na consulta de turmas: ' . $conn->error);
+            }
 
-            $turmas_html .= "<div class='box-turmas-single' data-turma-id='{$row['id']}'>";
-            $turmas_html .= "<h3>{$row['nome']} ({$row['ano']})</h3>";
-            $turmas_html .= "<p>Professor: " . ($row['professor_nome'] ? htmlspecialchars($row['professor_nome'] . " " . $row['sobrenome']) : "Sem professor") . "</p>";
-            $turmas_html .= "<p>{$quantidade} alunos</p>";
-            $turmas_html .= "</div>";
+            $turmas_html = '';
+            while ($row = $result->fetch_assoc()) {
+                $sql_count = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
+                $stmt_count = $conn->prepare($sql_count);
+                $stmt_count->bind_param("i", $row['id']);
+                $stmt_count->execute();
+                $count_result = $stmt_count->get_result();
+                if ($count_result === false) {
+                    throw new Exception('Erro na contagem de alunos: ' . $conn->error);
+                }
+                $quantidade = $count_result->fetch_assoc()['quantidade'];
+                $stmt_count->close();
+
+                $turmas_html .= "<div class='box-turmas-single' data-turma-id='{$row['id']}'>";
+                $turmas_html .= "<h3>{$row['nome']} ({$row['ano']})</h3>";
+                $turmas_html .= "<p>Professor: " . ($row['professor_nome'] ? htmlspecialchars($row['nome'] . " " . $row['sobrenome']) : "Sem professor") . "</p>";
+                $turmas_html .= "<p>{$quantidade} alunos</p>";
+                $turmas_html .= "</div>";
+            }
+
+            // Total de turmas
+            $total_result = $conn->query("SELECT COUNT(*) as total_turmas FROM turmas");
+            if ($total_result === false) {
+                throw new Exception('Erro ao contar turmas: ' . $conn->error);
+            }
+            $total_turmas = $total_result->fetch_assoc()['total_turmas'];
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Turma cadastrada com sucesso!',
+                'turmas_html' => $turmas_html,
+                'total_turmas' => $total_turmas
+            ]);
+        } else {
+            throw new Exception('Erro ao cadastrar turma: ' . $insertStmt->error);
         }
-
-        // Total de turmas (para Diretor)
-        $total_turmas = $conn->query("SELECT COUNT(*) as total_turmas FROM turmas")->fetch_assoc()['total_turmas'];
-
-        echo json_encode([
-            'success' => true,
-            'message' => 'Turma cadastrada com sucesso!',
-            'turmas_html' => $turmas_html,
-            'total_turmas' => $total_turmas
-        ]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Erro ao cadastrar turma: ' . $insertStmt->error]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
-    $insertStmt->close();
     $conn->close();
     exit;
 }
