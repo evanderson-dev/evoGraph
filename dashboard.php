@@ -130,7 +130,7 @@ $cargo = $_SESSION["cargo"];
             <?php elseif ($cargo === "Coordenador"): ?>
                 <!-- Dashboard do Coordenador -->
                 <div class="box-turmas">
-                    <?php include 'fetch_turmas_html.php'; ?>
+                    <?php include 'fetch_turmas_dashboard.php'; ?>
                 </div>
 
                 <div class="tabela-turma-selecionada">
@@ -186,7 +186,7 @@ $cargo = $_SESSION["cargo"];
                 <!-- Lista de Turmas -->
                 <h3 class="section-title"><i class="fa-solid fa-users"></i> Turmas</h3>
                 <div class="box-turmas">
-                    <?php include 'fetch_turmas_html.php'; ?>
+                    <?php include 'fetch_turmas_dashboard.php'; ?>
                 </div>
 
                 <!-- Tabela de Alunos -->
