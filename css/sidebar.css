@@ -1,14 +1,14 @@
 /* css/sidebar.css */
 .sidebar {
-    width: 250px; /* Largura da sidebar */
+    width: 230px; /* Largura da sidebar */
     background-color: white; /* Cor de fundo da sidebar */
     height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
     border-width: 0 1px 0 0; /* Borda à direita */
     border-style: solid; /* Borda sólida */
-    /*border-color: #73b4ff; /* Cor da borda */
+    border-color: #73b4ff; /* Cor da borda */
     position: fixed; /* Fixa a sidebar à esquerda */
     top: 50px; /* Alinhado abaixo do header */
-    left: -210px; /* Inicialmente oculta à esquerda */
+    left: -230px; /* Inicialmente oculta à esquerda */
     z-index: 999; /* Abaixo do header, acima do conteúdo */
     font-size: 15px; /* Tamanho da fonte */
 }
