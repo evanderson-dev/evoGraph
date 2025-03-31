@@ -235,7 +235,11 @@ $cargo = $_SESSION["cargo"];
                         echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
                         echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
                         echo "<p>{$quantidade} alunos</p>";
-                        echo "<p><i class='fa-solid fa-trash'></i></p>";
+                        if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor") {
+                            echo "<button class='action-btn delete-btn' title='Excluir Turma' onclick='showDeleteTurmaModal({$turma['id']})'>";
+                            echo "<i class='fa-solid fa-trash'></i>";
+                            echo "</button>";
+                        }
                         echo "</div>";
                     }
                     if (empty($turmas)) {
@@ -495,10 +499,28 @@ $cargo = $_SESSION["cargo"];
         </div>
     </div>
     <?php endif; ?>
+    <!-- Fim do Modal de Cadastro de Turma -->
+
+    <!-- Modal de Exclusão de Turma (exclusivo para Coordenador e Diretor) -->
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <div id="modal-delete-turma" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 class="modal-title">Excluir Turma</h2>
+            <p class="modal-message">Tem certeza que deseja excluir esta turma? Esta ação não pode ser desfeita.</p>
+            <input type="hidden" id="delete-turma-id">
+            <div class="modal-buttons">
+                <button class="btn delete-btn" onclick="confirmDeleteTurma()">Excluir</button>
+                <button class="btn close-modal-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+    <!-- Fim do Modal de Exclusão de Turma -->
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/modal-delete-turma.js"></script>
     <script src="js/modal-add-turma.js"></script>
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
