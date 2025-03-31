@@ -233,7 +233,7 @@ $cargo = $_SESSION["cargo"];
                         $stmt->close();
 
                         echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
-                        echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
+                        echo "<h3>{$turma['nome']}</h3>";
                         echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
                         echo "<p>{$quantidade} alunos</p>";
                         if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor") {

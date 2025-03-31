@@ -17,8 +17,8 @@ function openAddTurmaModal() {
                 <input type="text" id="nome" name="nome" placeholder="Ex.: 5º Ano A" required>
             </div>
             <div class="form-group">
-                <label for="ano">Ano:</label>
-                <input type="number" id="ano" name="ano" placeholder="Ex.: 2023" min="2000" max="2100" required>
+                <label for="ano">Ano Escolar:</label>
+                <input type="number" id="ano" name="ano" placeholder="Ex.: 5" min="1" max="9" required>
             </div>
             <div class="form-group">
                 <label for="professor_id">Professor:</label>
