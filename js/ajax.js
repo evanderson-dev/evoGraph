@@ -17,8 +17,6 @@ function loadTurma(turmaId) {
             }
         },
         error: function(xhr, status, error) {
-            console.log('Erro AJAX:', xhr, status, error); // Log do erro
-            console.log('Resposta bruta:', xhr.responseText); // Mostra o conteúdo retornado
             $('#tabela-alunos').html('<tr><td colspan="5">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
         }
     });

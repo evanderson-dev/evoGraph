@@ -19,6 +19,7 @@ $cargo = $_SESSION["cargo"];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-details.css" />
     <link rel="stylesheet" href="./css/modal-delete.css" />
     <link rel="stylesheet" href="./css/modal-edit.css" />
@@ -51,7 +52,7 @@ $cargo = $_SESSION["cargo"];
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
-                <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i>Cadastrar Turma</a>
+                <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-plus"></i>Cadastrar Turma</a>
                 <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i>Cadastrar Funcionário</a>
                 <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Cadastrar Aluno</a>
             <?php endif; ?>
@@ -451,14 +452,50 @@ $cargo = $_SESSION["cargo"];
         </div>
     </div>
     <?php endif; ?>
+    <!-- Fim do Modal de Cadstro de Aluno-->
+
+    <!-- Modal de Cadastro de Turma (exclusivo para Coordenador e Diretor) -->
+    <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+    <div id="modal-cadastrar-turma" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 class="modal-title">Cadastrar Turma</h2>
+            <form id="cadastro-turma-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-turma-nome">Nome da Turma:</label>
+                        <input type="text" id="add-turma-nome" name="nome" placeholder="Ex.: 5º Ano A" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-turma-ano">Ano:</label>
+                        <input type="number" id="add-turma-ano" name="ano" placeholder="Ex.: 5" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="add-professor-id">Professor Responsável:</label>
+                        <select id="add-professor-id" name="professor_id" required>
+                            <option value="">Selecione um professor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Cadastrar</button>
+                    <button type="button" class="btn close-modal-btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
+    <!-- Fim do Modal de Cadastro de Turma-->
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/modal-add-turma.js"></script>
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
-    <script src="js/modal-add.js"></script>
     <script src="js/modal-edit.js"></script>
+    <script src="js/modal-add.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
     <script src="js/dashboard.js"></script>

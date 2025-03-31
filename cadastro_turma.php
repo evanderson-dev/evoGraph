@@ -3,63 +3,70 @@ session_start();
 
 // Permitir acesso para Coordenador e Diretor
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor")) {
-    header("Location: index.php");
+    echo json_encode(['success' => false, 'message' => 'Acesso negado.']);
     exit;
 }
 
 require_once 'db_connection.php';
 
+header('Content-Type: application/json');
+
 // Processar cadastro de nova turma
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
-    $nome = $_POST["nome"];
-    $ano = $_POST["ano"];
-    $funcionario_id = $_POST["funcionario_id"];
+    $nome = trim($_POST["nome"] ?? '');
+    $ano = trim($_POST["ano"] ?? '');
+    $funcionario_id = trim($_POST["professor_id"] ?? '');
+
+    if (empty($nome) || empty($ano) || empty($funcionario_id)) {
+        echo json_encode(['success' => false, 'message' => 'Preencha todos os campos obrigatórios.']);
+        exit;
+    }
+
     $insertSql = "INSERT INTO turmas (nome, ano, professor_id) VALUES (?, ?, ?)";
     $insertStmt = $conn->prepare($insertSql);
     $insertStmt->bind_param("sii", $nome, $ano, $funcionario_id);
-    $insertStmt->execute();
+
+    if ($insertStmt->execute()) {
+        $insertStmt->close();
+
+        // Atualizar a lista de turmas
+        $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
+                FROM turmas t 
+                LEFT JOIN funcionarios f ON t.professor_id = f.id";
+        $result = $conn->query($sql);
+        $turmas_html = '';
+        while ($row = $result->fetch_assoc()) {
+            $sql_count = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
+            $stmt_count = $conn->prepare($sql_count);
+            $stmt_count->bind_param("i", $row['id']);
+            $stmt_count->execute();
+            $quantidade = $stmt_count->get_result()->fetch_assoc()['quantidade'];
+            $stmt_count->close();
+
+            $turmas_html .= "<div class='box-turmas-single' data-turma-id='{$row['id']}'>";
+            $turmas_html .= "<h3>{$row['nome']} ({$row['ano']})</h3>";
+            $turmas_html .= "<p>Professor: " . ($row['professor_nome'] ? htmlspecialchars($row['professor_nome'] . " " . $row['sobrenome']) : "Sem professor") . "</p>";
+            $turmas_html .= "<p>{$quantidade} alunos</p>";
+            $turmas_html .= "</div>";
+        }
+
+        // Total de turmas (para Diretor)
+        $total_turmas = $conn->query("SELECT COUNT(*) as total_turmas FROM turmas")->fetch_assoc()['total_turmas'];
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Turma cadastrada com sucesso!',
+            'turmas_html' => $turmas_html,
+            'total_turmas' => $total_turmas
+        ]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Erro ao cadastrar turma: ' . $insertStmt->error]);
+    }
     $insertStmt->close();
-    header("Location: dashboard.php");
+    $conn->close();
     exit;
 }
-?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./css/global.css" rel="stylesheet" />
-    <link href="./css/cadastro.css" rel="stylesheet" />
-    <title>evoGraph - Cadastrar Turma</title>
-</head>
-<body>
-    <div class="container">
-        <h2>Cadastrar Nova Turma</h2>
-        <form method="POST" class="turma-form">
-            <div class="form-group">
-                <label for="nome">Nome da Turma</label>
-                <input type="text" id="nome" name="nome" placeholder="Ex.: 5º Ano A" required>
-            </div>
-            <div class="form-group">
-                <label for="ano">Ano</label>
-                <input type="number" id="ano" name="ano" placeholder="Ex.: 5" required>
-            </div>
-            <div class="form-group">
-                <label for="funcionario_id">Professor Responsável</label>
-                <select id="funcionario_id" name="funcionario_id" required>
-                    <?php
-                    $func_result = $conn->query("SELECT id, nome, sobrenome FROM funcionarios WHERE cargo = 'Professor'");
-                    while ($func = $func_result->fetch_assoc()) {
-                        echo "<option value='" . $func["id"] . "'>" . htmlspecialchars($func["nome"] . " " . $func["sobrenome"]) . "</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            <button type="submit" name="nova-turma" class="login-button">Cadastrar</button>
-            <a href="dashboard.php" class="cancel-button">Cancelar</a>
-        </form>
-    </div>
-</body>
-</html>
-<?php $conn->close(); ?>
+echo json_encode(['success' => false, 'message' => 'Requisição inválida.']);
+$conn->close();
+?>
