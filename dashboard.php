@@ -19,6 +19,7 @@ $cargo = $_SESSION["cargo"];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-delete-turma.css" />
     <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-details.css" />
@@ -59,7 +60,9 @@ $cargo = $_SESSION["cargo"];
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
+                    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+                    <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
+                    <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
                 </div>
             </div>
@@ -482,9 +485,17 @@ $cargo = $_SESSION["cargo"];
     </div>
     <?php endif; ?>
 
+    <!-- Modal de Adição de Funcionário (exclusivo para Coordenador e Diretor) -->
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <div id="modal-add-funcionario" class="modal" style="display: none;">
+        <div class="modal-content"></div>
+    </div>
+    <?php endif; ?>
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/modal-add-funcionario.js"></script>
     <script src="js/modal-delete-turma.js"></script>
     <script src="js/modal-add-turma.js"></script>
     <script src="js/modal-details.js"></script>
