@@ -235,7 +235,7 @@ $cargo = $_SESSION["cargo"];
                         echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
                         echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
                         echo "<p>{$quantidade} alunos</p>";
-                        echo "<p><i class='fa-solid fa-trash'></p>";
+                        echo "<p><i class='fa-solid fa-trash'></i></p>";
                         echo "</div>";
                     }
                     if (empty($turmas)) {
