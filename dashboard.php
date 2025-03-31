@@ -496,17 +496,34 @@ $cargo = $_SESSION["cargo"];
     <?php endif; ?>
     <!-- Fim do Modal de Cadastro de Turma-->
 
+    <!-- Modal de Confirmação de Exclusão de Turma (exclusivo para Coordenador e Diretor) -->
+    <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+    <div id="modal-delete-turma" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 class="modal-title">Excluir Turma</h2>
+            <p class="modal-message">Tem certeza que deseja excluir esta turma? Esta ação não pode ser desfeita.</p>
+            <input type="hidden" id="delete-turma-id">
+            <div class="modal-buttons">
+                <button class="btn delete-btn" onclick="confirmDeleteTurma()">Excluir</button>
+                <button class="btn close-modal-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+    <!-- Fim do Modal de Confirmação de Exclusão de Turma-->
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/modal-delete-turma.js"></script>
     <script src="js/modal-add-turma.js"></script>
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
     <script src="js/modal-edit.js"></script>
     <script src="js/modal-add.js"></script>
+    <script src="js/dashboard.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
-    <script src="js/dashboard.js"></script>
 </body>
 </html>
 <?php $conn->close(); ?>

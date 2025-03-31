@@ -10,24 +10,37 @@ require_once 'db_connection.php';
 
 header('Content-Type: application/json');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
-    $nome = trim($_POST["nome"] ?? '');
-    $ano = trim($_POST["ano"] ?? '');
-    $funcionario_id = trim($_POST["professor_id"] ?? '');
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["turma_id"])) {
+    $turma_id = trim($_POST["turma_id"] ?? '');
 
-    if (empty($nome) || empty($ano) || empty($funcionario_id)) {
-        echo json_encode(['success' => false, 'message' => 'Preencha todos os campos obrigatórios.']);
+    if (empty($turma_id)) {
+        echo json_encode(['success' => false, 'message' => 'ID da turma não fornecido.']);
         exit;
     }
 
     try {
-        $insertSql = "INSERT INTO turmas (nome, ano, professor_id) VALUES (?, ?, ?)";
-        $insertStmt = $conn->prepare($insertSql);
-        $insertStmt->bind_param("sii", $nome, $ano, $funcionario_id);
+        // Verificar se a turma tem alunos
+        $sql_count = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
+        $stmt_count = $conn->prepare($sql_count);
+        $stmt_count->bind_param("i", $turma_id);
+        $stmt_count->execute();
+        $quantidade = $stmt_count->get_result()->fetch_assoc()['quantidade'];
+        $stmt_count->close();
 
-        if ($insertStmt->execute()) {
-            $insertStmt->close();
+        if ($quantidade > 0) {
+            echo json_encode(['success' => false, 'message' => 'Não é possível excluir uma turma com alunos matriculados.']);
+            exit;
+        }
 
+        // Excluir a turma
+        $deleteSql = "DELETE FROM turmas WHERE id = ?";
+        $deleteStmt = $conn->prepare($deleteSql);
+        $deleteStmt->bind_param("i", $turma_id);
+
+        if ($deleteStmt->execute()) {
+            $deleteStmt->close();
+
+            // Atualizar a lista de turmas
             $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
                     FROM turmas t 
                     LEFT JOIN funcionarios f ON t.professor_id = f.id";
@@ -43,9 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
                 $stmt_count->bind_param("i", $row['id']);
                 $stmt_count->execute();
                 $count_result = $stmt_count->get_result();
-                if ($count_result === false) {
-                    throw new Exception('Erro na contagem de alunos: ' . $conn->error);
-                }
                 $quantidade = $count_result->fetch_assoc()['quantidade'];
                 $stmt_count->close();
 
@@ -67,12 +77,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
 
             echo json_encode([
                 'success' => true,
-                'message' => 'Turma cadastrada com sucesso!',
+                'message' => 'Turma excluída com sucesso!',
                 'turmas_html' => $turmas_html,
                 'total_turmas' => $total_turmas
             ]);
         } else {
-            throw new Exception('Erro ao cadastrar turma: ' . $insertStmt->error);
+            throw new Exception('Erro ao excluir turma: ' . $deleteStmt->error);
         }
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
