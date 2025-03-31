@@ -1,5 +1,4 @@
 /* js/modal-delete-turma.js */
-/* Responsabilidade: Gerencia o modal de exclusão de turmas */
 function showDeleteTurmaModal(turmaId) {
     $('#delete-turma-id').val(turmaId);
     $('#modal-delete-turma').css('display', 'block');
@@ -22,11 +21,10 @@ function confirmDeleteTurma() {
                         <button class="btn close-modal-btn">Fechar</button>
                     </div>
                 `);
-                // Atualizar a lista de turmas
                 if (response.turmas_html) {
                     $('.box-turmas').html(response.turmas_html);
                     if ($('.box-turmas-single').length > 0) {
-                        $('.box-turmas-single').first().click(); // Carrega a primeira turma
+                        $('.box-turmas-single').first().click();
                     } else {
                         $('#tabela-alunos').html('<tr><td colspan="5">Nenhuma turma disponível</td></tr>');
                     }
@@ -48,8 +46,7 @@ function confirmDeleteTurma() {
 }
 
 $(document).ready(function() {
-    // Fechar modal ao clicar no botão Cancelar
-    $('#modal-delete-turma .close-modal-btn').on('click', function() {
+    $(document).on('click', '#modal-delete-turma .close-modal-btn', function() {
         $('#modal-delete-turma').css('display', 'none');
     });
 });

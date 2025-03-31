@@ -19,6 +19,7 @@ $cargo = $_SESSION["cargo"];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/modal-delete-turma.css" />
     <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-details.css" />
     <link rel="stylesheet" href="./css/modal-delete.css" />
@@ -129,35 +130,7 @@ $cargo = $_SESSION["cargo"];
             <?php elseif ($cargo === "Coordenador"): ?>
                 <!-- Dashboard do Coordenador -->
                 <div class="box-turmas">
-                    <?php
-                    $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
-                            FROM turmas t 
-                            LEFT JOIN funcionarios f ON t.professor_id = f.id";
-                    $result = $conn->query($sql);
-                    $turmas = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $turmas[] = $row;
-                    }
-
-                    foreach ($turmas as $turma) {
-                        $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("i", $turma['id']);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $quantidade = $result->fetch_assoc()['quantidade'];
-                        $stmt->close();
-
-                        echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
-                        echo "<h3>{$turma['nome']}</h3>";
-                        echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
-                        echo "<p>{$quantidade} alunos</p>";
-                        echo "</div>";
-                    }
-                    if (empty($turmas)) {
-                        echo "<p>Nenhuma turma cadastrada.</p>";
-                    }
-                    ?>
+                    <?php include 'fetch_turmas_html.php'; ?>
                 </div>
 
                 <div class="tabela-turma-selecionada">
@@ -213,34 +186,7 @@ $cargo = $_SESSION["cargo"];
                 <!-- Lista de Turmas -->
                 <h3 class="section-title"><i class="fa-solid fa-users"></i> Turmas</h3>
                 <div class="box-turmas">
-                    <?php
-                    $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
-                            FROM turmas t 
-                            LEFT JOIN funcionarios f ON t.professor_id = f.id";
-                    $result = $conn->query($sql);
-                    $turmas = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $turmas[] = $row;
-                    }
-
-                    foreach ($turmas as $turma) {
-                        $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("i", $turma['id']);
-                        $stmt->execute();
-                        $quantidade = $stmt->get_result()->fetch_assoc()['quantidade'];
-                        $stmt->close();
-
-                        echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
-                        echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
-                        echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
-                        echo "<p>{$quantidade} alunos</p>";
-                        echo "</div>";
-                    }
-                    if (empty($turmas)) {
-                        echo "<p>Nenhuma turma cadastrada.</p>";
-                    }
-                    ?>
+                    <?php include 'fetch_turmas_html.php'; ?>
                 </div>
 
                 <!-- Tabela de Alunos -->

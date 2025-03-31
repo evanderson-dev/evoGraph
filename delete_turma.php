@@ -19,7 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["turma_id"])) {
     }
 
     try {
-        // Verificar se a turma tem alunos
         $sql_count = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
         $stmt_count = $conn->prepare($sql_count);
         $stmt_count->bind_param("i", $turma_id);
@@ -32,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["turma_id"])) {
             exit;
         }
 
-        // Excluir a turma
         $deleteSql = "DELETE FROM turmas WHERE id = ?";
         $deleteStmt = $conn->prepare($deleteSql);
         $deleteStmt->bind_param("i", $turma_id);
@@ -40,34 +38,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["turma_id"])) {
         if ($deleteStmt->execute()) {
             $deleteStmt->close();
 
-            // Atualizar a lista de turmas
-            $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
-                    FROM turmas t 
-                    LEFT JOIN funcionarios f ON t.professor_id = f.id";
-            $result = $conn->query($sql);
-            if ($result === false) {
-                throw new Exception('Erro na consulta de turmas: ' . $conn->error);
-            }
-
-            $turmas_html = '';
-            while ($row = $result->fetch_assoc()) {
-                $sql_count = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
-                $stmt_count = $conn->prepare($sql_count);
-                $stmt_count->bind_param("i", $row['id']);
-                $stmt_count->execute();
-                $count_result = $stmt_count->get_result();
-                $quantidade = $count_result->fetch_assoc()['quantidade'];
-                $stmt_count->close();
-
-                $turmas_html .= "<div class='box-turmas-single' data-turma-id='{$row['id']}'>";
-                $turmas_html .= "<h3>{$row['nome']} ({$row['ano']})</h3>";
-                $turmas_html .= "<p>Professor: " . ($row['professor_nome'] ? htmlspecialchars($row['professor_nome'] . " " . $row['sobrenome']) : "Sem professor") . "</p>";
-                $turmas_html .= "<p>{$quantidade} alunos</p>";
-                $turmas_html .= "<button class='action-btn delete-btn' title='Excluir Turma' onclick='showDeleteTurmaModal({$row['id']})'>";
-                $turmas_html .= "<i class='fa-solid fa-trash'></i>";
-                $turmas_html .= "</button>";
-                $turmas_html .= "</div>";
-            }
+            // Incluir o HTML atualizado das turmas
+            ob_start();
+            include 'fetch_turmas_dashboard.php';
+            $turmas_html = ob_get_clean();
 
             $total_result = $conn->query("SELECT COUNT(*) as total_turmas FROM turmas");
             if ($total_result === false) {
