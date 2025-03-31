@@ -1,4 +1,4 @@
-/* js/modal-delete-turma.js */
+/* Funções para abrir e fechar o modal de exclusão de turma */
 function showDeleteTurmaModal(turmaId) {
     // Restaurar o conteúdo original do modal antes de abrir
     const originalContent = `

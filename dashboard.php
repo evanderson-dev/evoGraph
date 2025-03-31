@@ -505,15 +505,7 @@ $cargo = $_SESSION["cargo"];
     <!-- Modal de Exclusão de Turma (exclusivo para Coordenador e Diretor) -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
     <div id="modal-delete-turma" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2 class="modal-title">Excluir Turma</h2>
-            <p class="modal-message">Tem certeza que deseja excluir esta turma? Esta ação não pode ser desfeita.</p>
-            <input type="hidden" id="delete-turma-id">
-            <div class="modal-buttons">
-                <button class="btn delete-btn" onclick="confirmDeleteTurma()">Excluir</button>
-                <button class="btn close-modal-btn">Cancelar</button>
-            </div>
-        </div>
+        <div class="modal-content"></div>
     </div>
     <?php endif; ?>
     <!-- Fim do Modal de Exclusão de Turma -->
