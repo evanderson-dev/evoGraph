@@ -52,68 +52,6 @@ header { /* Cabeçalho da página */
     padding-top: 50px; /* Espaço para o header fixo */
 }
 
-.sidebar {
-    width: 210px; /* Largura da sidebar */
-    background-color: white; /* Cor de fundo da sidebar */
-    height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
-    border-width: 0 1px 0 0; /* Borda à direita */
-    border-style: solid; /* Borda sólida */
-    border-color: #73b4ff; /* Cor da borda */
-    position: fixed; /* Fixa a sidebar à esquerda */
-    top: 50px; /* Alinhado abaixo do header */
-    left: -210px; /* Inicialmente oculta à esquerda */
-    z-index: 999; /* Abaixo do header, acima do conteúdo */
-    font-size: 15px; /* Tamanho da fonte */
-}
-
-.sidebar.active {
-    left: 0; /* Exibe a sidebar quando ativa */
-}
-
-.sidebar.transition-enabled {
-    transition: left 0.3s ease; /* Transição só quando ativada */
-}
-
-.sidebar a.sidebar-active { /* Estilo do item ativo */
-    border-left: 3px solid #73b4ff;
-    background-color: rgb(245, 245, 245);
-    color: #777; /* Cor do texto */
-    font-weight: bold; /* Texto em negrito */
-}
-
-.sidebar a.sidebar-active > svg { /* Ícone do item ativo */
-    color: #777; /* Cor do ícone */
-}
-
-.sidebar h3 { /* Título da sidebar */
-    color: #333; /* Cor do texto */
-    font-size: 20px; /* Tamanho da fonte */
-    margin: 10px; /* Espaçamento externo */
-}
-
-.sidebar a { /* Estilo dos itens da sidebar */
-    display: block; /* Transforma o link em bloco */
-    text-decoration: none; /* Remove sublinhado */
-    padding: 10px 10px; /* Espaçamento interno AlturaPx EsquerdaPx */
-    color: #444; /* Cor do texto */
-}
-
-.sidebar a:hover { /* Efeito de hover nos itens da sidebar */
-    border-left: 3px solid #73b4ff; /* Borda à esquerda */
-    background-color: rgb(245, 245, 245); /* Cor de fundo */
-    color: #777; /* Cor do texto */
-    font-weight: bold; /* Texto em negrito */
-}
-
-.sidebar a:hover > svg { /* Ícone do item em hover */
-    color: #777; /* Cor do ícone */
-}
-
-.sidebar a > svg { /* Ícone dos itens da sidebar */
-    color: #444; /* Cor do ícone */
-    margin-right: 0px; /* Espaço entre ícone e texto */
-}
-
 .content { /* Conteúdo principal */
     width: 100%; /* Ocupa toda a largura por padrão */
     margin-left: 0; /* Sem deslocamento inicial */
@@ -439,17 +377,8 @@ header { /* Cabeçalho da página */
     color: #cc0000;
 }
 
-/* Media Query para telas menores */
+/* Media Queries */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 150px;
-        left: -150px;
-    }
-    
-    .sidebar.active {
-        left: 0;
-    }
-
     .content.shifted {
         margin-left: 150px;
     }
@@ -460,15 +389,6 @@ header { /* Cabeçalho da página */
 }
 
 @media (max-width: 480px) {
-    .sidebar {
-        width: 100px;
-        left: -100px;
-    }
-
-    .sidebar.active {
-        left: 0;
-    }
-
     .content.shifted {
         margin-left: 100px;
     }

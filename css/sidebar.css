@@ -1,0 +1,155 @@
+/* css/sidebar.css */
+.sidebar {
+    width: 210px; /* Largura da sidebar */
+    background-color: white; /* Cor de fundo da sidebar */
+    height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
+    border-width: 0 1px 0 0; /* Borda à direita */
+    border-style: solid; /* Borda sólida */
+    border-color: #73b4ff; /* Cor da borda */
+    position: fixed; /* Fixa a sidebar à esquerda */
+    top: 50px; /* Alinhado abaixo do header */
+    left: -210px; /* Inicialmente oculta à esquerda */
+    z-index: 999; /* Abaixo do header, acima do conteúdo */
+    font-size: 15px; /* Tamanho da fonte */
+}
+
+.sidebar.active {
+    left: 0; /* Exibe a sidebar quando ativa */
+}
+
+.sidebar.transition-enabled {
+    transition: left 0.3s ease; /* Transição só quando ativada */
+}
+
+.sidebar a.sidebar-active {
+    border-left: 3px solid #73b4ff;
+    background-color: rgb(245, 245, 245);
+    color: #777; /* Cor do texto */
+    font-weight: bold; /* Texto em negrito */
+}
+
+.sidebar a.sidebar-active > svg, .sidebar a.sidebar-active > i {
+    color: #777; /* Cor do ícone */
+}
+
+.sidebar h3 {
+    color: #333; /* Cor do texto */
+    font-size: 20px; /* Tamanho da fonte */
+    margin: 10px; /* Espaçamento externo */
+}
+
+.sidebar a {
+    display: block; /* Transforma o link em bloco */
+    text-decoration: none; /* Remove sublinhado */
+    padding: 10px 10px; /* Espaçamento interno AlturaPx EsquerdaPx */
+    color: #444; /* Cor do texto */
+}
+
+.sidebar a:hover {
+    border-left: 3px solid #73b4ff; /* Borda à esquerda */
+    background-color: rgb(245, 245, 245); /* Cor de fundo */
+    color: #777; /* Cor do texto */
+    font-weight: bold; /* Texto em negrito */
+}
+
+.sidebar a:hover > svg, .sidebar a:hover > i {
+    color: #777; /* Cor do ícone */
+}
+
+.sidebar a > svg, .sidebar a > i {
+    color: #444; /* Cor do ícone */
+    margin-right: 10px; /* Espaço entre ícone e texto */
+}
+
+.separator {
+    width: 100%; /* Largura total */
+    height: 1px; /* Altura de 1px */
+    background-color: #73b4ff; /* Cor do separador */
+}
+
+/* Estilo para o item da sidebar com submenu */
+.sidebar-item {
+    position: relative;
+}
+
+.sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 10px;
+    color: #444;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar-toggle:hover {
+    border-left: 3px solid #73b4ff;
+    background-color: rgb(245, 245, 245);
+    color: #777;
+}
+
+.sidebar-toggle:hover > i {
+    color: #777;
+}
+
+.submenu-toggle {
+    font-size: 12px;
+    transition: transform 0.3s;
+}
+
+.submenu-toggle.open {
+    transform: rotate(180deg); /* Gira a seta para cima quando aberto */
+}
+
+.submenu {
+    display: none; /* Inicialmente oculto */
+    background: #f0f0f0; /* Cor mais clara para diferenciar */
+    padding-left: 20px; /* Indentação */
+}
+
+.submenu a {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    color: #444;
+    text-decoration: none;
+    font-size: 14px; /* Um pouco menor que os itens principais */
+    transition: background 0.3s, color 0.3s;
+}
+
+.submenu a:hover {
+    border-left: 3px solid #73b4ff;
+    background-color: rgb(235, 235, 235);
+    color: #777;
+}
+
+.submenu a:hover > i {
+    color: #777;
+}
+
+.submenu a > i {
+    margin-right: 10px;
+}
+
+/* Media Queries para a Sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 150px;
+        left: -150px;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 100px;
+        left: -100px;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+}
