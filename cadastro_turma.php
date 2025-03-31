@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nova-turma"])) {
                 $stmt_count->close();
 
                 $turmas_html .= "<div class='box-turmas-single' data-turma-id='{$row['id']}'>";
-                $turmas_html .= "<h3>{$row['nome']} ({$row['ano']})</h3>";
+                $turmas_html .= "<h3>{$row['nome']}</h3>";
                 $turmas_html .= "<p>Professor: " . ($row['professor_nome'] ? htmlspecialchars($row['professor_nome'] . " " . $row['sobrenome']) : "Sem professor") . "</p>";
                 $turmas_html .= "<p>{$quantidade} alunos</p>";
                 $turmas_html .= "<button class='action-btn delete-btn' title='Excluir Turma' onclick='showDeleteTurmaModal({$row['id']})'>";
