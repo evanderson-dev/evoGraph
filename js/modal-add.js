@@ -1,9 +1,5 @@
-/* js/modal-add.js */
 /* Responsabilidade: Gerencia o modal de cadastro de alunos */
-console.log('modal-add.js carregado');
-
 function openAddModal() {
-    console.log('openAddModal chamado');
     $('#add-nome').val('');
     $('#add-sobrenome').val('');
     $('#add-data_nascimento').val('');
@@ -20,7 +16,6 @@ function openAddModal() {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-            console.log('Resposta de fetch_turmas.php:', response);
             if (response.success) {
                 let select = $('#add-turma_id');
                 select.empty().append('<option value="">Selecione uma turma</option>');
@@ -28,12 +23,10 @@ function openAddModal() {
                     select.append(`<option value="${turma.id}">${turma.nome} (${turma.ano})</option>`);
                 });
             } else {
-                console.log('Erro na resposta: ', response.message);
                 $('#add-turma_id').empty().append('<option value="">Erro ao carregar turmas</option>');
             }
         },
         error: function(xhr, status, error) {
-            console.log('Erro na requisição AJAX:', status, error);
             $('#add-turma_id').empty().append('<option value="">Erro ao carregar turmas</option>');
         }
     });
@@ -42,7 +35,6 @@ function openAddModal() {
 }
 
 $(document).ready(function() {
-    console.log('document.ready em modal-add.js');
     $('#cadastro-aluno-form').on('submit', function(e) {
         e.preventDefault();
 
