@@ -29,8 +29,8 @@ window.editAluno = function(matricula) {
 };
 
 $(document).ready(function() {
-    // Clique nas turmas
-    $('.box-turmas-single').click(function() {
+    // Clique nas turmas (delegação de eventos)
+    $(document).on('click', '.box-turmas-single', function() {
         $('.box-turmas-single').removeClass('active'); // Remove a classe active de todas as turmas
         $(this).addClass('active'); // Adiciona a classe active à turma clicada
         var turmaId = $(this).data('turma-id');
