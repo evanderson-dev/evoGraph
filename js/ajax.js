@@ -6,7 +6,6 @@ function loadTurma(turmaId) {
         data: { turma_id: turmaId },
         dataType: 'json',
         success: function(response) {
-            console.log('Resposta do servidor:', response); // Log da resposta
             if (response.success) {
                 $('#tabela-alunos').html(response.tabela_alunos);
                 if (response.total_alunos !== undefined) {
@@ -18,29 +17,24 @@ function loadTurma(turmaId) {
             }
         },
         error: function(xhr, status, error) {
-            console.log('Erro AJAX:', xhr, status, error); // Log do erro
-            console.log('Resposta bruta:', xhr.responseText); // Mostra o conteúdo retornado
             $('#tabela-alunos').html('<tr><td colspan="5">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
         }
     });
 }
 
-// Função para abrir o modal de edição (chamada pelo botão na tabela)
 window.editAluno = function(matricula) {
     var turmaId = $('.box-turmas-single.active').data('turma-id') || $('#tabela-alunos tr[data-matricula="' + matricula + '"]').data('turma-id');
-    openEditModal(matricula, turmaId); // Chama a função do modals.js
+    openEditModal(matricula, turmaId);
 };
 
 $(document).ready(function() {
-    // Clique nas turmas
-    $('.box-turmas-single').click(function() {
-        $('.box-turmas-single').removeClass('active'); // Remove a classe active de todas as turmas
-        $(this).addClass('active'); // Adiciona a classe active à turma clicada
+    $(document).on('click', '.box-turmas-single', function() {
+        $('.box-turmas-single').removeClass('active');
+        $(this).addClass('active');
         var turmaId = $(this).data('turma-id');
         loadTurma(turmaId);
     });
 
-    // Carrega a primeira turma automaticamente ao abrir o dashboard
     if ($('.box-turmas-single').length > 0) {
         $('.box-turmas-single').first().click();
     }
