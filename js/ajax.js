@@ -6,6 +6,7 @@ function loadTurma(turmaId) {
         data: { turma_id: turmaId },
         dataType: 'json',
         success: function(response) {
+            console.log('Resposta do servidor:', response); // Log da resposta
             if (response.success) {
                 $('#tabela-alunos').html(response.tabela_alunos);
                 if (response.total_alunos !== undefined) {
@@ -17,6 +18,8 @@ function loadTurma(turmaId) {
             }
         },
         error: function(xhr, status, error) {
+            console.log('Erro AJAX:', xhr, status, error); // Log do erro
+            console.log('Resposta bruta:', xhr.responseText); // Mostra o conteúdo retornado
             $('#tabela-alunos').html('<tr><td colspan="5">Erro ao carregar alunos: ' + xhr.statusText + '</td></tr>');
         }
     });
@@ -29,8 +32,8 @@ window.editAluno = function(matricula) {
 };
 
 $(document).ready(function() {
-    // Clique nas turmas (delegação de eventos)
-    $(document).on('click', '.box-turmas-single', function() {
+    // Clique nas turmas
+    $('.box-turmas-single').click(function() {
         $('.box-turmas-single').removeClass('active'); // Remove a classe active de todas as turmas
         $(this).addClass('active'); // Adiciona a classe active à turma clicada
         var turmaId = $(this).data('turma-id');

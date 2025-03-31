@@ -19,13 +19,10 @@ $cargo = $_SESSION["cargo"];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
-    <link rel="stylesheet" href="./css/modal-delete-turma.css" />
-    <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-details.css" />
     <link rel="stylesheet" href="./css/modal-delete.css" />
     <link rel="stylesheet" href="./css/modal-edit.css" />
     <link rel="stylesheet" href="./css/modal-add.css" />
-    <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph Dashboard - <?php echo htmlspecialchars($cargo); ?></title>
 </head>
@@ -53,18 +50,11 @@ $cargo = $_SESSION["cargo"];
             <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
-
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
-            <div class="sidebar-item">
-                <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
-                <div class="submenu">
-                    <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-users"></i>Turma</a>
-                    <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
-                    <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
-                </div>
-            </div>
+                <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i>Cadastrar Turma</a>
+                <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i>Cadastrar Funcionário</a>
+                <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Cadastrar Aluno</a>
             <?php endif; ?>
-
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
             <div class="separator"></div><br>
         </div>
@@ -130,7 +120,35 @@ $cargo = $_SESSION["cargo"];
             <?php elseif ($cargo === "Coordenador"): ?>
                 <!-- Dashboard do Coordenador -->
                 <div class="box-turmas">
-                    <?php include 'fetch_turmas_dashboard.php'; ?>
+                    <?php
+                    $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
+                            FROM turmas t 
+                            LEFT JOIN funcionarios f ON t.professor_id = f.id";
+                    $result = $conn->query($sql);
+                    $turmas = [];
+                    while ($row = $result->fetch_assoc()) {
+                        $turmas[] = $row;
+                    }
+
+                    foreach ($turmas as $turma) {
+                        $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("i", $turma['id']);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        $quantidade = $result->fetch_assoc()['quantidade'];
+                        $stmt->close();
+
+                        echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
+                        echo "<h3>{$turma['nome']}</h3>";
+                        echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
+                        echo "<p>{$quantidade} alunos</p>";
+                        echo "</div>";
+                    }
+                    if (empty($turmas)) {
+                        echo "<p>Nenhuma turma cadastrada.</p>";
+                    }
+                    ?>
                 </div>
 
                 <div class="tabela-turma-selecionada">
@@ -186,7 +204,34 @@ $cargo = $_SESSION["cargo"];
                 <!-- Lista de Turmas -->
                 <h3 class="section-title"><i class="fa-solid fa-users"></i> Turmas</h3>
                 <div class="box-turmas">
-                    <?php include 'fetch_turmas_dashboard.php'; ?>
+                    <?php
+                    $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
+                            FROM turmas t 
+                            LEFT JOIN funcionarios f ON t.professor_id = f.id";
+                    $result = $conn->query($sql);
+                    $turmas = [];
+                    while ($row = $result->fetch_assoc()) {
+                        $turmas[] = $row;
+                    }
+
+                    foreach ($turmas as $turma) {
+                        $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("i", $turma['id']);
+                        $stmt->execute();
+                        $quantidade = $stmt->get_result()->fetch_assoc()['quantidade'];
+                        $stmt->close();
+
+                        echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
+                        echo "<h3>{$turma['nome']} ({$turma['ano']})</h3>";
+                        echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
+                        echo "<p>{$quantidade} alunos</p>";
+                        echo "</div>";
+                    }
+                    if (empty($turmas)) {
+                        echo "<p>Nenhuma turma cadastrada.</p>";
+                    }
+                    ?>
                 </div>
 
                 <!-- Tabela de Alunos -->
@@ -406,70 +451,17 @@ $cargo = $_SESSION["cargo"];
         </div>
     </div>
     <?php endif; ?>
-    <!-- Fim do Modal de Cadstro de Aluno-->
-
-    <!-- Modal de Cadastro de Turma (exclusivo para Coordenador e Diretor) -->
-    <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
-    <div id="modal-cadastrar-turma" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2 class="modal-title">Cadastrar Turma</h2>
-            <form id="cadastro-turma-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="add-turma-nome">Nome da Turma:</label>
-                        <input type="text" id="add-turma-nome" name="nome" placeholder="Ex.: 5º Ano A" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="add-turma-ano">Ano:</label>
-                        <input type="number" id="add-turma-ano" name="ano" placeholder="Ex.: 5" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="add-professor-id">Professor Responsável:</label>
-                        <select id="add-professor-id" name="professor_id" required>
-                            <option value="">Selecione um professor</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-buttons">
-                    <button type="submit" class="btn">Cadastrar</button>
-                    <button type="button" class="btn close-modal-btn">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <?php endif; ?>
-    <!-- Fim do Modal de Cadastro de Turma-->
-
-    <!-- Modal de Confirmação de Exclusão de Turma (exclusivo para Coordenador e Diretor) -->
-    <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
-    <div id="modal-delete-turma" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2 class="modal-title">Excluir Turma</h2>
-            <p class="modal-message">Tem certeza que deseja excluir esta turma? Esta ação não pode ser desfeita.</p>
-            <input type="hidden" id="delete-turma-id">
-            <div class="modal-buttons">
-                <button class="btn delete-btn" onclick="confirmDeleteTurma()">Excluir</button>
-                <button class="btn close-modal-btn">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
-    <!-- Fim do Modal de Confirmação de Exclusão de Turma-->
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
-    <script src="js/modal-delete-turma.js"></script>
-    <script src="js/modal-add-turma.js"></script>
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
-    <script src="js/modal-edit.js"></script>
     <script src="js/modal-add.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/modal-edit.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
 <?php $conn->close(); ?>

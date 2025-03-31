@@ -1,7 +1,5 @@
-/* js/sidebar.js */
-/* Responsabilidade: Gerencia o toggle da sidebar, persiste seu estado e controla submenus */
+/* Responsabilidade: Gerencia o toggle da sidebar e persiste seu estado. */
 $(document).ready(function() {
-    // Toggle da sidebar
     if (localStorage.getItem('sidebarActive') === 'true') {
         $('#sidebar').addClass('active');
         $('#content').addClass('shifted');
@@ -17,15 +15,5 @@ $(document).ready(function() {
             $('#sidebar').removeClass('transition-enabled');
             $('#content').removeClass('transition-enabled');
         }, 300);
-    });
-
-    // Toggle do submenu
-    $('.sidebar-toggle').on('click', function(e) {
-        e.preventDefault();
-        const $submenu = $(this).next('.submenu');
-        const $toggleIcon = $(this).find('.submenu-toggle');
-
-        $submenu.slideToggle(200); // Animação suave
-        $toggleIcon.toggleClass('open'); // Gira a seta
     });
 });
