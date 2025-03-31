@@ -1,5 +1,16 @@
 /* js/modal-delete-turma.js */
 function showDeleteTurmaModal(turmaId) {
+    // Restaurar o conteúdo original do modal antes de abrir
+    const originalContent = `
+        <h2 class="modal-title">Excluir Turma</h2>
+        <p class="modal-message">Tem certeza que deseja excluir esta turma? Esta ação não pode ser desfeita.</p>
+        <input type="hidden" id="delete-turma-id">
+        <div class="modal-buttons">
+            <button class="btn delete-btn" onclick="confirmDeleteTurma()">Excluir</button>
+            <button class="btn close-modal-btn">Cancelar</button>
+        </div>
+    `;
+    $('#modal-delete-turma .modal-content').html(originalContent);
     $('#delete-turma-id').val(turmaId);
     $('#modal-delete-turma').css('display', 'block');
 }
