@@ -13,7 +13,7 @@
 }
 
 /* Estilos específicos para o modal de cadastro */
-#modal-cadastrar-aluno .modal-content {
+#modal-add-aluno .modal-content {
     background-color: white;
     margin: 10% auto; /* Centraliza verticalmente e horizontalmente */
     padding: 20px;
@@ -23,41 +23,41 @@
     max-width: 600px;
 }
 
-#modal-cadastrar-aluno .modal-title {
+#modal-add-aluno .modal-title {
     text-align: center;
     margin-bottom: 20px;
     color: #333;
 }
 
-#modal-cadastrar-aluno .form-row {
+#modal-add-aluno .form-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
 }
 
-#modal-cadastrar-aluno .form-group {
+#modal-add-aluno .form-group {
     flex: 1;
     margin-right: 10px;
 }
 
-#modal-cadastrar-aluno .form-group:last-child {
+#modal-add-aluno .form-group:last-child {
     margin-right: 0;
 }
 
-#modal-cadastrar-aluno .form-group.full-width {
+#modal-add-aluno .form-group.full-width {
     flex: none;
     width: 100%;
 }
 
-#modal-cadastrar-aluno .form-group label {
+#modal-add-aluno .form-group label {
     font-weight: bold;
     color: #333;
     display: block;
     margin-bottom: 5px;
 }
 
-#modal-cadastrar-aluno .form-group input,
-#modal-cadastrar-aluno .form-group select {
+#modal-add-aluno .form-group input,
+#modal-add-aluno .form-group select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
@@ -65,12 +65,12 @@
     font-size: 14px;
 }
 
-#modal-cadastrar-aluno .modal-buttons {
+#modal-add-aluno .modal-buttons {
     margin-top: 20px;
     text-align: right;
 }
 
-#modal-cadastrar-aluno .modal-buttons .btn {
+#modal-add-aluno .modal-buttons .btn {
     background-color: #73b4ff;
     color: white;
     padding: 10px 20px;
@@ -82,26 +82,26 @@
     margin-left: 10px;
 }
 
-#modal-cadastrar-aluno .modal-buttons .btn:hover:not(:disabled) {
+#modal-add-aluno .modal-buttons .btn:hover:not(:disabled) {
     background-color: #5599e6;
 }
 
 /* Estilos para mensagens de sucesso ou erro */
-#modal-cadastrar-aluno .modal-title.success {
+#modal-add-aluno .modal-title.success {
     color: #28a745; /* Verde */
 }
 
-#modal-cadastrar-aluno .modal-title.success i {
+#modal-add-aluno .modal-title.success i {
     margin-right: 10px;
 }
 
-#modal-cadastrar-aluno .modal-message {
+#modal-add-aluno .modal-message {
     font-size: 16px;
     color: #333;
     margin-bottom: 20px;
     text-align: center;
 }
 
-#modal-cadastrar-aluno .modal-message.error {
+#modal-add-aluno .modal-message.error {
     color: #dc3545; /* Vermelho */
 }
