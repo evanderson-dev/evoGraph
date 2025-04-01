@@ -116,6 +116,83 @@ require_once 'db_connection.php';
         <div class="modal-content"></div>
     </div>
 
+    <!-- Modal de Cadastro de Turma (exclusivo para Coordenador e Diretor) -->
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <div id="modal-cadastrar-turma" class="modal" style="display: none;">
+        <div class="modal-content"></div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Modal de Adição de Funcionário (exclusivo para Coordenador e Diretor) -->
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <div id="modal-add-funcionario" class="modal" style="display: none;">
+        <div class="modal-content"></div>
+    </div>
+    <?php endif; ?>
+
+    <!--  Modal de Cadastro de Aluno (exclusivo para Coordenador e Diretor) -->
+    <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+    <div id="modal-cadastrar-aluno" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 class="modal-title">Cadastrar Aluno</h2>
+            <form id="cadastro-aluno-form" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-nome">Nome:</label>
+                        <input type="text" id="add-nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-sobrenome">Sobrenome:</label>
+                        <input type="text" id="add-sobrenome" name="sobrenome" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-data_nascimento">Data de Nascimento:</label>
+                        <input type="date" id="add-data_nascimento" name="data_nascimento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-matricula">Matrícula:</label>
+                        <input type="text" id="add-matricula" name="matricula" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-foto">Foto (opcional):</label>
+                        <input type="file" id="add-foto" name="foto" accept="image/*">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="add-nome_pai">Nome do Pai (opcional):</label>
+                        <input type="text" id="add-nome_pai" name="nome_pai">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="add-nome_mae">Nome da Mãe (opcional):</label>
+                        <input type="text" id="add-nome_mae" name="nome_mae">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="add-turma_id">Turma:</label>
+                        <select id="add-turma_id" name="turma_id" required>
+                            <option value="">Selecione uma turma</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" id="add-data_matricula_hidden" name="data_matricula_hidden">
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Cadastrar</button>
+                    <button type="button" class="btn close-modal-btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
+    <!-- Fim do Modal de Cadastro de Aluno -->
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
