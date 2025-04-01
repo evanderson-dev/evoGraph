@@ -73,10 +73,8 @@ require_once 'db_connection.php';
                 <h2>Gerenciar Funcionários</h2><br>
                 <div class="separator"></div><br>
                 <p><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a> / Gerenciar Funcionários</p>
-            </div>
-
-            <!-- Filtros e Pesquisa -->
-            <div class="filtros">
+                
+                <!-- Filtros e Pesquisa -->
                 <input type="text" id="search-funcionario" placeholder="Pesquisar por Nome ou RF" class="search-bar">
                 <select id="filtro-cargo">
                     <option value="">Todos os Cargos</option>
