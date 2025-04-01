@@ -60,7 +60,7 @@ header { /* Cabeçalho da página */
 }
 
 .content.shifted {
-    margin-left: 210px; /* Desloca o conteúdo quando a sidebar está ativa */
+    margin-left: 250px; /* Desloca o conteúdo quando a sidebar está ativa */
 }
 
 .content.transition-enabled {
