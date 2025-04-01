@@ -1,0 +1,89 @@
+/* css/modal-edit-funcionario.css */
+#modal-edit-funcionario.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal-edit-funcionario .modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 600px;
+}
+
+#modal-edit-funcionario .modal-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #333;
+}
+
+#modal-edit-funcionario .modal-title.success {
+    color: #28a745; /* Verde */
+}
+
+#modal-edit-funcionario .modal-title.success i {
+    margin-right: 10px;
+}
+
+#modal-edit-funcionario .modal-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#modal-edit-funcionario .modal-message.error {
+    color: #dc3545; /* Vermelho */
+}
+
+#modal-edit-funcionario .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+#modal-edit-funcionario .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+#modal-edit-funcionario .form-group input,
+#modal-edit-funcionario .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#modal-edit-funcionario .modal-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+#modal-edit-funcionario .modal-buttons .btn {
+    background-color: #73b4ff;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+#modal-edit-funcionario .modal-buttons .btn:hover:not(:disabled) {
+    background-color: #5599e6;
+}
