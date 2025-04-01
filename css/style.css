@@ -126,21 +126,22 @@ header { /* Cabeçalho da página */
     flex-shrink: 0; /* Impede que os filtros encolham demais */
 }
 
-.titulo-secao #search-funcionario {
+
+.titulo-secao #search-funcionario { /* Campo de busca */
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
-    width: 200px;
+    width: 220px; /* Largura fixa */
     transition: border-color 0.3s ease;
 }
 
-.titulo-secao #search-funcionario:focus {
+.titulo-secao #search-funcionario:focus { /* Efeito de foco */
     border-color: #73b4ff;
     outline: none;
 }
 
-.titulo-secao #filtro-cargo {
+.titulo-secao #filtro-cargo { /* Filtro de cargo */
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
