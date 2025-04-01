@@ -22,11 +22,11 @@ $cargo = $_SESSION["cargo"];
     <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-delete-turma.css" />
     <link rel="stylesheet" href="./css/modal-edit-turma.css" />
+    <link rel="stylesheet" href="./css/modal-edit-aluno.css" />
     <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-add-aluno.css" />
     <link rel="stylesheet" href="./css/modal-details.css" />
     <link rel="stylesheet" href="./css/modal-delete.css" />
-    <link rel="stylesheet" href="./css/modal-edit.css" />
     <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph Dashboard - <?php echo htmlspecialchars($cargo); ?></title>
@@ -341,78 +341,6 @@ $cargo = $_SESSION["cargo"];
         </div>
     </div>
     <?php endif; ?>
-
-    <!-- Modal de Edição de Aluno -->
-    <?php if ($cargo === "Diretor" || $cargo === "Coordenador"): ?>
-    <div id="modal-editar-aluno" class="modal">
-        <div class="modal-content">
-            <h2>Editar Aluno</h2>
-            <div class="cadastro-form">
-                <form method="POST" id="editar-aluno-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-nome">Nome:</label>
-                            <input type="text" id="edit-nome" name="nome" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-sobrenome">Sobrenome:</label>
-                            <input type="text" id="edit-sobrenome" name="sobrenome" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-data_nascimento">Data de Nascimento:</label>
-                            <input type="date" id="edit-data_nascimento" name="data_nascimento" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-matricula">Matrícula:</label>
-                            <input type="text" id="edit-matricula" name="matricula" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="edit-nome_pai">Nome do Pai (opcional):</label>
-                            <input type="text" id="edit-nome_pai" name="nome_pai">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="edit-nome_mae">Nome da Mãe (opcional):</label>
-                            <input type="text" id="edit-nome_mae" name="nome_mae">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="edit-turma_id">Turma:</label>
-                            <select id="edit-turma_id" name="turma_id" required>
-                                <option value="">Selecione uma turma</option>
-                                <?php
-                                $sql = "SELECT id, nome FROM turmas";
-                                $result = $conn->query($sql);
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='{$row['id']}'>" . htmlspecialchars($row['nome']) . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <input type="hidden" id="edit-data_matricula_hidden" name="data_matricula_hidden">
-
-                    <div class="form-buttons">
-                        <button type="submit" class="btn">Salvar</button>
-                        <button type="button" class="btn close-modal-btn">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
-    <!-- Fim do modal de Edição de Aluno -->
     
     <!-- Modal de Cadastro de Turma -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
@@ -449,18 +377,29 @@ $cargo = $_SESSION["cargo"];
     </div>
     <?php endif; ?>
 
+    <!-- Modal de Edição de Aluno -->
+    <?php if ($cargo === "Diretor" || $cargo === "Coordenador"): ?>
+    <div id="modal-edit-aluno" class="modal" style="display: none;">
+        <div class="modal-content"></div>
+    </div>
+    <?php endif; ?>
+
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
+
     <script src="js/modal-add-funcionario.js"></script>
-    <script src="js/modal-delete-turma.js"></script>
-    <script src="js/modal-edit-turma.js"></script>
     <script src="js/modal-add-turma.js"></script>
     <script src="js/modal-add-aluno.js"></script>
-    <script src="js/modal-details.js"></script>
+
+    <script src="js/modal-edit-turma.js"></script>
+    <script src="js/modal-edit-aluno.js"></script>
+
+    <script src="js/modal-delete-turma.js"></script>
     <script src="js/modal-delete.js"></script>
-    <script src="js/modal-edit.js"></script>
+
+    <script src="js/modal-details.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>

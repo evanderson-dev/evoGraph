@@ -66,7 +66,7 @@ function generateTabelaAlunos($conn, $turma_id, $cargo, $funcionario_id) {
             $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
             if ($cargo === "Diretor") {
                 $html .= "<td>";
-                $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"openEditModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($row['turma_id']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
+                $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"openEditAlunoModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($row['turma_id']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
                 $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"showDeleteModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($row['turma_id']) . "')\"><i class='fa-solid fa-trash'></i></button>";
                 $html .= "</td>";
             }

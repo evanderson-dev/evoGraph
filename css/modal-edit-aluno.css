@@ -1,0 +1,96 @@
+/* css/modal-edit-aluno.css */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal-edit-aluno .modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 600px;
+}
+
+#modal-edit-aluno .modal-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#modal-edit-aluno .form-group {
+    margin-bottom: 15px;
+}
+
+#modal-edit-aluno .form-group.full-width {
+    width: 100%;
+}
+
+#modal-edit-aluno .form-group label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+#modal-edit-aluno .form-group input,
+#modal-edit-aluno .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#modal-edit-aluno .modal-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+#modal-edit-aluno .modal-buttons .btn {
+    background-color: #73b4ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+#modal-edit-aluno .modal-buttons .btn:hover:not(:disabled) {
+    background-color: #5599e6;
+}
+
+#modal-edit-aluno .modal-title.success {
+    color: #28a745;
+}
+
+#modal-edit-aluno .modal-title.success i {
+    margin-right: 10px;
+}
+
+#modal-edit-aluno .modal-title.error {
+    color: #dc3545;
+}
+
+#modal-edit-aluno .modal-title.error i {
+    margin-right: 10px;
+}
+
+#modal-edit-aluno .modal-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}

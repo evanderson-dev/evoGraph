@@ -24,7 +24,7 @@ function loadTurma(turmaId) {
 
 window.editAluno = function(matricula) {
     var turmaId = $('.box-turmas-single.active').data('turma-id') || $('#tabela-alunos tr[data-matricula="' + matricula + '"]').data('turma-id');
-    openEditModal(matricula, turmaId);
+    openEditAlunoModal(matricula, turmaId);
 };
 
 $(document).ready(function() {
