@@ -83,12 +83,16 @@ header { /* Cabeçalho da página */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
-.titulo-secao h2 { /* Título principal */
-    font-size: 19px; /* Tamanho da fonte */
+.titulo-secao h2 {
+    font-size: 19px;
+    margin-bottom: 10px; /* Ajustado para evitar <br> */
 }
 
-.titulo-secao p { /* Subtítulo */
-    font-size: 14px; /* Tamanho da fonte */
+.titulo-secao .separator {
+    width: 100%;
+    height: 1px;
+    background-color: #73b4ff;
+    margin: 10px 0;
 }
 
 .titulo-secao svg { /* Ícone do título */
@@ -96,21 +100,22 @@ header { /* Cabeçalho da página */
     margin-right: 5px; /* Espaço entre ícone e texto */
 }
 
-.separator { /* Separador horizontal */
-    width: 100%; /* Largura total */
-    height: 1px; /* Altura de 1px */
-    background-color: #73b4ff; /* Cor do separador */
+.titulo-secao .separator {
+    width: 100%;
+    height: 1px;
+    background-color: #73b4ff;
+    margin: 10px 0;
 }
 
-.home-link {
-    color: #333; /* Cor padrão do ícone */
-    text-decoration: none; /* Remove sublinhado */
-    font-size: 16px; /* Tamanho do ícone */
-    transition: color 0.3s ease; /* Transição suave para hover */
+.titulo-secao .home-link {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
 }
 
-.home-link:hover {
-    color: #5599e6; /* Azul mais escuro ao passar o mouse */
+.titulo-secao .home-link:hover {
+    color: #5599e6;
 }
 
 /* Estilização dos filtros */
@@ -118,6 +123,7 @@ header { /* Cabeçalho da página */
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0; /* Impede que os filtros encolham demais */
 }
 
 .titulo-secao #search-funcionario {

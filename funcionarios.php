@@ -70,8 +70,8 @@ require_once 'db_connection.php';
 
         <div class="content" id="content">
             <div class="titulo-secao">
-                <h2>Gerenciar Funcionários</h2><br>
-                <div class="separator"></div><br>
+                <h2>Gerenciar Funcionários</h2>
+                <div class="separator"></div>
                 <p>
                     <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a> / Gerenciar Funcionários</span>
                     <div class="filtros">
