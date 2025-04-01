@@ -1,4 +1,4 @@
-/* css/modal-add.css */
+/* css/modal-add-aluno.css */
 /* Estilos para modais genéricos */
 .modal {
     display: none; /* Começa oculto */
@@ -12,7 +12,7 @@
     background-color: rgba(0, 0, 0, 0.5); /* Fundo escurecido */
 }
 
-/* Estilos específicos para o modal de cadastro */
+/* Estilos específicos para o modal de cadastro de aluno */
 #modal-add-aluno .modal-content {
     background-color: white;
     margin: 10% auto; /* Centraliza verticalmente e horizontalmente */
@@ -29,23 +29,11 @@
     color: #333;
 }
 
-#modal-add-aluno .form-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
 #modal-add-aluno .form-group {
-    flex: 1;
-    margin-right: 10px;
-}
-
-#modal-add-aluno .form-group:last-child {
-    margin-right: 0;
+    margin-bottom: 15px; /* Ajustado para consistência sem form-row */
 }
 
 #modal-add-aluno .form-group.full-width {
-    flex: none;
     width: 100%;
 }
 
