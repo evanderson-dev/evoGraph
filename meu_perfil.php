@@ -66,34 +66,7 @@ $conn->close();
     <title>evoGraph - Meu Perfil</title>
 </head>
 <body>
-    <header>
-        <div class="info-header">
-            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
-            <div class="logo">
-                <h3>evoGraph</h3>
-            </div>
-        </div>
-        <div class="info-header">
-            <i class="fa-solid fa-envelope"></i>
-            <i class="fa-solid fa-bell"></i>
-            <i class="fa-solid fa-user"></i>
-            <img src="https://avatars.githubusercontent.com/u/94180306?s=40&v=4" alt="User" class="user-icon">
-        </div>
-    </header>
-
-    <section class="main">
-        <div class="sidebar" id="sidebar">
-            <a href="dashboard.php"><i class="fa-solid fa-house"></i> Home</a>
-            <a href="#"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
-            <a class="sidebar-active" href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i> Meu Perfil</a>
-            <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
-                <a href="cadastro_turma.php"><i class="fa-solid fa-plus"></i> Cadastrar Turma</a>
-                <a href="cadastro_funcionario.php"><i class="fa-solid fa-user-plus"></i> Cadastrar Funcionário</a>
-                <a href="cadastro_aluno.php"><i class="fa-solid fa-graduation-cap"></i> Cadastrar Aluno</a>
-            <?php endif; ?>
-            <a href="logout.php"><i class="fa-solid fa-sign-out"></i> Sair</a>
-            <div class="separator"></div><br>
-        </div>
+    <section class="main">        
 
         <div class="content" id="content">
             <div class="titulo-secao">
@@ -175,25 +148,6 @@ $conn->close();
                 data_nascimento: $('#data_nascimento').val(),
                 new_password: $('#new_password').val()
             };
-
-            // Aplicar estado inicial sem transição
-            if (localStorage.getItem('sidebarActive') === 'true') {
-                $('#sidebar').addClass('active');
-                $('#content').addClass('shifted');
-            }
-
-            // Menu hambúrguer
-            $('#menu-toggle').on('click', function() {
-                $('#sidebar').addClass('transition-enabled');
-                $('#content').addClass('transition-enabled');
-                $('#sidebar').toggleClass('active');
-                $('#content').toggleClass('shifted');
-                localStorage.setItem('sidebarActive', $('#sidebar').hasClass('active'));
-                setTimeout(function() {
-                    $('#sidebar').removeClass('transition-enabled');
-                    $('#content').removeClass('transition-enabled');
-                }, 300); // Duração da transição (0.3s)
-            });
 
             // Botão Editar
             $('#edit-btn').on('click', function() {
