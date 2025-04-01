@@ -62,19 +62,11 @@ $conn->close();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Meu Perfil</title>
 </head>
 <body>
-    <section class="main">        
-
+    <section class="main">
         <div class="content" id="content">
-            <div class="titulo-secao">
-                <h2>Meu Perfil</h2><br>
-                <div class="separator"></div><br>
-                <p><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Meu Perfil</p>
-            </div>
-
             <?php if (isset($success_message)): ?>
                 <p style="color: green;"><?php echo $success_message; ?></p>
             <?php elseif (isset($error_message)): ?>
