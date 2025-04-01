@@ -81,59 +81,59 @@ $cargo = $_SESSION["cargo"];
             </div>
 
             <?php if ($cargo === "Professor"): ?>
-                <!-- Dashboard do Professor -->
-                <div class="box-turmas">
-                    <?php
-                    $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
+            <!-- Dashboard do Professor -->
+            <div class="box-turmas">
+                <?php
+                $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $funcionario_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $turmas = [];
+                while ($row = $result->fetch_assoc()) {
+                    $turmas[] = $row;
+                }
+                $stmt->close();
+
+                foreach ($turmas as $turma) {
+                    $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $funcionario_id);
+                    $stmt->bind_param("i", $turma['id']);
                     $stmt->execute();
                     $result = $stmt->get_result();
-                    $turmas = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $turmas[] = $row;
-                    }
+                    $quantidade = $result->fetch_assoc()['quantidade'];
                     $stmt->close();
 
-                    foreach ($turmas as $turma) {
-                        $sql = "SELECT COUNT(*) as quantidade FROM alunos WHERE turma_id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("i", $turma['id']);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $quantidade = $result->fetch_assoc()['quantidade'];
-                        $stmt->close();
+                    echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
+                    echo "<h3>{$turma['nome']}</h3>";
+                    echo "<p>{$quantidade} alunos</p>";
+                    echo "</div>";
+                }
+                if (empty($turmas)) {
+                    echo "<p>Nenhuma turma cadastrada.</p>";
+                }
+                ?>
+            </div>
 
-                        echo "<div class='box-turmas-single' data-turma-id='{$turma['id']}'>";
-                        echo "<h3>{$turma['nome']}</h3>";
-                        echo "<p>{$quantidade} alunos</p>";
-                        echo "</div>";
-                    }
-                    if (empty($turmas)) {
-                        echo "<p>Nenhuma turma cadastrada.</p>";
-                    }
-                    ?>
-                </div>
-
-                <div class="tabela-turma-selecionada">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Data de Nascimento</th>
-                                <th>Matrícula</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-alunos">
-                            <!-- Dados dos alunos serão inseridos aqui -->
-                        </tbody>
-                    </table>
-                </div>
+            <div class="tabela-turma-selecionada">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Data de Nascimento</th>
+                            <th>Matrícula</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-alunos">
+                        <!-- Dados dos alunos serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
 
             <?php elseif ($cargo === "Coordenador"): ?>
-                <!-- Dashboard do Coordenador -->
-                <div class="box-turmas">
-                    <?php
+            <!-- Dashboard do Coordenador -->
+            <div class="box-turmas">
+                <?php
                     $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
                             FROM turmas t 
                             LEFT JOIN funcionarios f ON t.professor_id = f.id";
@@ -161,66 +161,67 @@ $cargo = $_SESSION["cargo"];
                     if (empty($turmas)) {
                         echo "<p>Nenhuma turma cadastrada.</p>";
                     }
-                    ?>
-                </div>
+                ?>
+            </div>
+            <!-- Fim do Dashboard do Coordenador -->
 
-                <div class="tabela-turma-selecionada">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Data de Nascimento</th>
-                                <th>Matrícula</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-alunos">
-                            <!-- Dados dos alunos serão inseridos aqui -->
-                        </tbody>
-                    </table>
-                </div>
+            <div class="tabela-turma-selecionada">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Data de Nascimento</th>
+                            <th>Matrícula</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-alunos">
+                        <!-- Dados dos alunos serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
 
             <?php elseif ($cargo === "Diretor"): ?>
-                <!-- Dashboard do Diretor -->
-                <!-- Visão Geral -->
-                <div class="overview">
-                    <?php
-                    $sql = "SELECT COUNT(*) as total_turmas FROM turmas";
-                    $total_turmas = $conn->query($sql)->fetch_assoc()['total_turmas'];
+            <!-- Dashboard do Diretor -->
+            <!-- Visão Geral -->
+            <div class="overview">
+                <?php
+                $sql = "SELECT COUNT(*) as total_turmas FROM turmas";
+                $total_turmas = $conn->query($sql)->fetch_assoc()['total_turmas'];
 
-                    $sql = "SELECT COUNT(*) as total_alunos FROM alunos";
-                    $total_alunos = $conn->query($sql)->fetch_assoc()['total_alunos'];
+                $sql = "SELECT COUNT(*) as total_alunos FROM alunos";
+                $total_alunos = $conn->query($sql)->fetch_assoc()['total_alunos'];
 
-                    $sql = "SELECT COUNT(*) as total_professores FROM funcionarios WHERE cargo = 'Professor'";
-                    $total_professores = $conn->query($sql)->fetch_assoc()['total_professores'];
+                $sql = "SELECT COUNT(*) as total_professores FROM funcionarios WHERE cargo = 'Professor'";
+                $total_professores = $conn->query($sql)->fetch_assoc()['total_professores'];
 
-                    $sql = "SELECT COUNT(*) as total_funcionarios FROM funcionarios";
-                    $total_funcionarios = $conn->query($sql)->fetch_assoc()['total_funcionarios'];
-                    ?>
-                    <div class="overview-box">
-                        <h3><?php echo $total_turmas; ?></h3>
-                        <p>Total de Turmas</p>
-                    </div>
-                    <div class="overview-box">
-                        <h3 id="total-alunos"><?php echo $total_alunos; ?></h3>
-                        <p>Total de Alunos</p>
-                    </div>
-                    <div class="overview-box">
-                        <h3><?php echo $total_professores; ?></h3>
-                        <p>Total de Professores</p>
-                    </div>
-                    <div class="overview-box">
-                        <h3><?php echo $total_funcionarios; ?></h3>
-                        <p>Total de Funcionários</p>
-                    </div>
+                $sql = "SELECT COUNT(*) as total_funcionarios FROM funcionarios";
+                $total_funcionarios = $conn->query($sql)->fetch_assoc()['total_funcionarios'];
+                ?>
+                <div class="overview-box">
+                    <h3><?php echo $total_turmas; ?></h3>
+                    <p>Total de Turmas</p>
                 </div>
+                <div class="overview-box">
+                    <h3 id="total-alunos"><?php echo $total_alunos; ?></h3>
+                    <p>Total de Alunos</p>
+                </div>
+                <div class="overview-box">
+                    <h3><?php echo $total_professores; ?></h3>
+                    <p>Total de Professores</p>
+                </div>
+                <div class="overview-box">
+                    <h3><?php echo $total_funcionarios; ?></h3>
+                    <p>Total de Funcionários</p>
+                </div>
+            </div>
 
-                <!-- Lista de Turmas -->
-                <h3 class="section-title"><i class="fa-solid fa-users"></i> Turmas</h3>
-                <div class="box-turmas">
-                    <?php
+            <!-- Lista de Turmas -->
+            <h3 class="section-title"><i class="fa-solid fa-users"></i> Turmas</h3>
+            <div class="box-turmas">
+                <?php
                     $sql = "SELECT t.id, t.nome, t.ano, f.nome AS professor_nome, f.sobrenome 
-                            FROM turmas t 
-                            LEFT JOIN funcionarios f ON t.professor_id = f.id";
+                        FROM turmas t 
+                        LEFT JOIN funcionarios f ON t.professor_id = f.id";
                     $result = $conn->query($sql);
                     $turmas = [];
                     while ($row = $result->fetch_assoc()) {
@@ -254,26 +255,26 @@ $cargo = $_SESSION["cargo"];
                     if (empty($turmas)) {
                         echo "<p>Nenhuma turma cadastrada.</p>";
                     }
-                    ?>
-                </div>
+                ?>
+            </div>
 
-                <!-- Tabela de Alunos -->
-                <div class="tabela-turma-selecionada">
-                    <h3>Alunos da Turma Selecionada</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Data de Nascimento</th>
-                                <th>Matrícula</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-alunos">
-                            <!-- Dados dos alunos serão inseridos aqui -->
-                        </tbody>
-                    </table>
-                </div>
+            <!-- Tabela de Alunos -->
+            <div class="tabela-turma-selecionada">
+                <h3>Alunos da Turma Selecionada</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Data de Nascimento</th>
+                            <th>Matrícula</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-alunos">
+                        <!-- Dados dos alunos serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
             <?php endif; ?>
         </div><!-- FIM CONTENT -->
     </section><!-- FIM MAIN -->
@@ -378,7 +379,7 @@ $cargo = $_SESSION["cargo"];
     <?php endif; ?>
 
     <!-- Modal de Edição de Aluno -->
-    <?php if ($cargo === "Diretor" || $cargo === "Coordenador"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
     <div id="modal-edit-aluno" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
