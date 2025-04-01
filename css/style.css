@@ -76,30 +76,25 @@ header { /* Cabeçalho da página */
     margin-right: 10px; /* Espaço à direita do botão */
 }
 
-.titulo-secao { /* Título das seções */
-    border-radius: 10px; /* Borda arredondada */
-    background-color: white; /* Cor de fundo */
-    padding: 10px; /* Espaçamento interno */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-}
-
-.titulo-secao h2 {
-    font-size: 19px;
-    margin-bottom: 10px; /* Ajustado para evitar <br> */
-}
-
-.titulo-secao .separator {
-    width: 100%;
-    height: 1px;
-    background-color: #73b4ff;
-    margin: 10px 0;
-}
-
 .titulo-secao svg { /* Ícone do título */
     color: #73b4ff; /* Cor do ícone */
     margin-right: 5px; /* Espaço entre ícone e texto */
 }
 
+.titulo-secao {
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex; /* Usar Flexbox no container principal */
+    flex-direction: column; /* Itens em coluna */
+}
+
+.titulo-secao span { /* Texto/ícone */
+    font-size: 14px;
+    color: #777;
+}
+
 .titulo-secao .separator {
     width: 100%;
     height: 1px;
@@ -107,15 +102,18 @@ header { /* Cabeçalho da página */
     margin: 10px 0;
 }
 
-.titulo-secao .home-link {
-    color: #333;
-    text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s ease;
+.titulo-secao .separator {
+    width: 100%;
+    height: 1px;
+    background-color: #73b4ff;
+    margin: 10px 0;
 }
 
-.titulo-secao .home-link:hover {
-    color: #5599e6;
+.titulo-secao p {
+    margin: 0;
+    display: flex;
+    justify-content: flex-end; /* Alinha os filtros à direita */
+    align-items: center;
 }
 
 /* Estilização dos filtros */
@@ -169,6 +167,17 @@ header { /* Cabeçalho da página */
 
 .titulo-secao #btn-pesquisar:hover {
     background-color: #5599e6;
+}
+
+.titulo-secao .home-link {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.titulo-secao .home-link:hover {
+    color: #5599e6;
 }
 
 /* Título das Seções */
