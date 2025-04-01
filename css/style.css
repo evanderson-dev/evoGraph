@@ -88,11 +88,7 @@ header { /* Cabeçalho da página */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex; /* Usar Flexbox no container principal */
     flex-direction: column; /* Itens em coluna */
-}
-
-.titulo-secao span { /* Texto/ícone */
-    font-size: 14px;
-    color: #777;
+    font-weight: bold;
 }
 
 .titulo-secao .separator {

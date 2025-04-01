@@ -77,7 +77,7 @@ $cargo = $_SESSION["cargo"];
 
         <div class="content" id="content">
             <div class="titulo-secao">
-                <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a> / Gerenciar Funcionários</span>
+                <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Gerenciamento de Turmas e Alunos</span>
             </div>
 
             <?php if ($cargo === "Professor"): ?>
