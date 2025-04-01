@@ -28,10 +28,10 @@ function loadFuncionarios() {
             if (response.success) {
                 let html = '';
                 response.funcionarios.forEach(func => {
+                    const nomeCompleto = `${func.nome} ${func.sobrenome}`; // Concatenar nome e sobrenome
                     html += `
                         <tr>
-                            <td>${func.nome}</td>
-                            <td>${func.sobrenome}</td>
+                            <td>${nomeCompleto}</td>
                             <td>${func.email}</td>
                             <td>${func.rf}</td>
                             <td>${func.cargo}</td>
@@ -39,7 +39,7 @@ function loadFuncionarios() {
                                 <button class="action-btn edit-btn" title="Editar" onclick="showEditFuncionarioModal(${func.id})">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
-                                <button class="action-btn delete-btn" title="Excluir" onclick="showDeleteFuncionarioModal(${func.id}, '${func.nome} ${func.sobrenome}')">
+                                <button class="action-btn delete-btn" title="Excluir" onclick="showDeleteFuncionarioModal(${func.id}, '${nomeCompleto}')">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </td>
@@ -48,11 +48,11 @@ function loadFuncionarios() {
                 });
                 $('#tabela-funcionarios').html(html);
             } else {
-                $('#tabela-funcionarios').html('<tr><td colspan="6">Nenhum funcionário encontrado.</td></tr>');
+                $('#tabela-funcionarios').html('<tr><td colspan="5">Nenhum funcionário encontrado.</td></tr>'); // Ajustado colspan para 5
             }
         },
         error: function(xhr) {
-            $('#tabela-funcionarios').html('<tr><td colspan="6">Erro ao carregar funcionários.</td></tr>');
+            $('#tabela-funcionarios').html('<tr><td colspan="5">Erro ao carregar funcionários.</td></tr>'); // Ajustado colspan para 5
         }
     });
 }

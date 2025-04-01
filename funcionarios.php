@@ -91,8 +91,7 @@ require_once 'db_connection.php';
                 <table>
                     <thead>
                         <tr>
-                            <th>Nome</th>
-                            <th>Sobrenome</th>
+                            <th>Nome Completo</th>
                             <th>E-mail</th>
                             <th>RF</th>
                             <th>Cargo</th>
