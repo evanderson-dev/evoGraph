@@ -21,6 +21,7 @@ $cargo = $_SESSION["cargo"];
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-delete-turma.css" />
+    <link rel="stylesheet" href="./css/modal-edit-turma.css" />
     <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-details.css" />
     <link rel="stylesheet" href="./css/modal-delete.css" />
@@ -497,11 +498,19 @@ $cargo = $_SESSION["cargo"];
     </div>
     <?php endif; ?>
 
+    <!-- Modal de Edição de Turma (exclusivo para Coordenador e Diretor) -->
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <div id="modal-edit-turma" class="modal" style="display: none;">
+        <div class="modal-content"></div>
+    </div>
+    <?php endif; ?>
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/modal-add-funcionario.js"></script>
     <script src="js/modal-delete-turma.js"></script>
+    <script src="js/modal-edit-turma.js"></script>
     <script src="js/modal-add-turma.js"></script>
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
