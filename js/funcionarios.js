@@ -61,7 +61,7 @@ function showEditFuncionarioModal(funcId) {
     $.ajax({
         url: 'fetch_funcionarios.php',
         method: 'POST',
-        data: { search: '', cargo: '', id: funcId }, // Adicionar filtro por ID se necessário
+        data: { id: funcId }, // Apenas o ID para buscar um funcionário específico
         dataType: 'json',
         success: function(response) {
             if (response.success && response.funcionarios.length > 0) {
@@ -87,7 +87,7 @@ function showEditFuncionarioModal(funcId) {
                         </div>
                         <div class="form-group">
                             <label for="data_nascimento">Data de Nascimento:</label>
-                            <input type="date" id="data_nascimento" name="data_nascimento" value="${func.data_nascimento}" required>
+                            <input type="date" id="data_nascimento" name="data_nascimento" value="${func.data_nascimento || ''}" required>
                         </div>
                         <div class="form-group">
                             <label for="rf">Registro Funcional (RF):</label>
@@ -139,7 +139,12 @@ function showEditFuncionarioModal(funcId) {
                         }
                     });
                 });
+            } else {
+                alert('Erro ao carregar funcionário: ' + (response.message || 'Dados não encontrados'));
             }
+        },
+        error: function(xhr) {
+            alert('Erro ao carregar funcionário: ' + xhr.statusText);
         }
     });
 }

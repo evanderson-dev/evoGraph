@@ -113,6 +113,57 @@ header { /* Cabeçalho da página */
     color: #5599e6; /* Azul mais escuro ao passar o mouse */
 }
 
+/* Estilização dos filtros */
+.titulo-secao .filtros {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.titulo-secao #search-funcionario {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 200px;
+    transition: border-color 0.3s ease;
+}
+
+.titulo-secao #search-funcionario:focus {
+    border-color: #73b4ff;
+    outline: none;
+}
+
+.titulo-secao #filtro-cargo {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.titulo-secao #filtro-cargo:focus {
+    border-color: #73b4ff;
+    outline: none;
+}
+
+.titulo-secao #btn-pesquisar {
+    padding: 8px 15px;
+    background-color: #73b4ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.titulo-secao #btn-pesquisar:hover {
+    background-color: #5599e6;
+}
+
 /* Título das Seções */
 .section-title {
     width: 100%;

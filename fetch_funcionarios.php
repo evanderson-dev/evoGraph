@@ -12,22 +12,29 @@ header('Content-Type: application/json');
 
 $search = trim($_POST['search'] ?? '');
 $cargo = trim($_POST['cargo'] ?? '');
+$id = isset($_POST['id']) ? (int)$_POST['id'] : null;
 
-$sql = "SELECT id, nome, sobrenome, email, rf, cargo FROM funcionarios WHERE 1=1";
+$sql = "SELECT id, nome, sobrenome, email, rf, cargo, data_nascimento FROM funcionarios WHERE 1=1";
 $params = [];
 $types = "";
 
-if (!empty($search)) {
-    $sql .= " AND (nome LIKE ? OR rf LIKE ?)";
-    $searchParam = "%$search%";
-    $params[] = $searchParam;
-    $params[] = $searchParam;
-    $types .= "ss";
-}
-if (!empty($cargo)) {
-    $sql .= " AND cargo = ?";
-    $params[] = $cargo;
-    $types .= "s";
+if ($id !== null) {
+    $sql .= " AND id = ?";
+    $params[] = $id;
+    $types .= "i";
+} else {
+    if (!empty($search)) {
+        $sql .= " AND (nome LIKE ? OR rf LIKE ?)";
+        $searchParam = "%$search%";
+        $params[] = $searchParam;
+        $params[] = $searchParam;
+        $types .= "ss";
+    }
+    if (!empty($cargo)) {
+        $sql .= " AND cargo = ?";
+        $params[] = $cargo;
+        $types .= "s";
+    }
 }
 
 $stmt = $conn->prepare($sql);
