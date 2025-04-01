@@ -166,7 +166,8 @@ header { /* Cabeçalho da página */
 /*################# ESTILO DA TABELA DE ALUNOS ################*/
 /*#############################################################*/
 
-.tabela-turma-selecionada { /* Tabela da turma selecionada */
+.tabela-turma-selecionada,
+.tabela-funcionarios { /* Tabela da turma selecionada */
     background-color: white; /* Cor de fundo */
     width: 100%; /* Largura total */
     padding: 20px; /* Espaçamento interno */
@@ -175,7 +176,8 @@ header { /* Cabeçalho da página */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
-.tabela-turma-selecionada table {
+.tabela-turma-selecionada table,
+.tabela-funcionarios  table {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
@@ -184,31 +186,38 @@ header { /* Cabeçalho da página */
 }
 
 .tabela-turma-selecionada th,
-.tabela-turma-selecionada td { /* Cabeçalho e células da tabela */
+.tabela-turma-selecionada td,
+.tabela-funcionarios th,
+.tabela-funcionarios td { /* Cabeçalho e células da tabela */
     padding: 12px 15px; /* Espaçamento interno */
     text-align: left; /* Alinhamento à esquerda */
     border-bottom: 1px solid #ddd; /* Borda inferior */
 }
 
-.tabela-turma-selecionada th { /* Cabeçalho da tabela */
+.tabela-turma-selecionada th,
+.tabela-funcionarios th { /* Cabeçalho da tabela */
     background-color: #73b4ff; /* Cor de fundo */
     color: #333; /* Cor do texto */
 }
 
-.tabela-turma-selecionada td { /* Células da tabela */
+.tabela-turma-selecionada td,
+.tabela-funcionarios td { /* Células da tabela */
     color: #333; /* Cor do texto */
     transition: color 0.3s ease; /* Adiciona transição à cor */
 }
 
-.tabela-turma-selecionada tbody tr { /* Linhas da tabela */
+.tabela-turma-selecionada tbody tr,
+.tabela-funcionarios tbody tr { /* Linhas da tabela */
     transition: background-color 0.3s ease; /* Transição suave */
 }
 
-.tabela-turma-selecionada tbody tr:hover { /* Efeito de hover nas linhas */
+.tabela-turma-selecionada tbody tr:hover,
+.tabela-funcionarios tbody tr:hover { /* Efeito de hover nas linhas */
     background-color: #e9ecef; /* Mesmo tom de hover da sidebar */
 }
 
-.tabela-turma-selecionada tbody tr:hover td { /* Efeito de hover nas células */
+.tabela-turma-selecionada tbody tr:hover td,
+.tabela-funcionarios tbody tr:hover td { /* Efeito de hover nas células */
     color: #777; /* Cor do texto no hover */
     cursor: pointer; /* Transforma em ponteiro ao passar o mouse */
 }

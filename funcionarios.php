@@ -16,6 +16,7 @@ require_once 'db_connection.php';
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/modal-delete-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-edit-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-delete-turma.css" />
