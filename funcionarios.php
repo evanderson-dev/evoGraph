@@ -70,10 +70,10 @@ require_once 'db_connection.php';
 
         <div class="content" id="content">
             <div class="titulo-secao">
-                <h2>Gerenciar Funcionários</h2>
+                <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a> / Gerenciar Funcionários</span>
+                <!--<h2>Gerenciar Funcionários</h2>-->
                 <div class="separator"></div>
-                <p>
-                    <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a> / Gerenciar Funcionários</span>
+                <p>                    
                     <div class="filtros">
                         <input type="text" id="search-funcionario" placeholder="Pesquisar por Nome ou RF" class="search-bar">
                         <select id="filtro-cargo">
