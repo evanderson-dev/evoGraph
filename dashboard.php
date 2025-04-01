@@ -239,10 +239,9 @@ $cargo = $_SESSION["cargo"];
                         echo "<h3>{$turma['nome']}</h3>";
                         echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
                         echo "<p>{$quantidade} alunos</p>";
-                        echo "<i class='fa-solid fa-pen-to-square'></i>";
                         if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor") {
                             echo "<button class='action-btn edit-btn' title='Editar Turma' onclick='showEditTurmaModal({$turma['id']})'>";
-                            echo "<i class='fa-solid fa-trash'></i>";
+                            echo "<i class='fa-solid fa-pen-to-square'></i>";
                             echo "</button>";
                         }
                         if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor") {
