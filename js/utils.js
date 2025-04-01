@@ -5,9 +5,9 @@ $(document).on('click', '.close-btn, #cancel-delete-btn, .close-modal-btn', func
 
 function fetchAlunos(turmaId) {
     $.ajax({
-        url: 'fetch_turma_data.php',
+        url: 'fetch_turmas.php',
         method: 'POST',
-        data: { turma_id: turmaId },
+        data: { turma_id: turmaId, action: 'details' },
         dataType: 'json',
         success: function(response) {
             if (response.success) {

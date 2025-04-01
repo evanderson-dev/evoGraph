@@ -167,9 +167,9 @@ function updateAllTurmas() { // Adicionada no final do arquivo
     $('.box-turmas-single').each(function() {
         var turmaId = $(this).data('turma-id');
         $.ajax({
-            url: 'fetch_turma_data.php',
+            url: 'fetch_turmas.php',
             method: 'POST',
-            data: { turma_id: turmaId },
+            data: { turma_id: turmaId, action: 'details' },
             dataType: 'json',
             success: function(response) {
                 if (response.success) {

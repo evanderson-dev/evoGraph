@@ -1,4 +1,5 @@
 /* js/modal-edit-turma.js */
+/* Responsabilidade: Gerencia o modal de edição de turmas */
 $(document).ready(function() {
     $(document).on('click', '#modal-edit-turma .close-modal-btn', function() {
         $('#modal-edit-turma').css('display', 'none');
@@ -6,10 +7,11 @@ $(document).ready(function() {
 });
 
 function showEditTurmaModal(turmaId) {
+    // Carregar os dados da turma via AJAX
     $.ajax({
-        url: 'fetch_turmas.php', // Alterado de fetch_turma.php
+        url: 'fetch_turma.php',
         method: 'POST',
-        data: { turma_id: turmaId, action: 'edit' },
+        data: { turma_id: turmaId },
         dataType: 'json',
         success: function(response) {
             if (response.success) {
@@ -38,6 +40,7 @@ function showEditTurmaModal(turmaId) {
                 $('#modal-edit-turma .modal-content').html(originalContent);
                 $('#modal-edit-turma').css('display', 'block');
 
+                // Carregar professores no select
                 $.ajax({
                     url: 'fetch_professores.php',
                     method: 'GET',
@@ -59,6 +62,7 @@ function showEditTurmaModal(turmaId) {
                     }
                 });
 
+                // Evento de envio do formulário
                 $('#form-edit-turma').on('submit', function(e) {
                     e.preventDefault();
                     $.ajax({
