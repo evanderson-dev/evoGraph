@@ -24,9 +24,10 @@ if (!$user) {
     $error_message = "Erro ao carregar dados do usuário.";
 }
 
-// Definir foto padrão
+// Definir foto padrão e verificar existência
 $default_photo = './img/employee_photos/default_photo.jpg';
-$user['foto'] = $user['foto'] ?: $default_photo;
+$photo_path = $user['foto'] ? $user['foto'] : $default_photo;
+$user['foto'] = file_exists($photo_path) ? $photo_path : $default_photo;
 
 // Processar atualização do perfil apenas ao clicar em "Salvar"
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
