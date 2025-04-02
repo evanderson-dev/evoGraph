@@ -24,8 +24,12 @@ if (!$user) {
     $error_message = "Erro ao carregar dados do usuário.";
 }
 
-// Processar atualização do perfil
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Definir foto padrão
+$default_photo = './img/employee_photos/default_photo.jpg';
+$user['foto'] = $user['foto'] ?: $default_photo;
+
+// Processar atualização do perfil apenas ao clicar em "Salvar"
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     $nome = trim($_POST["nome"]);
     $sobrenome = trim($_POST["sobrenome"]);
     $email = trim($_POST["email"]);
@@ -129,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <i class="fa-solid fa-envelope"></i>
             <i class="fa-solid fa-bell"></i>
             <i class="fa-solid fa-user"></i>
-            <img src="<?php echo $user['foto'] ?? 'https://avatars.githubusercontent.com/u/94180306?s=40&v=4'; ?>" alt="User" class="user-icon">
+            <img src="<?php echo $user['foto']; ?>" alt="User" class="user-icon">
         </div>
     </header>
     <!-- FIM HEADER -->
@@ -171,11 +175,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="profile-form">
                     <form method="POST" action="my_profile.php" id="profile-form" enctype="multipart/form-data">
+                        <input type="hidden" name="save_profile" value="1">
                         <div class="form-row">
                             <div class="form-group foto-placeholder">
                                 <label>Foto do Perfil</label>
                                 <div class="foto-box" id="foto-box">
-                                    <img id="profile-foto-preview" src="<?php echo $user['foto'] ?? 'img/default-photo.jpg'; ?>" alt="Foto do Perfil">
+                                    <img id="profile-foto-preview" src="<?php echo $user['foto']; ?>" alt="Foto do Perfil">
                                     <input type="file" id="foto" name="foto" accept="image/*" hidden disabled>
                                 </div>
                             </div>
