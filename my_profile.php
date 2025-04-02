@@ -25,7 +25,7 @@ if (!$user) {
 }
 
 // Definir foto padrão
-$default_photo = './img/employee_photos/default_photo.jpg';
+$default_photo = 'img/employee_photos/default_photo.jpg';
 $user['foto'] = $user['foto'] ?: $default_photo;
 
 // Processar atualização do perfil apenas ao clicar em "Salvar"
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     // Processar upload da foto
     $foto_path = $user['foto'];
     if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] == 0) {
-        $target_dir = "./img/employee_photos/";
+        $target_dir = "img/employee_photos/";
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
