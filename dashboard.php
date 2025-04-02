@@ -25,7 +25,7 @@ $cargo = $_SESSION["cargo"];
     <link rel="stylesheet" href="./css/modal-edit-turma.css" />
     <link rel="stylesheet" href="./css/modal-edit-aluno.css" />
     <link rel="stylesheet" href="./css/modal-delete-turma.css" />
-    <link rel="stylesheet" href="./css/modal-delete.css" />
+    <link rel="stylesheet" href="./css/modal-delete-aluno.css" />
     <link rel="stylesheet" href="./css/modal-details-aluno.css" />
     <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -281,15 +281,8 @@ $cargo = $_SESSION["cargo"];
 
     <!-- Modal de Confirmação de Exclusão (exclusivo do Diretor) -->
     <?php if ($cargo === "Diretor"): ?>
-    <div id="modal-confirm-delete" class="modal">
-        <div class="modal-content">
-            <h2>Confirmar Exclusão</h2>
-            <p>Tem certeza que deseja excluir o aluno com matrícula <span id="delete-matricula"></span>?</p>
-            <div class="modal-buttons">
-                <button id="confirm-delete-btn" class="btn">Sim</button>
-                <button id="cancel-delete-btn" class="btn">Não</button>
-            </div>
-        </div>
+    <div id="modal-delete-aluno" class="modal" style="display: none;">
+        <div class="modal-content"></div>
     </div>
     <?php endif; ?>
     
@@ -352,7 +345,7 @@ $cargo = $_SESSION["cargo"];
     <script src="js/modal-edit-aluno.js"></script>
 
     <script src="js/modal-delete-turma.js"></script>
-    <script src="js/modal-delete.js"></script>
+    <script src="js/modal-delete-aluno.js"></script>
 
     <script src="js/modal-details-aluno.js"></script>
     <script src="js/dashboard.js"></script>
