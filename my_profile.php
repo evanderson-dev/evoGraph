@@ -63,9 +63,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         }
         $foto_ext = pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION);
         $foto_name = $rf . "." . $foto_ext;
+        $foto_square_name = $rf . "_square." . $foto_ext;
         $target_file = $target_dir . $foto_name;
+        $target_square_file = $target_dir . $foto_square_name;
 
         if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
+            // Criar miniatura quadrada para o header
+            $image = null;
+            switch (strtolower($foto_ext)) {
+                case 'jpg':
+                case 'jpeg':
+                    $image = imagecreatefromjpeg($target_file);
+                    break;
+                case 'png':
+                    $image = imagecreatefrompng($target_file);
+                    break;
+                default:
+                    $error_message = "Formato de imagem não suportado.";
+            }
+
+            if ($image) {
+                $width = imagesx($image);
+                $height = imagesy($image);
+                $size = min($width, $height);
+                $square = imagecreatetruecolor(40, 40); // Tamanho do header
+                imagecopyresampled($square, $image, 0, 0, ($width - $size) / 2, ($height - $size) / 2, 40, 40, $size, $size);
+
+                switch (strtolower($foto_ext)) {
+                    case 'jpg':
+                    case 'jpeg':
+                        imagejpeg($square, $target_square_file, 85);
+                        break;
+                    case 'png':
+                        imagepng($square, $target_square_file, 9);
+                        break;
+                }
+                imagedestroy($image);
+                imagedestroy($square);
+            }
+
             $foto_path = $target_file;
         } else {
             $error_message = "Erro ao fazer upload da foto.";
@@ -104,6 +140,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         $stmt->close();
     }
 }
+
+// Definir caminho da foto quadrada para o header
+$square_photo_path = str_replace(".$foto_ext", "_square.$foto_ext", $user['foto']);
+$header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_photo;
 ?>
 
 <!DOCTYPE html>
@@ -134,7 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
             <i class="fa-solid fa-envelope"></i>
             <i class="fa-solid fa-bell"></i>
             <i class="fa-solid fa-user"></i>
-            <img src="<?php echo $user['foto']; ?>" alt="User" class="user-icon">
+            <img src="<?php echo $header_photo; ?>" alt="User" class="user-icon">
         </div>
     </header>
     <!-- FIM HEADER -->
