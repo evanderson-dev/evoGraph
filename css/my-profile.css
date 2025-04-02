@@ -57,6 +57,17 @@
     border: 2px dashed #ddd;
     border-radius: 5px;
     overflow: hidden;
+    position: relative;
+    cursor: not-allowed;
+}
+
+.foto-placeholder .foto-box.editable {
+    cursor: pointer;
+    border-color: #73b4ff;
+}
+
+.foto-placeholder .foto-box.editable:hover {
+    background-color: #f0f4f8;
 }
 
 .foto-placeholder .foto-box img#profile-foto-preview {

@@ -56,7 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
-        $foto_name = $rf . "_" . time() . "." . pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION);
+        $foto_ext = pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION);
+        $foto_name = $rf . "." . $foto_ext; // Apenas RF no nome
         $target_file = $target_dir . $foto_name;
 
         if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
@@ -173,10 +174,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-row">
                             <div class="form-group foto-placeholder">
                                 <label>Foto do Perfil</label>
-                                <div class="foto-box">
+                                <div class="foto-box" id="foto-box">
                                     <img id="profile-foto-preview" src="<?php echo $user['foto'] ?? 'img/default-photo.jpg'; ?>" alt="Foto do Perfil">
+                                    <input type="file" id="foto" name="foto" accept="image/*" hidden disabled>
                                 </div>
-                                <!--<input type="file" id="foto" name="foto" accept="image/*" disabled>-->
                             </div>
                             <div class="form-group info-right">
                                 <label for="nome">Nome:</label>

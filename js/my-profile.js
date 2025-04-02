@@ -16,6 +16,7 @@ $(document).ready(function() {
         $('#foto').prop('disabled', false);
         $('#save-btn, #cancel-btn').prop('disabled', false);
         $('#edit-btn').prop('disabled', true);
+        $('#foto-box').addClass('editable');
     });
 
     $('#cancel-btn').on('click', function() {
@@ -33,6 +34,13 @@ $(document).ready(function() {
         $('#foto').prop('disabled', true);
         $('#save-btn, #cancel-btn').prop('disabled', true);
         $('#edit-btn').prop('disabled', false);
+        $('#foto-box').removeClass('editable');
+    });
+
+    $('#foto-box').on('click', function() {
+        if (!$('#foto').prop('disabled')) {
+            $('#foto').click();
+        }
     });
 
     $('#foto').on('change', function(event) {
@@ -40,6 +48,8 @@ $(document).ready(function() {
         reader.onload = function() {
             $('#profile-foto-preview').attr('src', reader.result);
         };
-        reader.readAsDataURL(event.target.files[0]);
+        if (event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
     });
 });
