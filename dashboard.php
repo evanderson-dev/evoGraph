@@ -19,14 +19,14 @@ $cargo = $_SESSION["cargo"];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
-    <link rel="stylesheet" href="./css/modal-delete-turma.css" />
+    <link rel="stylesheet" href="./css/modal-add-aluno.css" />
     <link rel="stylesheet" href="./css/modal-edit-turma.css" />
     <link rel="stylesheet" href="./css/modal-edit-aluno.css" />
-    <link rel="stylesheet" href="./css/modal-add-turma.css" />
-    <link rel="stylesheet" href="./css/modal-add-aluno.css" />
-    <link rel="stylesheet" href="./css/modal-details.css" />
+    <link rel="stylesheet" href="./css/modal-delete-turma.css" />
     <link rel="stylesheet" href="./css/modal-delete.css" />
+    <link rel="stylesheet" href="./css/modal-details-aluno.css" />
     <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph Dashboard - <?php echo htmlspecialchars($cargo); ?></title>
@@ -279,56 +279,6 @@ $cargo = $_SESSION["cargo"];
         </div><!-- FIM CONTENT -->
     </section><!-- FIM MAIN -->
 
-    <!-- Modal de Detalhes do Aluno (compartilhado entre cargos) -->
-    <div id="modal-detalhes-aluno" class="modal">
-        <div class="modal-content">
-            <h2>Detalhes do Aluno</h2>
-            <div class="cadastro-form detalhes-form">
-                <div class="form-row">
-                    <div class="form-group foto-placeholder">
-                        <label>Foto do Aluno</label>
-                        <div class="foto-box">
-                            <img id="detalhes-foto" src="img/default-photo.jpg" alt="Foto do Aluno">
-                        </div>
-                    </div>
-                    <div class="form-group info-right">
-                        <label for="detalhes-nome">Nome:</label>
-                        <input type="text" id="detalhes-nome" readonly>
-                        <label for="detalhes-matricula">Matrícula:</label>
-                        <input type="text" id="detalhes-matricula" readonly>
-                        <label for="detalhes-turma">Turma:</label>
-                        <input type="text" id="detalhes-turma" readonly>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="detalhes-nascimento">Data de Nascimento:</label>
-                        <input type="text" id="detalhes-nascimento" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="detalhes-data-matricula">Data de Matrícula:</label>
-                        <input type="text" id="detalhes-data-matricula" readonly>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="detalhes-pai">Nome do Pai:</label>
-                        <input type="text" id="detalhes-pai" readonly>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="detalhes-mae">Nome da Mãe:</label>
-                        <input type="text" id="detalhes-mae" readonly>
-                    </div>
-                </div>
-                <div class="form-buttons">
-                    <button class="btn close-modal-btn">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal de Confirmação de Exclusão (exclusivo do Diretor) -->
     <?php if ($cargo === "Diretor"): ?>
     <div id="modal-confirm-delete" class="modal">
@@ -385,6 +335,10 @@ $cargo = $_SESSION["cargo"];
     </div>
     <?php endif; ?>
 
+    <!-- Modal de Detalhes do Aluno (compartilhado entre cargos) -->
+    <div id="modal-details-aluno" class="modal" style="display: none;">
+        <div class="modal-content"></div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -400,7 +354,7 @@ $cargo = $_SESSION["cargo"];
     <script src="js/modal-delete-turma.js"></script>
     <script src="js/modal-delete.js"></script>
 
-    <script src="js/modal-details.js"></script>
+    <script src="js/modal-details-aluno.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>

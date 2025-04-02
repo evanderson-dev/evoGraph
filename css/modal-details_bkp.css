@@ -1,6 +1,5 @@
-/* css/modal-details-aluno.css */
-/* Estilos para modais genéricos */
-.modal {
+/* Estilos específicos para o modal de detalhes do aluno */
+#modal-detalhes-aluno.modal {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -12,8 +11,7 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Estilos específicos para o modal de detalhes do aluno */
-#modal-details-aluno .modal-content {
+#modal-detalhes-aluno .modal-content {
     background-color: white;
     margin: 10% auto;
     padding: 20px;
@@ -23,36 +21,38 @@
     max-width: 600px;
 }
 
-#modal-details-aluno .modal-title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
+#modal-detalhes-aluno .cadastro-form.detalhes-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
 }
 
-#modal-details-aluno .details-form {
+#modal-detalhes-aluno .form-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    margin-bottom: 15px;
+    gap: 20px;
 }
 
-#modal-details-aluno .form-group {
+#modal-detalhes-aluno .form-group {
     flex: 1;
     min-width: 200px;
-    margin-bottom: 15px;
 }
 
-#modal-details-aluno .form-group.full-width {
+#modal-detalhes-aluno .form-group.full-width {
     flex: 100%;
 }
 
-#modal-details-aluno .form-group label {
+#modal-detalhes-aluno .form-group label {
     display: block;
     margin-bottom: 5px;
     color: #333;
     font-weight: bold;
 }
 
-#modal-details-aluno .form-group input {
+#modal-detalhes-aluno .form-group input {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
@@ -62,27 +62,32 @@
 }
 
 /* Foto do Aluno */
-#modal-details-aluno .foto-placeholder {
+#modal-detalhes-aluno .foto-placeholder {
     flex: 0 0 auto;
 }
 
-#modal-details-aluno .foto-placeholder .foto-box {
+#modal-detalhes-aluno .foto-placeholder .foto-box {
     width: 120px;  /* Proporção 3x4 */
     height: 160px; /* Proporção 3x4 */
     background-color: #e9ecef;
     border: 2px dashed #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 14px;
     border-radius: 5px;
     overflow: hidden;
 }
 
-#modal-details-aluno .foto-placeholder .foto-box img#detalhes-foto {
+#modal-detalhes-aluno .foto-placeholder .foto-box img#detalhes-foto {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 /* Dados à direita da foto */
-#modal-details-aluno .form-group.info-right {
+#modal-detalhes-aluno .form-group.info-right {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -90,22 +95,11 @@
 }
 
 /* Botões */
-#modal-details-aluno .modal-buttons {
-    width: 100%;
+#modal-detalhes-aluno .form-buttons {
     text-align: right;
     margin-top: 20px;
 }
 
-#modal-details-aluno .modal-buttons .btn {
-    background-color: #73b4ff;
-    color: white;
+#modal-detalhes-aluno .form-buttons .btn {
     padding: 8px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#modal-details-aluno .modal-buttons .btn:hover:not(:disabled) {
-    background-color: #5599e6;
 }
