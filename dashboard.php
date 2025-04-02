@@ -54,7 +54,7 @@ $cargo = $_SESSION["cargo"];
         <div class="sidebar" id="sidebar">
             <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
-            <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+            <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
             <div class="sidebar-item">

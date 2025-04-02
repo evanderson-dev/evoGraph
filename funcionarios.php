@@ -53,7 +53,7 @@ require_once 'db_connection.php';
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
-            <a href="meu_perfil.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+            <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">

@@ -83,6 +83,9 @@
     font-size: 16px;
     margin-bottom: 15px;
     text-align: center;
+    padding: 10px;
+    background-color: #d4edda;
+    border-radius: 5px;
 }
 
 .error-message {
@@ -90,4 +93,7 @@
     font-size: 16px;
     margin-bottom: 15px;
     text-align: center;
+    padding: 10px;
+    background-color: #f8d7da;
+    border-radius: 5px;
 }
