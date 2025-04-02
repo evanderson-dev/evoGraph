@@ -18,7 +18,7 @@ function showDeleteAlunoModal(matricula, turmaId) {
                 const alunoNome = `${response.aluno.nome} ${response.aluno.sobrenome}`;
                 const content = `
                     <h2 class="modal-title">Confirmar Exclusão</h2>
-                    <p class="modal-message">Deseja realmente excluir o aluno <span class="highlight-aluno">${alunoNome}</span> (matrícula: <span class="highlight-matricula">${matricula}</span>)?</p>
+                    <p class="modal-message">Deseja realmente excluir o aluno<br><span class="highlight-aluno">${alunoNome}</span><br> (matrícula: <span class="highlight-matricula">${matricula}</span>)?</p>
                     <div class="modal-buttons">
                         <button class="btn confirm-btn" id="confirm-delete-btn">Confirmar</button>
                         <button class="btn cancel-btn" id="cancel-delete-btn">Cancelar</button>
