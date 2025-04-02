@@ -13,10 +13,9 @@ $(document).ready(function() {
 
     $('#edit-btn').on('click', function() {
         $('#profile-form input:not(#cargo)').prop('disabled', false);
-        $('#foto').prop('disabled', false);
+        $('#upload-foto-btn').prop('disabled', false);
         $('#save-btn, #cancel-btn').prop('disabled', false);
         $('#edit-btn').prop('disabled', true);
-        $('#foto-box').addClass('editable');
     });
 
     $('#cancel-btn').on('click', function() {
@@ -31,16 +30,15 @@ $(document).ready(function() {
         $('#new_password').val('');
 
         $('#profile-form input:not(#cargo)').prop('disabled', true);
-        $('#foto').prop('disabled', true);
+        $('#upload-foto-btn').prop('disabled', true);
         $('#save-btn, #cancel-btn').prop('disabled', true);
         $('#edit-btn').prop('disabled', false);
-        $('#foto-box').removeClass('editable');
     });
 
-    $('#foto-box').on('click', function(e) {
+    $('#upload-foto-btn').on('click', function(e) {
         e.preventDefault();
-        if (!$('#foto').prop('disabled')) {
-            $('#foto').trigger('click');
+        if (!$(this).prop('disabled')) {
+            $('#foto')[0].click();
         }
     });
 
