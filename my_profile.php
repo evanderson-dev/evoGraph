@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="foto-box">
                                     <img id="profile-foto-preview" src="<?php echo $user['foto'] ?? 'img/default-photo.jpg'; ?>" alt="Foto do Perfil">
                                 </div>
-                                <input type="file" id="foto" name="foto" accept="image/*" disabled>
+                                <!--<input type="file" id="foto" name="foto" accept="image/*" disabled>-->
                             </div>
                             <div class="form-group info-right">
                                 <label for="nome">Nome:</label>
