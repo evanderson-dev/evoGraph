@@ -1,38 +1,20 @@
 <?php
-session_start();
-
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("Location: index.php");
-    exit;
-}
-
-require_once 'db_connection.php';
-
+require_once 'db_connection.php'; // Já incluído em header.php, mas mantido por clareza
 $funcionario_id = $_SESSION["funcionario_id"];
 $cargo = $_SESSION["cargo"];
 
-// Buscar dados do funcionário
+// Buscar dados adicionais do funcionário para o formulário
 $sql = "SELECT nome, sobrenome, email, rf, data_nascimento, cargo, foto FROM funcionarios WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $funcionario_id);
 $stmt->execute();
 $result = $stmt->get_result();
-$user = $result->fetch_assoc();
+$user_profile = $result->fetch_assoc(); // Usamos $user_profile para evitar conflito com $user do header
 $stmt->close();
 
-if (!$user) {
+if (!$user_profile) {
     die("Erro ao carregar dados do usuário.");
 }
-
-// Definir foto padrão e verificar existência
-$default_photo = './img/employee_photos/default_photo.jpg';
-$photo_path = $user['foto'] ? $user['foto'] : $default_photo;
-$user['foto'] = file_exists($photo_path) ? $photo_path : $default_photo;
-
-// Definir caminho da foto quadrada para o header
-$ext = pathinfo($user['foto'], PATHINFO_EXTENSION);
-$square_photo_path = str_replace(".$ext", "_square.$ext", $user['foto']);
-$header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_photo;
 
 // Processar atualização via AJAX
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
@@ -64,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     }
 
     // Processar upload da foto
-    $foto_path = $user['foto'];
+    $foto_path = $user_profile['foto'];
     if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] == 0) {
         $target_dir = "./img/employee_photos/";
         if (!file_exists($target_dir)) {
@@ -77,7 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         $target_square_file = $target_dir . $foto_square_name;
 
         if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
-            // Criar miniatura quadrada
             $image = null;
             switch (strtolower($foto_ext)) {
                 case 'jpg':
@@ -175,19 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     <title>evoGraph - Meu Perfil</title>
 </head>
 <body>
-    <header>
-        <div class="info-header">
-            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
-            <div class="logo">
-                <h3>evoGraph</h3>
-            </div>
-        </div>
-        <div class="info-header">
-            <i class="fa-solid fa-envelope"></i>
-            <i class="fa-solid fa-bell"></i>
-            <img src="<?php echo $header_photo; ?>" alt="User" class="user-icon" id="header-photo">
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <section class="main">
         <div class="sidebar" id="sidebar">
@@ -225,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
                                 <div class="foto-box" id="foto-box">
                                     <img id="profile-foto-preview" src="<?php echo $user['foto']; ?>" alt="Foto do Perfil">
                                 </div>
-                                <button type="button" id="upload-foto-btn" class="btn upload-btn" disabled>Escolher Foto</button>
+                                <button type="button" id="upload-foto-btn" class="btn upload-btn" disabled>Foto</button>
                                 <input type="file" id="foto" name="foto" accept="image/*" hidden>
                             </div>
                             <div class="form-group info-right">
