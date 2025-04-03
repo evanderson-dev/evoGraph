@@ -46,18 +46,18 @@
 }
 
 /* Foto do Perfil */
-.foto-placeholder {
+.foto-placeholder { /* Placeholder para a foto do perfil */
     flex: 0 0 auto;
 }
 
-.foto-placeholder .foto-box {
+.foto-placeholder .foto-box { /* Caixa para a foto do perfil */
     width: 120px; /* Proporção 3x4 */
     height: 160px; /* Proporção 3x4 */
     background-color: #e9ecef;
     border: 2px dashed #ddd;
     border-radius: 5px;
     overflow: hidden;
-    position: relative;
+    position: center;
 }
 
 .foto-placeholder .foto-box img#profile-foto-preview {
