@@ -6,7 +6,7 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 600px; /* Largura máxima para telas grandes */
-    min-width: 450px; /* Largura mínima para telas pequenas */
+    min-width: 350px; /* Largura mínima para telas pequenas */
 }
 
 .form-row {
@@ -68,10 +68,21 @@
 }
 
 .foto-placeholder .upload-btn {
-    margin-top: 10px;
-    width: 100px;
-    padding: 5px;
-    font-size: 14px;
+    background-color: #73b4ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.foto-placeholder .upload-btn:hover {
+    background-color: #5599e6;
+}
+
+.foto-placeholder .upload-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 /* Dados à direita da foto */
@@ -84,7 +95,7 @@
 
 .form-buttons {
     margin-top: 20px;
-    text-align: right;
+    text-align: center;
 }
 
 .success-message {
