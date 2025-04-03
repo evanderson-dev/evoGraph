@@ -206,7 +206,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
                                 <div class="foto-box" id="foto-box">
                                     <img id="profile-foto-preview" src="<?php echo $user_profile['foto']; ?>" alt="Foto do Perfil">
                                 </div>
-                                <button type="button" id="upload-foto-btn" class="btn upload-btn" disabled>Escolher Foto</button>
+                                <button type="button" id="upload-foto-btn" class="btn upload-btn" disabled>Foto</button>
                                 <input type="file" id="foto" name="foto" accept="image/*" hidden>
                             </div>
                             <div class="form-group info-right">
