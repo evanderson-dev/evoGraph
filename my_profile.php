@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
 
     $response = ['success' => false, 'message' => ''];
 
+    // Verificar senha atual se uma nova senha foi informada
     if (!empty($new_password)) {
         $sql = "SELECT senha FROM funcionarios WHERE id = ?";
         $stmt = $conn->prepare($sql);
@@ -50,7 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         }
     }
 
-    $foto_path = $user_profile['foto'];
+    // Processar upload da foto
+    $foto_path = $user_profile['foto']; // Valor inicial
     if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] == 0) {
         $target_dir = "./img/employee_photos/";
         if (!file_exists($target_dir)) {
@@ -98,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
                 imagedestroy($square);
             }
 
-            $foto_path = $target_file;
+            $foto_path = $target_file; // Atualiza o caminho da foto
         } else {
             $response['message'] = "Erro ao fazer upload da foto.";
             echo json_encode($response);
@@ -106,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         }
     }
 
+    // Atualizar no banco
     $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?, rf = ?, data_nascimento = ?, foto = ?";
     $params = [$nome, $sobrenome, $email, $rf, $data_nascimento, $foto_path];
     $types = "ssssss";
@@ -120,6 +123,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     $types .= "i";
 
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        $response['message'] = "Erro ao preparar a query: " . $conn->error;
+        echo json_encode($response);
+        exit;
+    }
+
     $stmt->bind_param($types, ...$params);
     if ($stmt->execute()) {
         $response['success'] = true;
@@ -134,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
             'header_photo' => str_replace(".$foto_ext", "_square.$foto_ext", $foto_path)
         ];
     } else {
-        $response['message'] = "Erro ao atualizar perfil: " . $conn->error;
+        $response['message'] = "Erro ao atualizar no banco: " . $stmt->error;
     }
     $stmt->close();
 
