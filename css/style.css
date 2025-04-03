@@ -389,7 +389,7 @@ header { /* Cabeçalho da página */
 /* Media Queries */
 @media (max-width: 768px) {
     .content.shifted {
-        margin-left: 150px;
+        margin-left: 400px;
     }
 
     .box-turmas-single {
@@ -399,7 +399,7 @@ header { /* Cabeçalho da página */
 
 @media (max-width: 480px) {
     .content.shifted {
-        margin-left: 100px;
+        margin-left: 400px;
     }
 
     .box-turmas-single {
