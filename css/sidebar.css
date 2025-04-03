@@ -1,6 +1,6 @@
 /* css/sidebar.css */
 .sidebar {
-    width: 250px; /* Largura da sidebar */
+    width: 200px; /* Largura da sidebar */
     /*background-color: white; /* Cor de fundo da sidebar */
     /*height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
     border-width: 0 1px 0 0; /* Borda à direita */
@@ -9,7 +9,7 @@
     position: fixed; /* Fixa a sidebar à esquerda */
     top: 50px; /* Alinhado abaixo do header */
     bottom: 100px; /* Termina antes do footer (ajuste conforme a altura real do footer) */
-    left: -250px; /* Inicialmente oculta à esquerda */
+    left: -200px; /* Inicialmente oculta à esquerda */
     z-index: 999; /* Abaixo do header, acima do conteúdo */
     font-size: 15px; /* Tamanho da fonte */
     overflow-y: auto; /* Adiciona scroll se o conteúdo exceder a altura */
