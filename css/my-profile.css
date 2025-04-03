@@ -11,8 +11,8 @@
 .form-row {
     display: flex; /* Ativa o Flexbox */
     flex-wrap: nowrap; /* Impede que os elementos quebrem para a próxima linha */
-    gap: 15px; /* Espaçamento entre os elementos */
-    /*margin-bottom: 15px;*/
+    gap: 20px; /* Espaçamento entre os elementos */
+    margin-bottom: 15px;
 }
 
 .form-group {
