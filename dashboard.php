@@ -1,15 +1,38 @@
 <?php
-session_start();
+    session_start();
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("Location: index.php");
-    exit;
-}
+    if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+        header("Location: index.php");
+        exit;
+    }
 
-require_once 'db_connection.php';
+    require_once 'db_connection.php';
 
-$funcionario_id = $_SESSION["funcionario_id"];
-$cargo = $_SESSION["cargo"];
+    $funcionario_id = $_SESSION["funcionario_id"];
+    $cargo = $_SESSION["cargo"];
+
+    // Buscar dados do funcionário
+    $sql = "SELECT nome, foto FROM funcionarios WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $funcionario_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+
+    if (!$user) {
+        die("Erro ao carregar dados do usuário.");
+    }
+
+    // Definir foto padrão e verificar existência
+    $default_photo = './img/employee_photos/default_photo.jpg';
+    $photo_path = $user['foto'] ? $user['foto'] : $default_photo;
+    $user['foto'] = file_exists($photo_path) ? $photo_path : $default_photo;
+
+    // Definir caminho da foto quadrada para o header
+    $ext = pathinfo($user['foto'], PATHINFO_EXTENSION);
+    $square_photo_path = str_replace(".$ext", "_square.$ext", $user['foto']);
+    $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_photo;
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +67,7 @@ $cargo = $_SESSION["cargo"];
             <i class="fa-solid fa-envelope"></i>
             <i class="fa-solid fa-bell"></i>
             <i class="fa-solid fa-user"></i>
-            <img src="https://avatars.githubusercontent.com/u/94180306?s=40&v=4" alt="User" class="user-icon">
+            <img src="<?php echo $header_photo; ?>" alt="User" class="user-icon" id="header-photo">
         </div>
     </header>
     <!-- FIM HEADER -->
