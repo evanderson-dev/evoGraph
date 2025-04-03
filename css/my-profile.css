@@ -47,7 +47,7 @@
 
 /* Foto do Perfil */
 .foto-placeholder { /* Placeholder para a foto do perfil */
-    flex: 0 0 120px;
+    flex: 0 0 130px;
 }
 
 .foto-placeholder .foto-box { /* Caixa para a foto do perfil */
