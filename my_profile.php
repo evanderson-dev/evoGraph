@@ -21,7 +21,7 @@ $user = $result->fetch_assoc();
 $stmt->close();
 
 if (!$user) {
-    $error_message = "Erro ao carregar dados do usuário.";
+    die("Erro ao carregar dados do usuário.");
 }
 
 // Definir foto padrão e verificar existência
@@ -29,15 +29,22 @@ $default_photo = './img/employee_photos/default_photo.jpg';
 $photo_path = $user['foto'] ? $user['foto'] : $default_photo;
 $user['foto'] = file_exists($photo_path) ? $photo_path : $default_photo;
 
-// Processar atualização do perfil apenas ao clicar em "Salvar"
+// Definir caminho da foto quadrada para o header
+$ext = pathinfo($user['foto'], PATHINFO_EXTENSION);
+$square_photo_path = str_replace(".$ext", "_square.$ext", $user['foto']);
+$header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_photo;
+
+// Processar atualização via AJAX
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     $nome = trim($_POST["nome"]);
     $sobrenome = trim($_POST["sobrenome"]);
     $email = trim($_POST["email"]);
     $rf = trim($_POST["rf"]);
     $data_nascimento = trim($_POST["data_nascimento"]);
-    $new_password = trim($_POST["new_password"]);
-    $current_password = trim($_POST["current_password"]);
+    $new_password = trim($_POST["new_password"] ?? '');
+    $current_password = trim($_POST["current_password"] ?? '');
+
+    $response = ['success' => false, 'message' => ''];
 
     // Verificar senha atual se uma nova senha foi informada
     if (!empty($new_password)) {
@@ -50,7 +57,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         $stmt->close();
 
         if (!password_verify($current_password, $stored_password)) {
-            $error_message = "Senha atual incorreta.";
+            $response['message'] = "Senha atual incorreta.";
+            echo json_encode($response);
+            exit;
         }
     }
 
@@ -68,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         $target_square_file = $target_dir . $foto_square_name;
 
         if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
-            // Criar miniatura quadrada para o header
+            // Criar miniatura quadrada
             $image = null;
             switch (strtolower($foto_ext)) {
                 case 'jpg':
@@ -79,14 +88,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
                     $image = imagecreatefrompng($target_file);
                     break;
                 default:
-                    $error_message = "Formato de imagem não suportado.";
+                    $response['message'] = "Formato de imagem não suportado.";
+                    echo json_encode($response);
+                    exit;
             }
 
             if ($image) {
                 $width = imagesx($image);
                 $height = imagesy($image);
                 $size = min($width, $height);
-                $square = imagecreatetruecolor(40, 40); // Tamanho do header
+                $square = imagecreatetruecolor(40, 40);
                 imagecopyresampled($square, $image, 0, 0, ($width - $size) / 2, ($height - $size) / 2, 40, 40, $size, $size);
 
                 switch (strtolower($foto_ext)) {
@@ -104,47 +115,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
 
             $foto_path = $target_file;
         } else {
-            $error_message = "Erro ao fazer upload da foto.";
+            $response['message'] = "Erro ao fazer upload da foto.";
+            echo json_encode($response);
+            exit;
         }
     }
 
-    if (!isset($error_message)) {
-        $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?, rf = ?, data_nascimento = ?, foto = ?";
-        $params = [$nome, $sobrenome, $email, $rf, $data_nascimento, $foto_path];
-        $types = "ssssss";
+    // Atualizar no banco
+    $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?, rf = ?, data_nascimento = ?, foto = ?";
+    $params = [$nome, $sobrenome, $email, $rf, $data_nascimento, $foto_path];
+    $types = "ssssss";
 
-        if (!empty($new_password)) {
-            $sql .= ", senha = ?";
-            $params[] = password_hash($new_password, PASSWORD_DEFAULT);
-            $types .= "s";
-        }
-        $sql .= " WHERE id = ?";
-        $params[] = $funcionario_id;
-        $types .= "i";
-
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param($types, ...$params);
-        if ($stmt->execute()) {
-            $success_message = "Perfil atualizado com sucesso!";
-            $user = array_merge($user, [
-                'nome' => $nome,
-                'sobrenome' => $sobrenome,
-                'email' => $email,
-                'rf' => $rf,
-                'data_nascimento' => $data_nascimento,
-                'foto' => $foto_path
-            ]);
-        } else {
-            $error_message = "Erro ao atualizar perfil: " . $conn->error;
-        }
-        $stmt->close();
+    if (!empty($new_password)) {
+        $sql .= ", senha = ?";
+        $params[] = password_hash($new_password, PASSWORD_DEFAULT);
+        $types .= "s";
     }
+    $sql .= " WHERE id = ?";
+    $params[] = $funcionario_id;
+    $types .= "i";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($types, ...$params);
+    if ($stmt->execute()) {
+        $response['success'] = true;
+        $response['message'] = "Perfil atualizado com sucesso!";
+        $response['data'] = [
+            'nome' => $nome,
+            'sobrenome' => $sobrenome,
+            'email' => $email,
+            'rf' => $rf,
+            'data_nascimento' => $data_nascimento,
+            'foto' => $foto_path,
+            'header_photo' => str_replace(".$foto_ext", "_square.$foto_ext", $foto_path)
+        ];
+    } else {
+        $response['message'] = "Erro ao atualizar perfil: " . $conn->error;
+    }
+    $stmt->close();
+
+    echo json_encode($response);
+    exit;
 }
-
-// Definir caminho da foto quadrada para o header
-$ext = pathinfo($user['foto'], PATHINFO_EXTENSION); // Extrair extensão do caminho salvo
-$square_photo_path = str_replace(".$ext", "_square.$ext", $user['foto']);
-$header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_photo;
 ?>
 
 <!DOCTYPE html>
@@ -163,7 +175,6 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     <title>evoGraph - Meu Perfil</title>
 </head>
 <body>
-    <!-- HEADER -->
     <header>
         <div class="info-header">
             <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
@@ -175,13 +186,11 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
             <i class="fa-solid fa-envelope"></i>
             <i class="fa-solid fa-bell"></i>
             <i class="fa-solid fa-user"></i>
-            <img src="<?php echo $header_photo; ?>" alt="User" class="user-icon">
+            <img src="<?php echo $header_photo; ?>" alt="User" class="user-icon" id="header-photo">
         </div>
     </header>
-    <!-- FIM HEADER -->
 
     <section class="main">
-        <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
@@ -200,23 +209,16 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
             <div class="separator"></div><br>
         </div>
-        <!-- FIM SIDEBAR -->
 
-        <!-- Seção de Conteúdo -->
         <div class="content" id="content">
             <div class="titulo-secao">
                 <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Meu Perfil</span>
             </div>
 
             <section class="meu-perfil">
-                <?php if (isset($success_message)): ?>
-                    <p class="success-message"><?php echo $success_message; ?></p>
-                <?php elseif (isset($error_message)): ?>
-                    <p class="error-message"><?php echo $error_message; ?></p>
-                <?php endif; ?>
-
+                <div id="message-box"></div>
                 <div class="profile-form">
-                    <form method="POST" action="my_profile.php" id="profile-form" enctype="multipart/form-data">
+                    <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
                         <div class="form-row">
                             <div class="form-group foto-placeholder">
@@ -275,7 +277,6 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
         </div>
     </section>
 
-    <!-- Modals -->
     <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
@@ -288,7 +289,6 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     </div>
     <?php endif; ?>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/modal-add-funcionario.js"></script>
