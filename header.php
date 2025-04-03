@@ -31,7 +31,6 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     <div class="info-header">
         <i class="fa-solid fa-envelope"></i>
         <i class="fa-solid fa-bell"></i>
-        <i class="fa-solid fa-user"></i>
         <img src="<?php echo $header_photo; ?>" alt="User" class="user-icon" id="header-photo">
     </div>
 </header>
