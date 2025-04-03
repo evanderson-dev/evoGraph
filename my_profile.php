@@ -164,6 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-add-aluno.css" />
     <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/footer.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Meu Perfil</title>
 </head>
@@ -269,6 +270,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     </div>
     <?php endif; ?>
 
+    <?php include 'footer.php'; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/modal-add-funcionario.js"></script>
