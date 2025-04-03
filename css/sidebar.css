@@ -4,7 +4,7 @@
     /*background-color: white; /* Cor de fundo da sidebar */
     /*height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
     border-width: 0 1px 0 0; /* Borda à direita */
-    border-style: solid; /* Borda sólida */
+    /*border-style: solid; /* Borda sólida */
     /*border-color: #73b4ff; /* Cor da borda */
     position: fixed; /* Fixa a sidebar à esquerda */
     top: 50px; /* Alinhado abaixo do header */
