@@ -142,7 +142,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
 }
 
 // Definir caminho da foto quadrada para o header
-$square_photo_path = str_replace(".$foto_ext", "_square.$foto_ext", $user['foto']);
+$ext = pathinfo($user['foto'], PATHINFO_EXTENSION); // Extrair extensão do caminho salvo
+$square_photo_path = str_replace(".$ext", "_square.$ext", $user['foto']);
 $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_photo;
 ?>
 
