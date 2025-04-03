@@ -2,17 +2,15 @@
 .sidebar {
     width: 250px; /* Largura da sidebar */
     background-color: white; /* Cor de fundo da sidebar */
-    /*height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
+    height: calc(100% - 60px); /* Ajusta a altura para abaixo do header */
     border-width: 0 1px 0 0; /* Borda à direita */
     border-style: solid; /* Borda sólida */
     border-color: #73b4ff; /* Cor da borda */
     position: fixed; /* Fixa a sidebar à esquerda */
     top: 50px; /* Alinhado abaixo do header */
-    bottom: 100px; /* Termina antes do footer (ajuste conforme a altura real do footer) */
     left: -250px; /* Inicialmente oculta à esquerda */
     z-index: 999; /* Abaixo do header, acima do conteúdo */
     font-size: 15px; /* Tamanho da fonte */
-    overflow-y: auto; /* Adiciona scroll se o conteúdo exceder a altura */
 }
 
 .sidebar.active {
@@ -133,21 +131,11 @@
     margin-right: 10px;
 }
 
-.main {
-    margin-left: 0; /* Padrão quando a sidebar está oculta */
-    transition: margin-left 0.3s ease;
-}
-
-.sidebar.active + .main {
-    margin-left: 250px; /* Espaço para a sidebar quando ativa */
-}
-
 /* Media Queries */
 @media (max-width: 768px) {
     .sidebar {
         width: 250px;
         left: -250px;
-        bottom: 100px; /* Mantém o ajuste para o footer */
     }
     
     .sidebar.active {
