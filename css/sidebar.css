@@ -142,12 +142,12 @@
     margin-left: 250px; /* Espaço para a sidebar quando ativa */
 }
 
-/* Media Queries */
+/* Media Queries
 @media (max-width: 768px) {
     .sidebar {
         width: 250px;
         left: -250px;
-        bottom: 100px; /* Mantém o ajuste para o footer */
+        bottom: 100px; /* Mantém o ajuste para o footer
     }
     
     .sidebar.active {
@@ -164,4 +164,4 @@
     .sidebar.active {
         left: 0;
     }
-}
+}*/
