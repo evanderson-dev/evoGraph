@@ -87,14 +87,15 @@ $(document).ready(function() {
                     originalValues.foto = res.data.foto;
                     originalValues.header_photo = res.data.header_photo;
 
-                    // Atualizar UI
+                    // Atualizar UI com timestamp para evitar cache
+                    const timestamp = new Date().getTime();
                     $('#nome').val(res.data.nome);
                     $('#sobrenome').val(res.data.sobrenome);
                     $('#email').val(res.data.email);
                     $('#rf').val(res.data.rf);
                     $('#data_nascimento').val(res.data.data_nascimento);
-                    $('#profile-foto-preview').attr('src', res.data.foto);
-                    $('#header-photo').attr('src', res.data.header_photo);
+                    $('#profile-foto-preview').attr('src', `${res.data.foto}?t=${timestamp}`);
+                    $('#header-photo').attr('src', `${res.data.header_photo}?t=${timestamp}`);
                     $('#foto').val('');
                     $('#current_password').val('');
                     $('#new_password').val('');
