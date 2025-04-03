@@ -393,11 +393,11 @@ header { /* Cabeçalho da página */
     }
 
     .box-turmas-single {
-        width: 45%;
+        width: 100%;
     }
 }
 
-@media (max-width: 480px) {
+/*@media (max-width: 480px) {
     .content.shifted {
         margin-left: 250px;
     }
@@ -405,4 +405,4 @@ header { /* Cabeçalho da página */
     .box-turmas-single {
         width: 100%;
     }
-}
+}*/
