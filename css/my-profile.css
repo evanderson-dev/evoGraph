@@ -17,7 +17,6 @@
 
 .form-group {
     flex: 1;
-    min-width: 200px;
 }
 
 .form-group.full-width {
@@ -48,7 +47,7 @@
 
 /* Foto do Perfil */
 .foto-placeholder { /* Placeholder para a foto do perfil */
-    flex: 0 0 200px; /* Não encolher ou crescer */
+    flex: 0 0 150px;
 }
 
 .foto-placeholder .foto-box { /* Caixa para a foto do perfil */
