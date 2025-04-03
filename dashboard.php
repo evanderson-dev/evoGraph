@@ -48,7 +48,6 @@
             
             <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
-            <div class="separator"></div><br>
         </div>
         <!-- FIM SIDEBAR -->
 

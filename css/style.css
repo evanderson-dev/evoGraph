@@ -91,13 +91,6 @@ header { /* Cabeçalho da página */
     font-weight: bold;
 }
 
-.titulo-secao .separator {
-    width: 100%;
-    height: 1px;
-    background-color: #73b4ff;
-    margin: 10px 0;
-}
-
 .titulo-secao p {
     margin: 0; /* Remove margem padrão */
     display: flex; /* Alinha os elementos horizontalmente */
@@ -396,13 +389,3 @@ header { /* Cabeçalho da página */
         width: 50%;
     }
 }
-
-/*@media (max-width: 480px) {
-    .content.shifted {
-        margin-left: 250px;
-    }
-
-    .box-turmas-single {
-        width: 100%;
-    }
-}*/

@@ -188,7 +188,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
             <?php endif; ?>
             <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
-            <div class="separator"></div><br>
         </div>
 
         <div class="content" id="content">

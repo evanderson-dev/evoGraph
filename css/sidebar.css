@@ -63,12 +63,6 @@
     margin-right: 10px; /* Espaço entre ícone e texto */
 }
 
-.separator {
-    width: 100%; /* Largura total */
-    height: 1px; /* Altura de 1px */
-    background-color: #73b4ff; /* Cor do separador */
-}
-
 /* Estilo para o item da sidebar com submenu */
 .sidebar-item {
     position: relative;
