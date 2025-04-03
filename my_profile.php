@@ -1,5 +1,11 @@
 <?php
-require_once 'db_connection.php'; // Já incluído em header.php, mas mantido por clareza
+session_start();
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    header("Location: index.php");
+    exit;
+}
+
+require_once 'db_connection.php';
 $funcionario_id = $_SESSION["funcionario_id"];
 $cargo = $_SESSION["cargo"];
 
@@ -9,7 +15,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $funcionario_id);
 $stmt->execute();
 $result = $stmt->get_result();
-$user_profile = $result->fetch_assoc(); // Usamos $user_profile para evitar conflito com $user do header
+$user_profile = $result->fetch_assoc();
 $stmt->close();
 
 if (!$user_profile) {
@@ -28,7 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
 
     $response = ['success' => false, 'message' => ''];
 
-    // Verificar senha atual se uma nova senha foi informada
     if (!empty($new_password)) {
         $sql = "SELECT senha FROM funcionarios WHERE id = ?";
         $stmt = $conn->prepare($sql);
@@ -45,7 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         }
     }
 
-    // Processar upload da foto
     $foto_path = $user_profile['foto'];
     if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] == 0) {
         $target_dir = "./img/employee_photos/";
@@ -102,7 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         }
     }
 
-    // Atualizar no banco
     $sql = "UPDATE funcionarios SET nome = ?, sobrenome = ?, email = ?, rf = ?, data_nascimento = ?, foto = ?";
     $params = [$nome, $sobrenome, $email, $rf, $data_nascimento, $foto_path];
     $types = "ssssss";
@@ -192,34 +195,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
                             <div class="form-group foto-placeholder">
                                 <label>Foto do Perfil</label>
                                 <div class="foto-box" id="foto-box">
-                                    <img id="profile-foto-preview" src="<?php echo $user['foto']; ?>" alt="Foto do Perfil">
+                                    <img id="profile-foto-preview" src="<?php echo $user_profile['foto']; ?>" alt="Foto do Perfil">
                                 </div>
-                                <button type="button" id="upload-foto-btn" class="btn upload-btn" disabled>Foto</button>
+                                <button type="button" id="upload-foto-btn" class="btn upload-btn" disabled>Escolher Foto</button>
                                 <input type="file" id="foto" name="foto" accept="image/*" hidden>
                             </div>
                             <div class="form-group info-right">
                                 <label for="nome">Nome:</label>
-                                <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($user['nome']); ?>" disabled required>
+                                <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($user_profile['nome']); ?>" disabled required>
                                 <label for="sobrenome">Sobrenome:</label>
-                                <input type="text" id="sobrenome" name="sobrenome" value="<?php echo htmlspecialchars($user['sobrenome']); ?>" disabled required>
+                                <input type="text" id="sobrenome" name="sobrenome" value="<?php echo htmlspecialchars($user_profile['sobrenome']); ?>" disabled required>
                                 <label for="rf">RF Funcionário:</label>
-                                <input type="text" id="rf" name="rf" value="<?php echo htmlspecialchars($user['rf'] ?? ''); ?>" disabled required>
+                                <input type="text" id="rf" name="rf" value="<?php echo htmlspecialchars($user_profile['rf'] ?? ''); ?>" disabled required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group full-width">
                                 <label for="email">E-mail:</label>
-                                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" disabled required>
+                                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_profile['email']); ?>" disabled required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="data_nascimento">Data de Nascimento:</label>
-                                <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($user['data_nascimento'] ?? ''); ?>" disabled required>
+                                <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($user_profile['data_nascimento'] ?? ''); ?>" disabled required>
                             </div>
                             <div class="form-group">
                                 <label for="cargo">Cargo:</label>
-                                <input type="text" id="cargo" name="cargo" value="<?php echo htmlspecialchars($user['cargo']); ?>" disabled readonly>
+                                <input type="text" id="cargo" name="cargo" value="<?php echo htmlspecialchars($user_profile['cargo']); ?>" disabled readonly>
                             </div>
                         </div>
                         <div class="form-row">
