@@ -5,7 +5,8 @@
     margin-top: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    max-width: 600px; /* Largura máxima para telas grandes */
+    min-width: 450px; /* Largura mínima para telas pequenas */
 }
 
 .form-row {
@@ -47,7 +48,7 @@
 
 /* Foto do Perfil */
 .foto-placeholder { /* Placeholder para a foto do perfil */
-    flex: 0 0 130px;
+    flex: 0 0 130px; /* Largura fixa */
 }
 
 .foto-placeholder .foto-box { /* Caixa para a foto do perfil */
