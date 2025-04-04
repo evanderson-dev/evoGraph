@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     $turma_id = (int)$_POST['turma_id'];
     $action = $_POST['action'] ?? '';
 
-    if ($action === 'edit' && ($cargo === "Coordenador" || $cargo === "Diretor")) {
+    if ($action === 'edit' && ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador")) {
         // Substitui fetch_turma.php
         $sql = "SELECT t.id, t.nome, t.ano, t.professor_id 
                 FROM turmas t 
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
                 'quantidade_turma' => $quantidade_turma,
                 'tabela_alunos' => $tabela_alunos
             ];
-            if ($cargo === "Diretor") {
+            if ($cargo === "Diretor" || $cargo === "Administrador") {
                 $response['total_alunos'] = $total_alunos;
             }
             echo json_encode($response);
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
     }
 } else {
     // Lista de todas as turmas (funcionalidade original)
-    if ($cargo !== "Diretor" && $cargo !== "Coordenador") {
+    if ($cargo !== "Diretor" && $cargo !== "Coordenador" && $cargo !== "Administrador") {
         echo json_encode(['success' => false, 'message' => 'Acesso negado.']);
         exit;
     }
