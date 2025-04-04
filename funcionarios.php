@@ -81,6 +81,7 @@ require_once 'db_connection.php';
                             <option value="Professor">Professor</option>
                             <option value="Coordenador">Coordenador</option>
                             <option value="Diretor">Diretor</option>
+                            <option value="Administrador">Administrador</option>
                         </select>
                         <button id="btn-pesquisar" class="btn">Pesquisar</button>
                     </div>

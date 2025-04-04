@@ -99,6 +99,7 @@ function showEditFuncionarioModal(funcId) {
                                 <option value="Professor" ${func.cargo === 'Professor' ? 'selected' : ''}>Professor</option>
                                 <option value="Coordenador" ${func.cargo === 'Coordenador' ? 'selected' : ''}>Coordenador</option>
                                 <option value="Diretor" ${func.cargo === 'Diretor' ? 'selected' : ''}>Diretor</option>
+                                <option value="Administrador" ${func.cargo === 'Administrador' ? 'selected' : ''}>Administrador</option>
                             </select>
                         </div>
                         <input type="hidden" name="edit_id" value="${func.id}">
