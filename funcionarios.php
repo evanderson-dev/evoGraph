@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor")) {
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor" && $_SESSION["cargo"] !== "Administrador")) {
     header("Location: index.php");
     exit;
 }
@@ -118,21 +118,21 @@ require_once 'db_connection.php';
     </div>
 
     <!-- Modal de Cadastro de Turma (exclusivo para Coordenador e Diretor) -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
 
     <!-- Modal de Adição de Funcionário (exclusivo para Coordenador e Diretor) -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-add-funcionario" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
 
     <!-- Modal de Cadastro de Aluno -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-add-aluno" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>

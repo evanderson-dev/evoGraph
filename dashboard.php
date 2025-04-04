@@ -33,12 +33,12 @@
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
-            <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+            <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+                    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $cargo === "Administrador"): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
@@ -156,7 +156,7 @@
                 </table>
             </div>
 
-            <?php elseif ($cargo === "Diretor"): ?>
+            <?php elseif ($cargo === "Diretor" || $cargo === "Administrador"): ?>
             <!-- Dashboard do Diretor -->
             <!-- Visão Geral -->
             <div class="overview">
@@ -216,12 +216,12 @@
                         echo "<h3>{$turma['nome']}</h3>";
                         echo "<p>Professor: " . ($turma['professor_nome'] ? htmlspecialchars($turma['professor_nome'] . " " . $turma['sobrenome']) : "Sem professor") . "</p>";
                         echo "<p>{$quantidade} alunos</p>";
-                        if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor") {
+                        if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $cargo === "Administrador") {
                             echo "<button class='action-btn edit-btn' title='Editar Turma' onclick='showEditTurmaModal({$turma['id']})'>";
                             echo "<i class='fa-solid fa-pen-to-square'></i>";
                             echo "</button>";
                         }
-                        if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor") {
+                        if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $cargo === "Administrador") {
                             echo "<button class='action-btn delete-btn' title='Excluir Turma' onclick='showDeleteTurmaModal({$turma['id']})'>";
                             echo "<i class='fa-solid fa-trash'></i>";
                             echo "</button>";
@@ -256,49 +256,49 @@
     </section><!-- FIM MAIN -->
 
     <!-- Modal de Confirmação de Exclusão (exclusivo do Diretor) -->
-    <?php if ($cargo === "Diretor"): ?>
+    <?php if ($cargo === "Diretor" || $cargo === "Administrador"): ?>
     <div id="modal-delete-aluno" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
     
     <!-- Modal de Cadastro de Turma -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
 
     <!-- Modal de Exclusão de Turma -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-delete-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
 
     <!-- Modal de Edição de Turma -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-edit-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
     
     <!-- Modal de Adição de Funcionário -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-add-funcionario" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
 
     <!-- Modal de Cadastro de Aluno -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-add-aluno" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
     <?php endif; ?>
 
     <!-- Modal de Edição de Aluno -->
-    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor"): ?>
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
     <div id="modal-edit-aluno" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
