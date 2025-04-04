@@ -12,7 +12,7 @@ require_once 'utils.php';
 $funcionario_id = $_SESSION["funcionario_id"];
 $cargo = $_SESSION["cargo"];
 
-if ($cargo !== "Coordenador" && $cargo !== "Diretor") {
+if ($cargo !== "Coordenador" && $cargo !== "Diretor" && $cargo !== "Administrador") {
     echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
     exit;
 }
@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'quantidade_turma' => $quantidade_turma,
             'tabela_alunos' => $tabela_alunos
         ];
-        if ($cargo === "Diretor") {
+        if ($cargo === "Diretor" || $cargo === "Administrador") {
             $response['total_alunos'] = $total_alunos;
         }
         echo json_encode($response);

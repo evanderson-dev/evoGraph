@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
     $matricula = $_POST['matricula'];
     $turma_id = $_POST['turma_id'];
 
-    if ($cargo !== "Diretor") {
+    if ($cargo !== "Diretor" && $cargo !== "Administrador") {
         echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
         exit;
     }
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
         'quantidade_turma' => $quantidade_turma,
         'tabela_alunos' => $tabela_alunos
     ];
-    if ($cargo === "Diretor") {
+    if ($cargo === "Diretor" || $cargo === "Administrador") {
         $response['total_alunos'] = $total_alunos;
     }
     echo json_encode($response);

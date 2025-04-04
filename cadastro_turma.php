@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor")) {
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor" && $_SESSION["cargo"] !== "Administrador")) {
     echo json_encode(['success' => false, 'message' => 'Acesso negado.']);
     exit;
 }

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor")) {
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || ($_SESSION["cargo"] !== "Coordenador" && $_SESSION["cargo"] !== "Diretor" && $_SESSION["cargo"] !== "Administrador")) {
     echo json_encode(['success' => false, 'message' => 'Acesso negado.']);
     exit;
 }
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["turma_id"])) {
                 $turmas_html .= "<h3>" . htmlspecialchars($row['nome']) . "</h3>";
                 $turmas_html .= "<p>Professor: " . ($row['professor_nome'] ? htmlspecialchars($row['professor_nome'] . " " . $row['sobrenome']) : "Sem professor") . "</p>";
                 $turmas_html .= "<p>{$quantidade} alunos</p>";
-                if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor") {
+                if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador") {
                     $turmas_html .= "<button class='action-btn edit-btn' title='Editar Turma' onclick='showEditTurmaModal({$row['id']})'>";
                     $turmas_html .= "<i class='fa-solid fa-pen-to-square'></i>";
                     $turmas_html .= "</button>";

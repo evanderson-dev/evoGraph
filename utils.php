@@ -2,7 +2,7 @@
 require_once 'db_connection.php';
 
 function getTotalAlunos($conn, $cargo) {
-    if ($cargo !== "Diretor") {
+    if ($cargo !== "Diretor" && $cargo !== "Administrador") {
         return null;
     }
     $sql = "SELECT COUNT(*) as total_alunos FROM alunos";
@@ -64,7 +64,7 @@ function generateTabelaAlunos($conn, $turma_id, $cargo, $funcionario_id) {
             $html .= "<td>" . htmlspecialchars($row["nome"] . " " . $row["sobrenome"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($data_nascimento) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["matricula"]) . "</td>";
-            if ($cargo === "Diretor") {
+            if ($cargo === "Diretor" || $cargo === "Administrador") {
                 $html .= "<td>";
                 $html .= "<button class='action-btn edit-btn' title='Editar' onclick=\"openEditAlunoModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($row['turma_id']) . "')\"><i class='fa-solid fa-pen-to-square'></i></button>";
                 $html .= "<button class='action-btn delete-btn' title='Excluir' onclick=\"showDeleteAlunoModal('" . htmlspecialchars($row['matricula']) . "', '" . htmlspecialchars($row['turma_id']) . "')\"><i class='fa-solid fa-trash'></i></button>";

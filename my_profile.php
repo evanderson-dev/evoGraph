@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
             <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="my_profile.php" class="sidebar-active"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
-            <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+            <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
@@ -257,7 +257,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         </div>
     </section>
 
-    <?php if ($cargo === "Coordenador" || $cargo === "Diretor"): ?>
+    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
