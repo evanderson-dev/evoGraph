@@ -52,7 +52,7 @@ CREATE TABLE relatorios_alunos (
 
 -- Inserindo funcionários (professores, coordenadores, diretor e administrador)
 INSERT INTO funcionarios (email, senha, nome, sobrenome, data_nascimento, rf, cargo) VALUES
-('administrador@database.com', '$2y$10$exemploHashAqui', 'Adm', 'Db', '2025-01-01', 'RF001', 'Administrador'),
+('administrador@database.com', '$2y$10$exemploHashAqui', 'Adm', 'Db', '2025-01-01', 'RF999', 'Administrador'),
 ('diretor@escola.com', '$2y$10$exemploHashAqui', 'Carlos', 'Silva', '1975-03-10', 'RF001', 'Diretor'),
 ('coordenador1@escola.com', '$2y$10$exemploHashAqui', 'Mariana', 'Souza', '1980-07-25', 'RF002', 'Coordenador'),
 ('coordenador2@escola.com', '$2y$10$exemploHashAqui', 'Roberto', 'Lima', '1982-05-15', 'RF003', 'Coordenador'),
