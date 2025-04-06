@@ -166,9 +166,9 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
-    <script src="js/funcionarios.js"></script>
     <script src="js/modal-edit.js"></script>
-
+    
+    <script src="js/funcionarios.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/ajax.js"></script>
 
