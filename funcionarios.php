@@ -18,16 +18,11 @@ require_once 'db_connection.php';
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/dashboard.css" />
     <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/modal-add-turma.css" />
+    <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
+    <link rel="stylesheet" href="./css/modal-add-aluno.css" />
     <link rel="stylesheet" href="./css/modal-delete-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-edit-funcionario.css" />
-    <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
-    <link rel="stylesheet" href="./css/modal-delete-turma.css" />
-    <link rel="stylesheet" href="./css/modal-edit-turma.css" />
-    <link rel="stylesheet" href="./css/modal-add-turma.css" />
-    <link rel="stylesheet" href="./css/modal-add-aluno.css" />
-    <link rel="stylesheet" href="./css/modal-details.css" />
-    <link rel="stylesheet" href="./css/modal-delete.css" />
-    <link rel="stylesheet" href="./css/modal-edit.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Gerenciar Funcionários</title>
 </head>
@@ -51,7 +46,7 @@ require_once 'db_connection.php';
 
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
-            <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i>Home</a>
+            <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
@@ -152,16 +147,15 @@ require_once 'db_connection.php';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/modal-add-funcionario.js"></script>
-    <script src="js/modal-delete-turma.js"></script>
-    <script src="js/modal-edit-turma.js"></script>
     <script src="js/modal-add-turma.js"></script>
     <script src="js/modal-add-aluno.js"></script>
+    
     <script src="js/modal-details.js"></script>
     <script src="js/modal-delete.js"></script>
     <script src="js/funcionarios.js"></script>
     <script src="js/modal-edit.js"></script>
+
     <script src="js/dashboard.js"></script>
-    <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
 
     <script>

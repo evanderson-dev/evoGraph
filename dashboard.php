@@ -62,7 +62,7 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
 
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
-            <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i>Home</a>
+            <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
