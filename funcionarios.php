@@ -145,6 +145,10 @@ require_once 'db_connection.php';
     <?php endif; ?>
     
     <!-- Scripts -->
+    <footer>
+        <p>&copy; 2025 evoGraph. All rights reserved.</p>
+    </footer>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/modal-add-funcionario.js"></script>
@@ -159,6 +163,41 @@ require_once 'db_connection.php';
     <script src="js/dashboard.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('shifted');
+    
+            // Atualiza o estado no localStorage
+            const isActive = sidebar.classList.contains('active');
+            localStorage.setItem('sidebarActive', isActive);
+        }
+    
+        $(document).ready(function() {
+            // Inicializa o estado da sidebar com base no localStorage
+            if (localStorage.getItem('sidebarActive') === 'true') {
+                $('#sidebar').addClass('active');
+                $('#main-content').addClass('shifted');
+            }
+    
+            $('#menu-toggle').on('click', function() {
+                toggleSidebar();
+            });
+    
+            // Toggle do submenu
+            $('.sidebar-toggle').on('click', function(e) {
+                e.preventDefault();
+                const $submenu = $(this).next('.submenu');
+                const $toggleIcon = $(this).find('.submenu-toggle');
+    
+                $submenu.slideToggle(200); // Animação suave
+                $toggleIcon.toggleClass('open'); // Gira a seta
+            });
+        });
+    </script>
 </body>
 </html>
 <?php $conn->close(); ?>
