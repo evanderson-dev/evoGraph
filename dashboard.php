@@ -84,7 +84,7 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
         </div>
         <!-- FIM SIDEBAR -->
 
-        <main class="main-content" id="content">
+        <main class="main-content" id="main-content">
             <div class="titulo-secao">
                 <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Gerenciamento de Turmas e Alunos</span>
             </div>
