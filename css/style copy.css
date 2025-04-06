@@ -1,4 +1,82 @@
-.titulo-secao i { /* Ícone do título */
+* { /* Reset de CSS */
+    margin: 0; /* Remove margens padrão */
+    padding: 0; /* Remove margens e preenchimentos padrão */
+    box-sizing: border-box; /* Modelo de caixa border-box */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+html, body { /* Corpo da página */
+    height: 100%; /* Altura total */
+    overflow-x: hidden; /* Evita rolagem horizontal desnecessária */
+}
+
+header { /* Cabeçalho da página */
+    background-color: #73b4ff; /* Cor de fundo do header */
+    padding: 20px 2%; /* 20px acima e abaixo, 2% nas laterais */
+    display: flex; /* Alinha os elementos horizontalmente */
+    justify-content: space-between; /* Espaço entre os elementos */
+    position: fixed; /* Fixa o header no topo */
+    top: 0; /* Alinhado ao topo */
+    left: 0; /* Alinhado à esquerda */
+    width: 100%; /* Largura total */
+    height: 50px; /* Altura fixa para o header */
+    z-index: 1000; /* Acima da sidebar e do conteúdo */
+    align-items: center; /* Centraliza verticalmente */
+}
+
+.logo h3 { /* Título da logo */
+    cursor: pointer; /* Transforma em ponteiro ao passar o mouse */
+    color: white; /* Garante que o texto seja visível */
+}
+
+.info-header { /* Informações do usuário */
+    color: white; /* Cor do texto */
+    display: flex; /* Alinha os elementos horizontalmente */
+    align-items: center; /* Alinha os elementos verticalmente */
+}
+
+.info-header img { /* Imagem do usuário */
+    width: 40px; /* Tamanho da imagem */
+    height: 40px; /* Tamanho da imagem */
+    border-radius: 20px; /* Borda circular */
+    margin: 0 8px; /* Espaço entre imagem e texto */
+}
+
+.info-header svg, i { /* Ícone do usuário */
+    margin: 0 10px; /* Espaço entre ícone e texto */
+}
+
+.main {
+    display: flex; /* Alinha os elementos horizontalmente */
+    height: 100%; /* Altura total */
+    padding-top: 50px; /* Espaço para o header fixo */
+}
+
+.content { /* Conteúdo principal */
+    width: 100%; /* Ocupa toda a largura por padrão */
+    margin-left: 0; /* Sem deslocamento inicial */
+    background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
+    padding: 20px; /* Espaçamento interno */
+}
+
+.content.shifted {
+    margin-left: 200px; /* Desloca o conteúdo quando a sidebar está ativa */
+}
+
+.content.transition-enabled {
+    transition: margin-left 0.3s ease; /* Transição só quando ativada */
+}
+
+.menu-toggle {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white; /* Cor do ícone ajustada para combinar com o header */
+    margin-right: 10px; /* Espaço à direita do botão */
+}
+
+.titulo-secao svg { /* Ícone do título */
     color: #73b4ff; /* Cor do ícone */
     margin-right: 5px; /* Espaço entre ícone e texto */
 }
@@ -28,14 +106,59 @@
     flex-shrink: 0; /* Impede que os filtros encolham demais */
 }
 
-.titulo-secao .home-link i {
+
+.titulo-secao #search-funcionario { /* Campo de busca */
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 220px; /* Largura fixa */
+    transition: border-color 0.3s ease;
+}
+
+.titulo-secao #search-funcionario:focus { /* Efeito de foco */
+    border-color: #73b4ff;
+    outline: none;
+}
+
+.titulo-secao #filtro-cargo { /* Filtro de cargo */
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.titulo-secao #filtro-cargo:focus {
+    border-color: #73b4ff;
+    outline: none;
+}
+
+.titulo-secao #btn-pesquisar {
+    padding: 8px 15px;
+    background-color: #73b4ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.titulo-secao #btn-pesquisar:hover {
+    background-color: #5599e6;
+}
+
+.titulo-secao .home-link {
     color: #333;
     text-decoration: none;
     font-size: 16px;
     transition: color 0.3s ease;
 }
 
-.titulo-secao .home-link:hover i {
+.titulo-secao .home-link:hover {
     color: #5599e6;
 }
 

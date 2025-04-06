@@ -1,0 +1,69 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
+}
+
+header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-toggle { /* Botão para abrir/fechar a sidebar */
+    left: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+}
+
+header .icons {
+    display: flex;
+    gap: 15px;
+}
+
+header .icons i {
+    cursor: pointer;
+}
+
+header,
+footer {
+    background-color: #333; /* Cor de fundo do header e footer */
+    padding: 10px 20px; /* Espaçamento interno */
+    position: relative; /* Para garantir que o footer fique no final da página */
+    z-index: 10; /* Garante que o header e footer fiquem acima da sidebar */
+    text-align: center; /* Centraliza o texto */ 
+    color: white; /* Cor do texto */      
+}
+
+footer {
+    text-align: center;
+}
+
+.container { /* Container principal */
+    display: flex;
+    flex: 1;
+}
+
+.main-content {
+    margin-left: 0;
+    padding: 20px;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.shifted {
+    margin-left: 250px;
+}

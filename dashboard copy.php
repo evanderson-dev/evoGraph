@@ -25,23 +25,8 @@
 </head>
 <body>
     <?php include 'header.php'; ?>
-    <!-- Header -->
-    <header>
-        <div class="menu-toggle" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </div>
-        <h1>evoGraph</h1>
-        <div class="icons">
-            <i class="fas fa-envelope"></i>
-            <i class="fas fa-bell"></i>
-            <i class="fas fa-cog"></i>
-            <i class="fas fa-user"></i>
-        </div>
-    </header>
-    <!-- Fim do Header -->
 
-    <div class="container">
-
+    <section class="main">
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i>Home</a>
@@ -66,7 +51,7 @@
         </div>
         <!-- FIM SIDEBAR -->
 
-        <main class="main-content" id="content">
+        <div class="content" id="content">
             <div class="titulo-secao">
                 <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Gerenciamento de Turmas e Alunos</span>
             </div>
@@ -267,8 +252,8 @@
                 </table>
             </div>
             <?php endif; ?>
-        </main><!-- FIM DO MAIN -->
-    </div><!-- FIM CONTAINER -->
+        </div><!-- FIM CONTENT -->
+    </section><!-- FIM MAIN -->
 
     <!-- Modal de Confirmação de Exclusão (exclusivo do Diretor) -->
     <?php if ($cargo === "Diretor" || $cargo === "Administrador"): ?>
@@ -325,10 +310,7 @@
     </div>
 
     <!-- Scripts -->
-    <footer>
-        <p>&copy; 2025 evoGraph. All rights reserved.</p>
-    </footer>
-    
+    <?php include 'footer.php'; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
 
@@ -346,41 +328,6 @@
     <script src="js/dashboard.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
-
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('shifted');
-    
-            // Atualiza o estado no localStorage
-            const isActive = sidebar.classList.contains('active');
-            localStorage.setItem('sidebarActive', isActive);
-        }
-    
-        $(document).ready(function() {
-            // Inicializa o estado da sidebar com base no localStorage
-            if (localStorage.getItem('sidebarActive') === 'true') {
-                $('#sidebar').addClass('active');
-                $('#main-content').addClass('shifted');
-            }
-    
-            $('#menu-toggle').on('click', function() {
-                toggleSidebar();
-            });
-    
-            // Toggle do submenu
-            $('.sidebar-toggle').on('click', function(e) {
-                e.preventDefault();
-                const $submenu = $(this).next('.submenu');
-                const $toggleIcon = $(this).find('.submenu-toggle');
-    
-                $submenu.slideToggle(200); // Animação suave
-                $toggleIcon.toggleClass('open'); // Gira a seta
-            });
-        });
-    </script>
 </body>
 </html>
 <?php $conn->close(); ?>

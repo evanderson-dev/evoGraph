@@ -21,3 +21,16 @@ $ext = pathinfo($user['foto'], PATHINFO_EXTENSION);
 $square_photo_path = str_replace(".$ext", "_square.$ext", $user['foto']);
 $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_photo;
 ?>
+<header>
+    <div class="info-header">
+        <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="logo">
+            <h3>evoGraph</h3>
+        </div>
+    </div>
+    <div class="info-header">
+        <i class="fa-solid fa-envelope"></i>
+        <i class="fa-solid fa-bell"></i>
+        <img src="<?php echo $header_photo; ?>" alt="User" class="user-icon" id="header-photo">
+    </div>
+</header>
