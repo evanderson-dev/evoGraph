@@ -2,12 +2,12 @@
     width: 230px;
     border-width: 0 1px 0 0; /* Borda à direita da sidebar */
     background-color: #444;
-    position: fixed; /* Fixa a sidebar na tela */
-    top: 40px; /* Abaixo do header */
+    position: sticky; /* Fixa a sidebar em relação ao scroll */
+    top: 0px; /* Sempre visível no topo ao rolar */
     color: white;
     padding: 20px; /* Espaçamento interno */
     left: -250px; /* Para esconder inicialmente */
-    height: 100%; /* Ocupa toda a altura da tela */
+    height: 100vh; /* Ocupa toda a altura da tela */
     transition: 0.3s ease; /* Para animação ao abrir/recolher */
 }
 
