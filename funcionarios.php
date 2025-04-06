@@ -16,6 +16,8 @@ require_once 'db_connection.php';
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/dashboard.css" />
+    <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="./css/modal-delete-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-edit-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
@@ -26,50 +28,53 @@ require_once 'db_connection.php';
     <link rel="stylesheet" href="./css/modal-details.css" />
     <link rel="stylesheet" href="./css/modal-delete.css" />
     <link rel="stylesheet" href="./css/modal-edit.css" />
-    <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Gerenciar Funcionários</title>
 </head>
 <body>
-    <!-- HEADER -->
+    <!-- Header -->
     <header>
-        <div class="info-header">
-            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
-            <div class="logo">
-                <h3>evoGraph</h3>
-            </div>
+        <div class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
         </div>
-        <div class="info-header">
-            <i class="fa-solid fa-envelope"></i>
-            <i class="fa-solid fa-bell"></i>
-            <i class="fa-solid fa-user"></i>
-            <img src="https://avatars.githubusercontent.com/u/94180306?s=40&v=4" alt="User" class="user-icon">
+        <h1>evoGraph</h1>
+        <div class="icons">
+            <i class="fas fa-envelope"></i>
+            <i class="fas fa-bell"></i>
+            <i class="fas fa-cog"></i>
+            <i class="fas fa-user"></i>
         </div>
     </header>
-    <!-- FIM HEADER -->
+    <!-- Fim do Header -->
 
-    <section class="main">
+    <div class="container">
+
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
-            <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
+            <a class="sidebar-active" href="#"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+
+            <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
+                    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $cargo === "Administrador"): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
+                    <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
                 </div>
             </div>
-            <a href="funcionarios.php" class="sidebar-active"><i class="fa-solid fa-users"></i>Funcionários</a>
+            <?php endif; ?>
+            
+            <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
-            <div class="separator"></div><br>
         </div>
         <!-- FIM SIDEBAR -->
 
         <!-- Seção de Conteúdo -->
-        <div class="content" id="content">
+        <div class="main-content" id="main-content">
             <div class="titulo-secao">
                 <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Gerenciamento de Funcionários</span>
                 <div class="separator"></div>
@@ -106,7 +111,7 @@ require_once 'db_connection.php';
                 </table>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Modal de Edição de Funcionário -->
     <div id="modal-edit-funcionario" class="modal" style="display: none;">
