@@ -10,6 +10,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/dashboard.css" />
+    <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="./css/modal-add-turma.css" />
     <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./css/modal-add-aluno.css" />
@@ -18,7 +20,6 @@
     <link rel="stylesheet" href="./css/modal-delete-turma.css" />
     <link rel="stylesheet" href="./css/modal-delete-aluno.css" />
     <link rel="stylesheet" href="./css/modal-details-aluno.css" />
-    <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="./css/footer.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph Dashboard - <?php echo htmlspecialchars($cargo); ?></title>
@@ -328,7 +329,7 @@
     <footer>
         <p>&copy; 2025 evoGraph. All rights reserved.</p>
     </footer>
-    
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/utils.js"></script>
 
