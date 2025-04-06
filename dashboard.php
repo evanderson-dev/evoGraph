@@ -1,6 +1,25 @@
 <?php
-    require_once 'db_connection.php'; // Já incluído em header.php, mas mantido por clareza
-    $cargo = $_SESSION["cargo"];
+session_start();
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    header("Location: index.php");
+    exit;
+}
+require_once 'db_connection.php';
+$funcionario_id = $_SESSION["funcionario_id"];
+$cargo = $_SESSION["cargo"];
+$sql = "SELECT nome, foto FROM funcionarios WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $funcionario_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+$stmt->close();
+$default_photo = './img/employee_photos/default_photo.jpg';
+$photo_path = $user['foto'] ? $user['foto'] : $default_photo;
+$user['foto'] = file_exists($photo_path) ? $photo_path : $default_photo;
+$ext = pathinfo($user['foto'], PATHINFO_EXTENSION);
+$square_photo_path = str_replace(".$ext", "_square.$ext", $user['foto']);
+$header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_photo;
 ?>
 
 <!DOCTYPE html>
@@ -20,12 +39,10 @@
     <link rel="stylesheet" href="./css/modal-delete-turma.css" />
     <link rel="stylesheet" href="./css/modal-delete-aluno.css" />
     <link rel="stylesheet" href="./css/modal-details-aluno.css" />
-    <link rel="stylesheet" href="./css/footer.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph Dashboard - <?php echo htmlspecialchars($cargo); ?></title>
 </head>
 <body>
-    <?php include 'header.php'; ?>
     <!-- Header -->
     <header>
         <div class="menu-toggle" onclick="toggleSidebar()">
@@ -345,7 +362,6 @@
 
     <script src="js/modal-details-aluno.js"></script>
     <script src="js/dashboard.js"></script>
-    <script src="js/sidebar.js"></script>
     <script src="js/ajax.js"></script>
 
     <script>
