@@ -1,20 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    echo json_encode(['success' => false, 'message' => 'Acesso negado.']);
-    exit;
-}
-
 require_once 'db_connection.php';
-
-$funcionario_id = $_SESSION["funcionario_id"];
-$cargo = $_SESSION["cargo"];
-
-if ($cargo !== "Coordenador" && $cargo !== "Diretor" && $cargo !== "Administrador") {
-    echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
-    exit;
-}
 
 header('Content-Type: application/json');
 
@@ -59,48 +44,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Atualizar o aluno no banco
-    $sql = "UPDATE alunos SET nome = ?, sobrenome = ?, data_nascimento = ?, data_matricula = ?, turma_id = ?";
-    $types = "sssss";
-    $params = [&$nome, &$sobrenome, &$data_nascimento, &$data_matricula, &$turma_id];
-
-    if (!empty($nome_pai)) {
-        $sql .= ", nome_pai = ?";
-        $types .= "s";
-        $params[] = &$nome_pai;
-    } else {
-        $sql .= ", nome_pai = NULL";
-    }
-    if (!empty($nome_mae)) {
-        $sql .= ", nome_mae = ?";
-        $types .= "s";
-        $params[] = &$nome_mae;
-    } else {
-        $sql .= ", nome_mae = NULL";
-    }
-    if (!empty($email)) {
-        $sql .= ", email = ?";
-        $types .= "s";
-        $params[] = &$email;
-    } else {
-        $sql .= ", email = NULL";
-    }
+    $sql = "UPDATE alunos SET nome = ?, sobrenome = ?, data_nascimento = ?, email = ?, nome_pai = ?, nome_mae = ?, turma_id = ?";
     if ($foto_path) {
         $sql .= ", foto = ?";
-        $types .= "s";
-        $params[] = &$foto_path;
     }
-
     $sql .= " WHERE matricula = ?";
-    $types .= "s";
-    $params[] = &$matricula;
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param($types, ...$params);
+    $params = [$nome, $sobrenome, $data_nascimento, $email, $nome_pai, $nome_mae, $turma_id];
+    if ($foto_path) {
+        $params[] = $foto_path;
+    }
+    $params[] = $matricula;
+
+    $stmt->bind_param(str_repeat('s', count($params)), ...$params);
 
     if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Aluno atualizado com sucesso!']);
+        echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Erro ao atualizar o aluno: ' . $stmt->error]);
+        echo json_encode(['success' => false, 'message' => 'Erro ao atualizar o aluno no banco: ' . $stmt->error]);
     }
 
     $stmt->close();
