@@ -24,7 +24,7 @@ function openAddModal() {
 
             // Buscar próxima matrícula disponível
             $.ajax({
-                url: 'fetch_next_matricula.php',
+                url: 'fetch_matricula.php',
                 method: 'GET',
                 dataType: 'json',
                 success: function(matriculaResponse) {
