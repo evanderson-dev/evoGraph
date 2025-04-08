@@ -18,11 +18,22 @@ $row = $result->fetch_assoc();
 
 $max_matricula = $row['max_matricula'];
 if ($max_matricula === null) {
-    $next_matricula = '0000000001'; // Primeiro número se o banco estiver vazio
+    $base_number = 1; // Primeiro número se o banco estiver vazio
 } else {
-    $next_number = (int)$max_matricula + 1;
-    $next_matricula = str_pad($next_number, 10, '0', STR_PAD_LEFT); // Formata com 10 dígitos
+    // Extrair o número base removendo os últimos 6 dígitos (data DDMMAA)
+    $base_number = (int)substr($max_matricula, 0, -6);
+    $base_number++; // Incrementar o número base
 }
+
+// Gerar a data atual no formato DDMMAA
+$date = new DateTime();
+$day = $date->format('d'); // Dia sem zero à esquerda
+$month = $date->format('m'); // Mês sem zero à esquerda
+$year = substr($date->format('Y'), -2); // Últimos 2 dígitos do ano
+$date_suffix = $day . $month . $year; // Ex.: "80425" para 08/04/2025
+
+// Concatenar número base com data
+$next_matricula = $base_number . $date_suffix;
 
 echo json_encode(['success' => true, 'matricula' => $next_matricula]);
 

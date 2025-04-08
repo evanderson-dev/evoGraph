@@ -28,7 +28,7 @@ function openAddModal() {
                 method: 'GET',
                 dataType: 'json',
                 success: function(matriculaResponse) {
-                    let nextMatricula = '0000000001'; // Valor padrão em caso de erro
+                    let nextMatricula = '1080425'; // Valor padrão (1 + data atual) em caso de erro
                     if (matriculaResponse.success && matriculaResponse.matricula) {
                         nextMatricula = matriculaResponse.matricula;
                     }
@@ -66,7 +66,7 @@ function openAddModal() {
                             </div>
                             <div class="form-group full-width">
                                 <label for="add-nome_mae">Nome da Mãe (opcional):</label>
-                                <input type="text" id="add-nome_pai" name="nome_mae" placeholder="Ex.: Maria Silva">
+                                <input type="text" id="add-nome_mae" name="nome_mae" placeholder="Ex.: Maria Silva">
                             </div>
                             <div class="form-group full-width">
                                 <label for="add-turma_id">Turma:</label>
@@ -143,7 +143,13 @@ function openAddModal() {
                 },
                 error: function(xhr) {
                     console.error('Erro ao buscar próxima matrícula:', xhr.statusText);
-                    // Prosseguir com valor padrão em caso de erro
+                    // Prosseguir com valor padrão em caso de erro (1 + data atual)
+                    const now = new Date();
+                    const day = String(now.getDate());
+                    const month = String(now.getMonth() + 1);
+                    const year = String(now.getFullYear()).slice(-2);
+                    const defaultMatricula = '1' + day + month + year;
+
                     const originalContent = `
                         <h2 class="modal-title">Cadastrar Aluno</h2>
                         <form id="cadastro-aluno-form" enctype="multipart/form-data">
@@ -161,7 +167,7 @@ function openAddModal() {
                             </div>
                             <div class="form-group">
                                 <label for="add-matricula">Matrícula:</label>
-                                <input type="text" id="add-matricula" name="matricula" value="0000000001" required>
+                                <input type="text" id="add-matricula" name="matricula" value="${defaultMatricula}" required>
                             </div>
                             <div class="form-group">
                                 <label for="add-email">E-mail (opcional):</label>
