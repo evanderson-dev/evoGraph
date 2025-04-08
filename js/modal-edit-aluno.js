@@ -81,6 +81,22 @@ function openEditAlunoModal(matricula, turmaId) {
                         // Evento de envio do formulário
                         $('#edit-aluno-form').on('submit', function(e) {
                             e.preventDefault();
+
+                            // Validação do e-mail
+                            const email = $('#edit-email').val().trim();
+                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (email && !emailRegex.test(email)) {
+                                const modalContent = $('#modal-edit-aluno .modal-content');
+                                modalContent.html(`
+                                    <h2 class="modal-title error"><i class="fa-solid fa-exclamation-circle"></i> Erro</h2>
+                                    <p class="modal-message">Por favor, insira um e-mail válido (ex.: nome@dominio.com).</p>
+                                    <div class="modal-buttons">
+                                        <button class="btn close-modal-btn">Fechar</button>
+                                    </div>
+                                `);
+                                return;
+                            }
+
                             const formData = new FormData(this);
                             $.ajax({
                                 url: 'edit_aluno.php',

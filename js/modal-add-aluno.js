@@ -76,6 +76,16 @@ function openAddModal() {
             // Evento de envio do formulário
             $('#cadastro-aluno-form').on('submit', function(e) {
                 e.preventDefault();
+
+                // Validação do e-mail
+                const email = $('#add-email').val().trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (email && !emailRegex.test(email)) {
+                    const modalContent = $('#modal-add-aluno .modal-content');
+                    modalContent.prepend(`<p class="modal-message error">Por favor, insira um e-mail válido (ex.: nome@dominio.com).</p>`);
+                    return;
+                }
+
                 const now = new Date();
                 const dataMatricula = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
                 $('#add-data_matricula_hidden').val(dataMatricula);
@@ -98,7 +108,6 @@ function openAddModal() {
                                     <button class="btn close-modal-btn">Fechar</button>
                                 </div>
                             `);
-                            // Atualizar interface, se aplicável
                             if (response.tabela_alunos) {
                                 $('#tabela-alunos').html(response.tabela_alunos);
                             }
