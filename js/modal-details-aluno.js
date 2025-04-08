@@ -25,6 +25,7 @@ $(document).on('click', '.aluno-row', function(e) {
                     const fotoSrc = aluno.foto || 'img/default-photo.jpg';
                     const nomePai = aluno.nome_pai || 'N/A';
                     const nomeMae = aluno.nome_mae || 'N/A';
+                    const email = aluno.email || 'N/A';
 
                     const content = `
                         <h2 class="modal-title">Detalhes do Aluno</h2>
@@ -50,6 +51,10 @@ $(document).on('click', '.aluno-row', function(e) {
                             <div class="form-group">
                                 <label for="detalhes-data-matricula">Data de Matrícula:</label>
                                 <input type="text" id="detalhes-data-matricula" value="${dataMatricula}" readonly>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="detalhes-email">E-mail:</label>
+                                <input type="text" id="detalhes-email" value="${email}" readonly>
                             </div>
                             <div class="form-group full-width">
                                 <label for="detalhes-pai">Nome do Pai:</label>

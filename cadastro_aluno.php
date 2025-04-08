@@ -27,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $data_matricula = trim($_POST["data_matricula_hidden"] ?? date('Y-m-d H:i:s'));
     $nome_pai = trim($_POST["nome_pai"] ?? null);
     $nome_mae = trim($_POST["nome_mae"] ?? null);
+    $email = trim($_POST["email"] ?? null);
     $turma_id = trim($_POST["turma_id"] ?? '');
 
     if (empty($nome) || empty($sobrenome) || empty($data_nascimento) || empty($matricula) || empty($turma_id)) {
@@ -72,6 +73,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $values .= ", ?";
         $types .= "s";
         $params[] = &$nome_mae;
+    }
+    if (!empty($email)) {
+        $fields .= ", email";
+        $values .= ", ?";
+        $types .= "s";
+        $params[] = &$email;
     }
     if ($foto_path) {
         $fields .= ", foto";

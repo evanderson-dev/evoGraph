@@ -46,6 +46,10 @@ function openEditAlunoModal(matricula, turmaId) {
                                     <input type="text" id="edit-matricula" name="matricula" value="${response.aluno.matricula}" readonly>
                                 </div>
                                 <div class="form-group full-width">
+                                    <label for="edit-email">E-mail (opcional):</label>
+                                    <input type="email" id="edit-email" name="email" value="${response.aluno.email || ''}">
+                                </div>
+                                <div class="form-group full-width">
                                     <label for="edit-foto">Foto do Aluno (opcional):</label>
                                     <input type="file" id="edit-foto" name="foto" accept="image/*">
                                 </div>

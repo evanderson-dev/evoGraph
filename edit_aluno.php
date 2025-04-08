@@ -1,17 +1,33 @@
 <?php
+session_start();
+
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    echo json_encode(['success' => false, 'message' => 'Acesso negado.']);
+    exit;
+}
+
 require_once 'db_connection.php';
+
+$funcionario_id = $_SESSION["funcionario_id"];
+$cargo = $_SESSION["cargo"];
+
+if ($cargo !== "Coordenador" && $cargo !== "Diretor" && $cargo !== "Administrador") {
+    echo json_encode(['success' => false, 'message' => 'Ação não permitida para este cargo.']);
+    exit;
+}
 
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = $_POST['nome'] ?? '';
-    $sobrenome = $_POST['sobrenome'] ?? '';
-    $data_nascimento = $_POST['data_nascimento'] ?? '';
-    $matricula = $_POST['matricula'] ?? '';
-    $nome_pai = $_POST['nome_pai'] ?? null;
-    $nome_mae = $_POST['nome_mae'] ?? null;
-    $turma_id = $_POST['turma_id'] ?? null;
-    $data_matricula = $_POST['data_matricula_hidden'] ?? null;
+    $nome = trim($_POST['nome'] ?? '');
+    $sobrenome = trim($_POST['sobrenome'] ?? '');
+    $data_nascimento = trim($_POST['data_nascimento'] ?? '');
+    $matricula = trim($_POST['matricula'] ?? '');
+    $data_matricula = trim($_POST['data_matricula_hidden'] ?? null);
+    $nome_pai = trim($_POST['nome_pai'] ?? null);
+    $nome_mae = trim($_POST['nome_mae'] ?? null);
+    $email = trim($_POST['email'] ?? null); // Novo campo email
+    $turma_id = trim($_POST['turma_id'] ?? null);
 
     // Verificar se todos os campos obrigatórios estão presentes
     if (empty($nome) || empty($sobrenome) || empty($data_nascimento) || empty($matricula) || empty($turma_id)) {
@@ -43,25 +59,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Atualizar o aluno no banco
-    $sql = "UPDATE alunos SET nome = ?, sobrenome = ?, data_nascimento = ?, nome_pai = ?, nome_mae = ?, turma_id = ?";
+    $sql = "UPDATE alunos SET nome = ?, sobrenome = ?, data_nascimento = ?, data_matricula = ?, turma_id = ?";
+    $types = "sssss";
+    $params = [&$nome, &$sobrenome, &$data_nascimento, &$data_matricula, &$turma_id];
+
+    if (!empty($nome_pai)) {
+        $sql .= ", nome_pai = ?";
+        $types .= "s";
+        $params[] = &$nome_pai;
+    } else {
+        $sql .= ", nome_pai = NULL";
+    }
+    if (!empty($nome_mae)) {
+        $sql .= ", nome_mae = ?";
+        $types .= "s";
+        $params[] = &$nome_mae;
+    } else {
+        $sql .= ", nome_mae = NULL";
+    }
+    if (!empty($email)) {
+        $sql .= ", email = ?";
+        $types .= "s";
+        $params[] = &$email;
+    } else {
+        $sql .= ", email = NULL";
+    }
     if ($foto_path) {
         $sql .= ", foto = ?";
+        $types .= "s";
+        $params[] = &$foto_path;
     }
+
     $sql .= " WHERE matricula = ?";
+    $types .= "s";
+    $params[] = &$matricula;
 
     $stmt = $conn->prepare($sql);
-    $params = [$nome, $sobrenome, $data_nascimento, $nome_pai, $nome_mae, $turma_id];
-    if ($foto_path) {
-        $params[] = $foto_path;
-    }
-    $params[] = $matricula;
-
-    $stmt->bind_param(str_repeat('s', count($params)), ...$params);
+    $stmt->bind_param($types, ...$params);
 
     if ($stmt->execute()) {
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true, 'message' => 'Aluno atualizado com sucesso!']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Erro ao atualizar o aluno no banco: ' . $stmt->error]);
+        echo json_encode(['success' => false, 'message' => 'Erro ao atualizar o aluno: ' . $stmt->error]);
     }
 
     $stmt->close();
@@ -69,4 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'message' => 'Método inválido.']);
 }
+
+$conn->close();
 ?>

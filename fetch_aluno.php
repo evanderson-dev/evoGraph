@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
     $matricula = $_POST['matricula'];
     $context = isset($_POST['context']) ? $_POST['context'] : 'details';
 
-    $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome, a.foto
+    $sql = "SELECT a.nome, a.sobrenome, a.data_nascimento, a.matricula, a.data_matricula, a.nome_pai, a.nome_mae, a.turma_id, t.nome AS turma_nome, a.foto, a.email
             FROM alunos a 
             LEFT JOIN turmas t ON a.turma_id = t.id 
             WHERE a.matricula = ?";

@@ -42,6 +42,10 @@ function openAddModal() {
                         <input type="text" id="add-matricula" name="matricula" placeholder="Ex.: 123456" required>
                     </div>
                     <div class="form-group">
+                        <label for="add-email">E-mail (opcional):</label>
+                        <input type="email" id="add-email" name="email" placeholder="Ex.: joao.silva@email.com">
+                    </div>
+                    <div class="form-group">
                         <label for="add-foto">Foto (opcional):</label>
                         <input type="file" id="add-foto" name="foto" accept="image/*">
                     </div>
