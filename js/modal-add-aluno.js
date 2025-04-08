@@ -88,11 +88,19 @@ function openAddModal() {
                     $('#cadastro-aluno-form').on('submit', function(e) {
                         e.preventDefault();
 
+                        const modalContent = $('#modal-add-aluno .modal-content');
+
+                        // Validação da matrícula
+                        const matricula = $('#add-matricula').val().trim();
+                        if (!/^\d+$/.test(matricula) || matricula.length < 7) {
+                            modalContent.prepend(`<p class="modal-message error">A matrícula deve ser um número com pelo menos 7 dígitos.</p>`);
+                            return;
+                        }
+
                         // Validação do e-mail
                         const email = $('#add-email').val().trim();
                         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         if (email && !emailRegex.test(email)) {
-                            const modalContent = $('#modal-add-aluno .modal-content');
                             modalContent.prepend(`<p class="modal-message error">Por favor, insira um e-mail válido (ex.: nome@dominio.com).</p>`);
                             return;
                         }
@@ -110,7 +118,6 @@ function openAddModal() {
                             processData: false,
                             dataType: 'json',
                             success: function(response) {
-                                const modalContent = $('#modal-add-aluno .modal-content');
                                 if (response.success) {
                                     modalContent.html(`
                                         <h2 class="modal-title success"><i class="fa-solid fa-check-circle"></i> Cadastro Concluído</h2>
@@ -136,7 +143,7 @@ function openAddModal() {
                                 }
                             },
                             error: function(xhr) {
-                                $('#modal-add-aluno .modal-content').prepend(`<p class="modal-message error">Erro ao comunicar com o servidor: ${xhr.statusText}</p>`);
+                                modalContent.prepend(`<p class="modal-message error">Erro ao comunicar com o servidor: ${xhr.statusText}</p>`);
                             }
                         });
                     });
@@ -204,10 +211,19 @@ function openAddModal() {
                     $('#cadastro-aluno-form').on('submit', function(e) {
                         e.preventDefault();
 
+                        const modalContent = $('#modal-add-aluno .modal-content');
+
+                        // Validação da matrícula
+                        const matricula = $('#add-matricula').val().trim();
+                        if (!/^\d+$/.test(matricula) || matricula.length < 7) {
+                            modalContent.prepend(`<p class="modal-message error">A matrícula deve ser um número com pelo menos 7 dígitos.</p>`);
+                            return;
+                        }
+
+                        // Validação do e-mail
                         const email = $('#add-email').val().trim();
                         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         if (email && !emailRegex.test(email)) {
-                            const modalContent = $('#modal-add-aluno .modal-content');
                             modalContent.prepend(`<p class="modal-message error">Por favor, insira um e-mail válido (ex.: nome@dominio.com).</p>`);
                             return;
                         }
@@ -225,7 +241,6 @@ function openAddModal() {
                             processData: false,
                             dataType: 'json',
                             success: function(response) {
-                                const modalContent = $('#modal-add-aluno .modal-content');
                                 if (response.success) {
                                     modalContent.html(`
                                         <h2 class="modal-title success"><i class="fa-solid fa-check-circle"></i> Cadastro Concluído</h2>
@@ -251,7 +266,7 @@ function openAddModal() {
                                 }
                             },
                             error: function(xhr) {
-                                $('#modal-add-aluno .modal-content').prepend(`<p class="modal-message error">Erro ao comunicar com o servidor: ${xhr.statusText}</p>`);
+                                modalContent.prepend(`<p class="modal-message error">Erro ao comunicar com o servidor: ${xhr.statusText}</p>`);
                             }
                         });
                     });
