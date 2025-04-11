@@ -93,7 +93,7 @@ function openAddModal() {
                         // Validação da matrícula
                         const matricula = $('#add-matricula').val().trim();
                         if (!/^\d+$/.test(matricula) || matricula.length < 7) {
-                            modalContent.prepend(`<p class="modal-message error">A matrícula deve ser um número com pelo menos 7 dígitos.</p>`);
+                            modalContent.prepend(`<p class="modal-message error">A matrícula deve conter somente números e com pelo menos 7 dígitos.</p>`);
                             return;
                         }
 
@@ -216,7 +216,7 @@ function openAddModal() {
                         // Validação da matrícula
                         const matricula = $('#add-matricula').val().trim();
                         if (!/^\d+$/.test(matricula) || matricula.length < 7) {
-                            modalContent.prepend(`<p class="modal-message error">A matrícula deve ser um número com pelo menos 7 dígitos.</p>`);
+                            modalContent.prepend(`<p class="modal-message error">A matrícula deve conter somente números e com pelo menos 7 dígitos.</p>`);
                             return;
                         }
 
