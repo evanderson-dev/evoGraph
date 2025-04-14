@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./public/assets/css/global.css" rel="stylesheet" />
-    <link href="./public/assets/css/login.css" rel="stylesheet" />
+    <link href="/assets/css/global.css" rel="stylesheet" />
+    <link href="/assets/css/login.css" rel="stylesheet" />
     <title>evoGraph Login</title>
 </head>
 <body>
@@ -15,7 +15,7 @@
             <p class="login-subtitle">Insira seu e-mail e senha para entrar</p>
             <div id="message" class="message"></div>
             <!-- Formulário de Login -->
-            <form id="login-form" class="login-form" method="POST" action="login.php">
+            <form id="login-form" class="login-form" method="POST">
                 <div class="form-group">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
@@ -28,7 +28,7 @@
             </form>
             <p class="forgot-password"><a href="#" id="show-reset-form">Esqueceu a senha?</a></p>
             <!-- Formulário de Redefinição de Senha (oculto por padrão) -->
-            <form id="reset-form" class="reset-form hidden" method="POST" action="reset_password.php">
+            <form id="reset-form" class="reset-form hidden" method="POST">
                 <div class="form-group">
                     <label for="reset-email">E-mail</label>
                     <input type="email" id="reset-email" name="reset-email" placeholder="Digite seu e-mail" required>
@@ -41,6 +41,47 @@
             </form>
         </div>
     </div>
-    <script src="./public/assets/js/script.js"></script>
+    <script src="/assets/js/script.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Manipular formulário de login
+            $('#login-form').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: '/login',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = response.redirect;
+                        } else {
+                            $('#message').text(response.message).removeClass('success').addClass('error').show();
+                        }
+                    },
+                    error: function(xhr) {
+                        $('#message').text('Erro ao comunicar com o servidor: ' + xhr.statusText).removeClass('success').addClass('error').show();
+                    }
+                });
+            });
+
+            // Mostrar/esconder formulário de redefinição
+            $('#show-reset-form').on('click', function(e) {
+                e.preventDefault();
+                $('#login-form').addClass('hidden');
+                $('#reset-form').removeClass('hidden');
+                $('#message').hide();
+            });
+
+            // Manipular formulário de redefinição (placeholder, será implementado depois)
+            $('#reset-form').on('submit', function(e) {
+                e.preventDefault();
+                $('#message').text('Funcionalidade de redefinição de senha ainda não implementada.').removeClass('success').addClass('error').show();
+            });
+        });
+    </script>
 </body>
 </html>
