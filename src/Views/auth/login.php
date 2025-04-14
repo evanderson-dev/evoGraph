@@ -24,6 +24,7 @@
         </form>
         <p id="error-message" class="error" style="display: none;"></p>
     </div>
+    <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/ajax.js"></script>
     <script>
         $(document).ready(function() {
