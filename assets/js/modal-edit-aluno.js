@@ -176,7 +176,7 @@ function updateAllTurmas() {
     });
 }
 
-// Função para atualizar a tabela de alunos (deve estar em outro arquivo, como dashboard.js)
+// Função para atualizar a tabela de alunos
 function fetchAlunos(turmaId) {
     $.ajax({
         url: 'fetch_turmas.php',
