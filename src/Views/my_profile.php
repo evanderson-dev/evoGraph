@@ -188,9 +188,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
 
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
-            <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
+            <a href="./Views/dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
-            <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+            <a href="./Views/my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
             <div class="sidebar-item">
@@ -212,7 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
 
         <div class="main-content" id="main-content">
             <div class="titulo-secao">
-                <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Meu Perfil</span>
+                <span><a href="./Views/dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Meu Perfil</span>
             </div>
 
             <section class="meu-perfil">
