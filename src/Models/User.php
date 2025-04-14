@@ -9,6 +9,7 @@ class User {
     }
 
     public function authenticate($email, $password) {
+        error_log("Autenticando usuário com email: $email");
         $stmt = $this->conn->prepare("SELECT id, nome, email, senha, tipo FROM funcionarios WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -17,9 +18,11 @@ class User {
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
             if (password_verify($password, $user['senha'])) {
+                error_log("Autenticação bem-sucedida para $email");
                 return $user;
             }
         }
+        error_log("Autenticação falhou para $email");
         return false;
     }
 }

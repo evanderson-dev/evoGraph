@@ -9,6 +9,9 @@ spl_autoload_register(function ($class) {
     $relative_class = substr($class, $len);
     $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
     if (file_exists($file)) {
+        error_log("Carregando classe: $file");
         require $file;
+    } else {
+        error_log("Classe não encontrada: $file");
     }
 });

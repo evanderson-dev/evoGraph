@@ -8,6 +8,9 @@ $db = \EvoGraph\Config\Database::getConnection();
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Debug: Exibir a rota solicitada
+error_log("Rota solicitada: $request, Método: $method");
+
 switch ($request) {
     case '/':
     case '/login':
@@ -19,7 +22,8 @@ switch ($request) {
         $controller->index();
         break;
     default:
+        error_log("Rota não encontrada: $request");
         http_response_code(404);
-        echo "404 - Página não encontrada";
+        echo json_encode(['success' => false, 'message' => 'Rota não encontrada']);
         break;
 }
