@@ -11,8 +11,8 @@ class Database {
             $password = "evoGraph123";
             $dbname = "evograph_db";
 
-            self::$conn = new mysqli($servername, $username, $password, $dbname);
-
+            self::$conn = new \mysqli($servername, $username, $password, $dbname);
+            
             if (self::$conn->connect_error) {
                 die("Conexão falhou: " . self::$conn->connect_error);
             }
