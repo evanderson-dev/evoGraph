@@ -29,14 +29,14 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/css/style.css" />
-    <link rel="stylesheet" href="./assets/css/dashboard.css" />
-    <link rel="stylesheet" href="./assets/css/sidebar.css" />
-    <link rel="stylesheet" href="./assets/css/modal-add-turma.css" />
-    <link rel="stylesheet" href="./assets/css/modal-add-funcionario.css" />
-    <link rel="stylesheet" href="./assets/css/modal-add-aluno.css" />
-    <link rel="stylesheet" href="./assets/css/modal-delete-funcionario.css" />
-    <link rel="stylesheet" href="./assets/css/modal-edit-funcionario.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/dashboard.css" />
+    <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/modal-add-turma.css" />
+    <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
+    <link rel="stylesheet" href="./css/modal-add-aluno.css" />
+    <link rel="stylesheet" href="./css/modal-delete-funcionario.css" />
+    <link rel="stylesheet" href="./css/modal-edit-funcionario.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Gerenciar Funcionários</title>
 </head>
@@ -60,9 +60,9 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
 
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
-            <a href="./src/Views/dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
+            <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
-            <a href="./src/Views/my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+            <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
             <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
             <div class="sidebar-item">
@@ -85,7 +85,7 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
         <!-- Seção de Conteúdo -->
         <div class="main-content" id="main-content">
             <div class="titulo-secao">
-                <span><a href="./src/Views/dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Gerenciamento de Funcionários</span>
+                <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Gerenciamento de Funcionários</span>
                 <div class="separator"></div>
                 <p>                    
                     <div class="filtros">
@@ -159,14 +159,14 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/utils.js"></script>
-    <script src="assets/js/modal-add-funcionario.js"></script>
-    <script src="assets/js/modal-add-turma.js"></script>
-    <script src="assets/js/modal-add-aluno.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/modal-add-funcionario.js"></script>
+    <script src="js/modal-add-turma.js"></script>
+    <script src="js/modal-add-aluno.js"></script>
     
-    <script src="assets/js/funcionarios.js"></script>
-    <script src="assets/js/dashboard.js"></script>
-    <script src="assets/js/ajax.js"></script>
+    <script src="js/funcionarios.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/ajax.js"></script>
 
     <script>
         function toggleSidebar() {
