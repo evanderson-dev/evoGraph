@@ -1,6 +1,6 @@
 <?php
 spl_autoload_register(function ($class) {
-    $prefix = 'evoGraph\\';
+    $prefix = 'EvoGraph\\';
     $base_dir = __DIR__ . '/';
     $len = strlen($prefix);
     if (strncmp($prefix, $class, $len) !== 0) {

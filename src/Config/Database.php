@@ -1,20 +1,22 @@
 <?php
+namespace EvoGraph\Config;
 
-// Configurações do banco de dados
-$host = "localhost";
-$username = "admEvoGraph";        // Usuário atual, pode ser alterado
-$password = "evoGraph123";     // Senha atual, pode ser alterada
-$database = "evograph_db";
+class Database {
+    private static $conn = null;
 
-// Criar a conexão
-$conn = new mysqli($host, $username, $password, $database);
+    public static function getConnection() {
+        if (self::$conn === null) {
+            $servername = "localhost";
+            $username = "admEvoGraph";
+            $password = "evoGraph123";
+            $dbname = "evograph_db";
 
-// Verificar a conexão
-if ($conn->connect_error) {
-    die("Erro de conexão: " . $conn->connect_error);
+            self::$conn = new mysqli($servername, $username, $password, $dbname);
+
+            if (self::$conn->connect_error) {
+                die("Conexão falhou: " . self::$conn->connect_error);
+            }
+        }
+        return self::$conn;
+    }
 }
-
-// Configurar charset (opcional, para evitar problemas com acentos)
-$conn->set_charset("utf8");
-
-?>
