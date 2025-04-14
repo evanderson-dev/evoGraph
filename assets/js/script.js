@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 message.className = `message ${data.status}`;
                 if (data.status === "success") {
                     setTimeout(() => {
-                        window.location.href = "src/Views/dashboard.php";
+                        window.location.href = "dashboard.php";
                     }, 2000);
                 }
             })
