@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - EvoGraph</title>
-    <link rel="stylesheet" href="/assets/css/global.css">
-    <link rel="stylesheet" href="/assets/css/login.css">
+    <link rel="stylesheet" href="./public/assets/css/global.css">
+    <link rel="stylesheet" href="./public/assets/css/login.css">
 </head>
 <body>
     <div class="login-container">
@@ -24,8 +24,8 @@
         </form>
         <p id="error-message" class="error" style="display: none;"></p>
     </div>
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/ajax.js"></script>
+    <script src="./public/assets/js/jquery.min.js"></script>
+    <script src="./public/assets/js/ajax.js"></script>
     <script>
         $(document).ready(function() {
             $('#login-form').on('submit', function(e) {
