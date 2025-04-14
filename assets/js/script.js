@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 message.className = `message ${data.status}`;
                 if (data.status === "success") {
                     setTimeout(() => {
-                        window.location.href = "dashboard.php";
+                        window.location.href = "./src/Views/dashboard.php";
                     }, 2000);
                 }
             })
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Mostrar/esconder a sidebar (somente no dashboard.php)
+    // Mostrar/esconder a sidebar (somente no ./src/Views/dashboard.php)
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.querySelector('.main-content');
