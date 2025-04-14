@@ -1,4 +1,3 @@
-/* js/modal-details-aluno.js */
 /* Responsabilidade: Gerencia o modal de detalhes do aluno */
 $(document).ready(function() {
     $(document).on('click', '#modal-details-aluno .close-modal-btn', function() {

@@ -1,4 +1,3 @@
-/* js/funcionarios.js */
 /* Responsabilidade: Gerencia a página de funcionários */
 $(document).ready(function() {
     loadFuncionarios();

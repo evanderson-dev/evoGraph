@@ -29,14 +29,14 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css" />
-    <link rel="stylesheet" href="./css/dashboard.css" />
-    <link rel="stylesheet" href="./css/sidebar.css" />
-    <link rel="stylesheet" href="./css/modal-add-turma.css" />
-    <link rel="stylesheet" href="./css/modal-add-funcionario.css" />
-    <link rel="stylesheet" href="./css/modal-add-aluno.css" />
-    <link rel="stylesheet" href="./css/modal-delete-funcionario.css" />
-    <link rel="stylesheet" href="./css/modal-edit-funcionario.css" />
+    <link rel="stylesheet" href="./public/assets/css/style.css" />
+    <link rel="stylesheet" href="./public/assets/css/dashboard.css" />
+    <link rel="stylesheet" href="./public/assets/css/sidebar.css" />
+    <link rel="stylesheet" href="./public/assets/css/modal-add-turma.css" />
+    <link rel="stylesheet" href="./public/assets/css/modal-add-funcionario.css" />
+    <link rel="stylesheet" href="./public/assets/css/modal-add-aluno.css" />
+    <link rel="stylesheet" href="./public/assets/css/modal-delete-funcionario.css" />
+    <link rel="stylesheet" href="./public/assets/css/modal-edit-funcionario.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Gerenciar Funcionários</title>
 </head>
@@ -159,14 +159,14 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/modal-add-funcionario.js"></script>
-    <script src="js/modal-add-turma.js"></script>
-    <script src="js/modal-add-aluno.js"></script>
+    <script src="public/assets/js/utils.js"></script>
+    <script src="public/assets/js/modal-add-funcionario.js"></script>
+    <script src="public/assets/js/modal-add-turma.js"></script>
+    <script src="public/assets/js/modal-add-aluno.js"></script>
     
-    <script src="js/funcionarios.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/ajax.js"></script>
+    <script src="public/assets/js/funcionarios.js"></script>
+    <script src="public/assets/js/dashboard.js"></script>
+    <script src="public/assets/js/ajax.js"></script>
 
     <script>
         function toggleSidebar() {

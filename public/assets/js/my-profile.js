@@ -1,4 +1,3 @@
-/* js/my-profile.js */
 $(document).ready(function() {
     const originalValues = {
         nome: $('#nome').val(),

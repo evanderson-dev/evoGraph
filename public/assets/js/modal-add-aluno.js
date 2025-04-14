@@ -1,4 +1,4 @@
-/* js/modal-add-aluno.js */
+
 /* Responsabilidade: Gerencia o modal de cadastro de alunos */
 $(document).ready(function() {
     $(document).on('click', '#modal-add-aluno .close-modal-btn', function() {

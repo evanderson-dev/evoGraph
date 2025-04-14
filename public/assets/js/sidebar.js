@@ -1,4 +1,3 @@
-/* js/sidebar.js */
 /* Responsabilidade: Gerencia o toggle da sidebar, persiste seu estado e controla submenus */
 $(document).ready(function() {
     // Toggle da sidebar

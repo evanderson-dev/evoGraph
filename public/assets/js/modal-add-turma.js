@@ -1,4 +1,3 @@
-/* js/modal-add-turma.js */
 /* Responsabilidade: Gerencia o modal de cadastro de turmas */
 $(document).ready(function() {
     // Fechar modal ao clicar em Cancelar ou Fechar

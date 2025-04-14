@@ -1,4 +1,3 @@
-/* js/modal-edit-turma.js */
 $(document).ready(function() {
     $(document).on('click', '#modal-edit-turma .close-modal-btn', function() {
         $('#modal-edit-turma').css('display', 'none');

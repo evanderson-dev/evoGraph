@@ -1,4 +1,3 @@
-/* js/modal-delete-aluno.js */
 /* Responsabilidade: Gerencia o modal de exclusão de alunos */
 $(document).ready(function() {
     $(document).on('click', '#modal-delete-aluno .close-modal-btn', function() {

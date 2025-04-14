@@ -1,4 +1,3 @@
-/* js/modal-add-funcionario.js */
 /* Responsabilidade: Gerencia o modal de cadastro de funcionários */
 $(document).ready(function() {
     $(document).on('click', '#modal-add-funcionario .close-modal-btn', function() {

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./css/global.css" rel="stylesheet" />
-    <link href="./css/login.css" rel="stylesheet" />
+    <link href="./public/assets/css/global.css" rel="stylesheet" />
+    <link href="./public/assets/css/login.css" rel="stylesheet" />
     <title>evoGraph Login</title>
 </head>
 <body>
@@ -41,6 +41,6 @@
             </form>
         </div>
     </div>
-    <script src="./js/script.js"></script>
+    <script src="./public/assets//js/script.js"></script>
 </body>
 </html>
