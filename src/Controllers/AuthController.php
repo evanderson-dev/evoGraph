@@ -17,7 +17,11 @@ class AuthController {
 
             header('Content-Type: application/json');
             if (empty($email) || empty($password)) {
-                echo json_encode(['success' => false, 'message' => 'E-mail e senha são obrigatórios.']);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'E-mail e senha são obrigatórios.',
+                    'status' => 'error'
+                ]);
                 return;
             }
 
@@ -28,9 +32,18 @@ class AuthController {
                 $_SESSION['funcionario_id'] = $user['id'];
                 $_SESSION['nome'] = $user['nome'];
                 $_SESSION['tipo'] = $user['tipo'];
-                echo json_encode(['success' => true, 'redirect' => '/dashboard']);
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Login bem-sucedido! Redirecionando...',
+                    'status' => 'success',
+                    'redirect' => '/dashboard'
+                ]);
             } else {
-                echo json_encode(['success' => false, 'message' => 'E-mail ou senha inválidos.']);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'E-mail ou senha inválidos.',
+                    'status' => 'error'
+                ]);
             }
         } else {
             require_once __DIR__ . '/../Views/auth/login.php';

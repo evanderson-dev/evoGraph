@@ -41,47 +41,6 @@
             </form>
         </div>
     </div>
-    <script src="/assets/js/script.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Manipular formulário de login
-            $('#login-form').on('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                $.ajax({
-                    url: '/login',
-                    method: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            window.location.href = response.redirect;
-                        } else {
-                            $('#message').text(response.message).removeClass('success').addClass('error').show();
-                        }
-                    },
-                    error: function(xhr) {
-                        $('#message').text('Erro ao comunicar com o servidor: ' + xhr.statusText).removeClass('success').addClass('error').show();
-                    }
-                });
-            });
-
-            // Mostrar/esconder formulário de redefinição
-            $('#show-reset-form').on('click', function(e) {
-                e.preventDefault();
-                $('#login-form').addClass('hidden');
-                $('#reset-form').removeClass('hidden');
-                $('#message').hide();
-            });
-
-            // Manipular formulário de redefinição (placeholder, será implementado depois)
-            $('#reset-form').on('submit', function(e) {
-                e.preventDefault();
-                $('#message').text('Funcionalidade de redefinição de senha ainda não implementada.').removeClass('success').addClass('error').show();
-            });
-        });
-    </script>
+    <script src="/assets/js/login.js"></script>
 </body>
 </html>
