@@ -8,7 +8,13 @@ class AuthController {
 
     public function __construct($db) {
         error_log("Inicializando AuthController");
-        $this->userModel = new User($db);
+        try {
+            $this->userModel = new User($db);
+            error_log("User model instanciado com sucesso");
+        } catch (Exception $e) {
+            error_log("Erro ao instanciar User: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function login() {
@@ -29,25 +35,35 @@ class AuthController {
                 return;
             }
 
-            $user = $this->userModel->authenticate($email, $password);
-            if ($user) {
-                error_log("Login bem-sucedido para $email");
-                session_start();
-                $_SESSION['loggedin'] = true;
-                $_SESSION['funcionario_id'] = $user['id'];
-                $_SESSION['nome'] = $user['nome'];
-                $_SESSION['cargo'] = $user['cargo'];
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Login bem-sucedido! Redirecionando...',
-                    'status' => 'success',
-                    'redirect' => '/dashboard'
-                ]);
-            } else {
-                error_log("Falha no login para $email");
+            try {
+                $user = $this->userModel->authenticate($email, $password);
+                if ($user) {
+                    error_log("Login bem-sucedido para $email");
+                    session_start();
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION['funcionario_id'] = $user['id'];
+                    $_SESSION['nome'] = $user['nome'];
+                    $_SESSION['cargo'] = $user['cargo'];
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Login bem-sucedido! Redirecionando...',
+                        'status' => 'success',
+                        'redirect' => '/dashboard'
+                    ]);
+                } else {
+                    error_log("Falha no login para $email");
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'E-mail ou senha inválidos.',
+                        'status' => 'error'
+                    ]);
+                }
+            } catch (Exception $e) {
+                error_log("Erro durante autenticação: " . $e->getMessage());
+                http_response_code(500);
                 echo json_encode([
                     'success' => false,
-                    'message' => 'E-mail ou senha inválidos.',
+                    'message' => 'Erro interno no servidor.',
                     'status' => 'error'
                 ]);
             }

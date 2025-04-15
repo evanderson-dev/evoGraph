@@ -1,5 +1,4 @@
 <?php
-// footer.php
 $current_year = date("Y"); // Ano atual dinâmico
 ?>
 
