@@ -36,7 +36,7 @@ class AuthController {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['funcionario_id'] = $user['id'];
                 $_SESSION['nome'] = $user['nome'];
-                $_SESSION['tipo'] = $user['tipo'];
+                $_SESSION['cargo'] = $user['cargo'];
                 echo json_encode([
                     'success' => true,
                     'message' => 'Login bem-sucedido! Redirecionando...',

@@ -10,7 +10,7 @@ class User {
 
     public function authenticate($email, $password) {
         error_log("Autenticando usuário com email: $email");
-        $stmt = $this->conn->prepare("SELECT id, nome, email, senha, tipo FROM funcionarios WHERE email = ?");
+        $stmt = $this->conn->prepare("SELECT id, nome, email, senha, cargo FROM funcionarios WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
