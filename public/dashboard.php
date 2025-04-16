@@ -14,7 +14,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
-$default_photo = './img/employee_photos/default_photo.jpg';
+$default_photo = './assets/img/employee_photos/default_photo.jpg';
 $photo_path = $user['foto'] ? $user['foto'] : $default_photo;
 $user['foto'] = file_exists($photo_path) ? $photo_path : $default_photo;
 $ext = pathinfo($user['foto'], PATHINFO_EXTENSION);
