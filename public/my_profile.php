@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     // Processar upload da foto
     $foto_path = $user_profile['foto']; // Valor inicial
     if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] == 0) {
-        $target_dir = "./img/employee_photos/";
+        $target_dir = "./assets/img/employee_photos/";
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
