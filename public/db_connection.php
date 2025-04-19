@@ -2,8 +2,8 @@
 
 // Configurações do banco de dados
 $host = "localhost";
-$username = "admEvoGraph";        // Usuário atual, pode ser alterado
-$password = "evoGraph123";     // Senha atual, pode ser alterada
+$username = "admEvoGraph";
+$password = "evoGraph123";
 $database = "evograph_db";
 
 // Criar a conexão
