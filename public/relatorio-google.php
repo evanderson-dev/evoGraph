@@ -116,6 +116,8 @@
                                 fetch(formattedUrl)
                                     .then(res => res.text())
                                     .then(csv => {
+                                        console.log("CSV bruto:", csv);  // <-- Aqui você verá o conteúdo original da planilha
+                                        // Use PapaParse para analisar o CSV
                                         Papa.parse(csv, {
                                             header: true,
                                             skipEmptyLines: true,
