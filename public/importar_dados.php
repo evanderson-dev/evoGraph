@@ -72,6 +72,7 @@
                 <?php if (isset($mensagem)): ?>
                     <div class="mensagem"><?php echo $mensagem; ?></div>
                 <?php endif; ?>
+
         </div>
     </div>
 
