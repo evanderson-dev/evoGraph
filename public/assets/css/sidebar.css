@@ -1,5 +1,5 @@
 .sidebar {
-    width: 230px;
+    width: 250px;
     border-width: 0 1px 0 0; /* Borda à direita da sidebar */
     background-color: #444;
     position: relative;
@@ -93,14 +93,4 @@
 
 .submenu-toggle.open {
     transform: rotate(180deg); /* Gira a seta para cima quando aberto */
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        width: 230px;
-    }
-
-    .main-content.shifted {
-        margin-left: 230px;
-    }
 }

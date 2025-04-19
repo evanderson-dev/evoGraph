@@ -1,0 +1,97 @@
+/* css/my-profile.css */
+.profile-form {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1320px;
+    margin: 1 auto;
+    display: auto; 
+}
+
+table {   
+    border-collapse: collapse; /*  Colapsa as bordas da tabela */
+    width: 100%; /*  Largura total da tabela */
+    overflow-x: auto; /*  Adiciona rolagem horizontal se necessário */
+    display: block; /*  Para permitir a rolagem */
+}
+
+th, td {
+    border: 1px solid #aaa; /*  Borda das células */
+    padding: px; /*  Espaçamento interno das células */
+    text-align: left; /*  Alinhamento do texto */
+    font-size: 14px; /*  Tamanho da fonte */
+}
+
+th {
+    background-color: #eee; /*  Cor de fundo dos cabeçalhos */
+}
+
+.form-row {
+    display: flex; /* Ativa o Flexbox */
+    flex-wrap: nowrap; /* Impede que os elementos quebrem para a próxima linha */
+    gap: 10px; /* Espaçamento entre os elementos */
+    margin-bottom: 10px; /* Espaçamento entre as linhas */
+}
+
+.form-group {
+    flex: 1; /* Cada grupo ocupa o mesmo espaço */
+}
+
+.form-group.full-width {
+    flex: 100%; /* O grupo ocupa toda a largura */
+}
+
+.profile-form label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px; /* Espaçamento abaixo do rótulo */
+}
+
+.profile-form input,
+.profile-form select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.form-buttons {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.success-message {
+    color: #28a745;
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-align: center;
+    padding: 10px;
+    background-color: #d4edda;
+    border-radius: 5px;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8d7da;
+    border-radius: 5px;
+}
+
+.input-google-link {
+    margin-bottom: 1rem; /* Espaçamento abaixo do campo */
+}
+.input-google-link input {
+    margin-right: 8px; /* Espaçamento à direita do campo de entrada */
+    padding: 4px; /* Espaçamento interno */
+}
+.input-google-link button {
+    padding: 6px 12px; /* Espaçamento interno do botão */
+}
