@@ -73,6 +73,7 @@
                             <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/...">
                             <input type="text" id="googleSheetTab" placeholder="(Opcional) Nome da aba"><br>
                             <button type="button" onclick="carregarPlanilha()">Carregar</button><br>
+                            <button type="button" onclick="importarParaBanco()">Importar para o banco</button>
                         </div>
                         <div style="overflow-x: auto;">
                             <table id="tabela-dados">
@@ -114,43 +115,65 @@
                                 if (!formattedUrl) return;
 
                                 fetch(formattedUrl)
-                                    .then(res => res.text())
-                                    .then(csv => {
-                                        console.log("CSV bruto:", csv);  // <-- Aqui você verá o conteúdo original da planilha
-                                        // Use PapaParse para analisar o CSV
-                                        Papa.parse(csv, {
-                                            header: true,
-                                            skipEmptyLines: true,
-                                            complete: function(results) {
-                                                const data = results.data;
-                                                const thead = document.querySelector("#tabela-dados thead");
-                                                const tbody = document.querySelector("#tabela-dados tbody");
+                                .then(res => res.text())
+                                .then(csv => {
+                                    console.log("CSV bruto:", csv);  // <-- Aqui você verá o conteúdo original da planilha
+                                    // Use PapaParse para analisar o CSV
+                                    Papa.parse(csv, {
+                                        header: true,
+                                        skipEmptyLines: true,
+                                        complete: function(results) {
+                                            const data = results.data;
+                                            const thead = document.querySelector("#tabela-dados thead");
+                                            const tbody = document.querySelector("#tabela-dados tbody");
 
-                                                // Limpa tabela
-                                                thead.innerHTML = '';
-                                                tbody.innerHTML = '';
+                                            // Limpa tabela
+                                            thead.innerHTML = '';
+                                            tbody.innerHTML = '';
 
-                                                const headers = Object.keys(data[0]);
-                                                const headerRow = document.createElement("tr");
+                                            const headers = Object.keys(data[0]);
+                                            const headerRow = document.createElement("tr");
+                                            headers.forEach(h => {
+                                                const th = document.createElement("th");
+                                                th.textContent = h;
+                                                headerRow.appendChild(th);
+                                            });
+                                            thead.appendChild(headerRow);
+
+                                            data.forEach(row => {
+                                                const tr = document.createElement("tr");
                                                 headers.forEach(h => {
-                                                    const th = document.createElement("th");
-                                                    th.textContent = h;
-                                                    headerRow.appendChild(th);
+                                                    const td = document.createElement("td");
+                                                    td.textContent = row[h];
+                                                    tr.appendChild(td);
                                                 });
-                                                thead.appendChild(headerRow);
-
-                                                data.forEach(row => {
-                                                    const tr = document.createElement("tr");
-                                                    headers.forEach(h => {
-                                                        const td = document.createElement("td");
-                                                        td.textContent = row[h];
-                                                        tr.appendChild(td);
-                                                    });
-                                                    tbody.appendChild(tr);
-                                                });
-                                            }
-                                        });
+                                                tbody.appendChild(tr);
+                                            });
+                                        }
                                     });
+                                });
+                            }
+
+                            function importarParaBanco() {
+                                if (dadosPlanilha.length === 0) {
+                                    alert("Nenhum dado carregado.");
+                                    return;
+                                }
+
+                                fetch('importar_formulario.php', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(dadosPlanilha)
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    const box = document.getElementById("message-box");
+                                    box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    alert("Erro ao importar os dados.");
+                                });
                             }
                         </script>
                     </form>

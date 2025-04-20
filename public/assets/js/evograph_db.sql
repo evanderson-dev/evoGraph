@@ -36,6 +36,7 @@ CREATE TABLE alunos (
     nome_mae VARCHAR(100),
     turma_id INT,
     foto VARCHAR(255) DEFAULT NULL,
+    email VARCHAR(150) UNIQUE DEFAULT NULL,
     FOREIGN KEY (turma_id) REFERENCES turmas(id)
 );
 
@@ -48,6 +49,16 @@ CREATE TABLE relatorios_alunos (
     criado_por INT NOT NULL,
     FOREIGN KEY (aluno_id) REFERENCES alunos(id),
     FOREIGN KEY (criado_por) REFERENCES funcionarios(id)
+);
+
+-- Tabela respostas_formulario
+CREATE TABLE respostas_formulario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    aluno_id INT,
+    email VARCHAR(150),
+    data_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
+    dados_json JSON NOT NULL,
+    FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL
 );
 
 -- Inserindo funcionários (professores, coordenadores, diretor e administrador)
