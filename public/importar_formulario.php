@@ -1,5 +1,5 @@
 <?php
-require_once "conexao.php"; // ajuste para o seu arquivo de conexão com o banco
+require_once "db_connection.php"; // ajuste para o seu arquivo de conexão com o banco
 
 header("Content-Type: application/json");
 
