@@ -58,6 +58,7 @@ CREATE TABLE respostas_formulario (
     email VARCHAR(150),
     data_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
     dados_json JSON NOT NULL,
+    formulario_id VARCHAR(50) DEFAULT NULL,
     FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL
 );
 

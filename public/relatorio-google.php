@@ -54,7 +54,6 @@
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
             <?php 
-            session_start();
             $cargo = isset($_SESSION["cargo"]) ? $_SESSION["cargo"] : "";
             if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
             <div class="sidebar-item">
@@ -76,7 +75,7 @@
 
         <div class="main-content" id="main-content">
             <div class="titulo-secao">
-                <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Formulário do Google Forms</span>
+                <spanleri><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Formulário do Google Forms</span>
             </div>
 
             <section class="meu-perfil">
@@ -84,12 +83,6 @@
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
-                        <?php
-                        if (!isset($_SESSION['csrf_token'])) {
-                            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-                        }
-                        ?>
-                        <input type="hidden" id="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         
                         <h3>Relatório - Respostas do Google Forms</h3>
                         <div class="input-google-link">
@@ -206,13 +199,10 @@
                                 button.disabled = true;
                                 button.textContent = "Importando...";
 
-                                const csrfToken = document.getElementById('csrf_token').value;
-
                                 fetch('importar_formulario.php', {
                                     method: 'POST',
                                     headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-Token': csrfToken
+                                        'Content-Type': 'application/json'
                                     },
                                     body: JSON.stringify({
                                         dados: dadosPlanilha,
@@ -222,10 +212,14 @@
                                 .then(response => response.json())
                                 .then(data => {
                                     const box = document.getElementById("message-box");
+                                    let mensagem = data.mensagem;
+                                    if (data.erros && data.erros.length > 0) {
+                                        mensagem += "<br>Detalhes: " + data.erros.join("<br>");
+                                    }
                                     if (data.mensagem.includes("Erro")) {
-                                        box.innerHTML = `<div class="mensagem-erro">${data.mensagem}</div>`;
+                                        box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
                                     } else {
-                                        box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
+                                        box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
                                     }
                                     button.disabled = false;
                                     button.textContent = "Importar para o banco";
