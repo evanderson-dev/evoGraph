@@ -12,7 +12,23 @@
     <link rel="stylesheet" href="./assets/css/modal-add-turma.css" />
     <link rel="stylesheet" href="./assets/css/modal-add-aluno.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>evoGraph - Meu Perfil</title>
+    <title>evoGraph - Relatório Google</title>
+    <style>
+        .mensagem-sucesso {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .mensagem-erro {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -31,19 +47,21 @@
     <!-- Fim do Header -->
 
     <div class="container">
-
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="#"><i class="fa-solid fa-chart-bar"></i>Relatórios</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
-            <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+            <?php 
+            session_start();
+            $cargo = isset($_SESSION["cargo"]) ? $_SESSION["cargo"] : "";
+            if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $cargo === "Administrador"): ?>
+                    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
@@ -66,12 +84,19 @@
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
+                        <?php
+                        if (!isset($_SESSION['csrf_token'])) {
+                            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                        }
+                        ?>
+                        <input type="hidden" id="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         
                         <h3>Relatório - Respostas do Google Forms</h3>
                         <div class="input-google-link">
                             <label for="googleSheetLink">Cole o link da planilha do Google:</label>
                             <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/...">
-                            <input type="text" id="googleSheetTab" placeholder="(Opcional) Nome da aba"><br>
+                            <input type="text" id="googleSheetTab" placeholder="(Opcional) Nome da aba">
+                            <input type="text" id="formularioId" placeholder="(Opcional) Identificador do formulário"><br>
                             <button type="button" onclick="carregarPlanilha()">Carregar</button><br>
                             <button type="button" onclick="importarParaBanco()">Importar para o banco</button>
                         </div>
@@ -83,28 +108,23 @@
                         </div>
 
                         <script>
+                            let dadosPlanilha = []; // Variável global para armazenar os dados
+
                             function formatGoogleSheetUrl(userInputUrl, sheetName = '') {
                                 const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
-                                const gidMatch = userInputUrl.match(/gid=(\d+)/);
-
                                 if (!idMatch) {
                                     alert("Link inválido! Verifique o link da planilha.");
                                     return null;
                                 }
 
                                 const sheetId = idMatch[1];
-                                const baseUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
+                                let url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
 
                                 if (sheetName) {
-                                    return `${baseUrl}&sheet=${encodeURIComponent(sheetName)}`;
+                                    url += `&sheet=${encodeURIComponent(sheetName)}`;
                                 }
 
-                                if (gidMatch) {
-                                    const gid = gidMatch[1];
-                                    return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
-                                }
-
-                                return baseUrl;
+                                return url;
                             }
 
                             function carregarPlanilha() {
@@ -114,44 +134,66 @@
 
                                 if (!formattedUrl) return;
 
+                                const button = document.querySelector('button[onclick="carregarPlanilha()"]');
+                                button.disabled = true;
+                                button.textContent = "Carregando...";
+
                                 fetch(formattedUrl)
-                                .then(res => res.text())
-                                .then(csv => {
-                                    console.log("CSV bruto:", csv);  // <-- Aqui você verá o conteúdo original da planilha
-                                    // Use PapaParse para analisar o CSV
-                                    Papa.parse(csv, {
-                                        header: true,
-                                        skipEmptyLines: true,
-                                        complete: function(results) {
-                                            const data = results.data;
-                                            const thead = document.querySelector("#tabela-dados thead");
-                                            const tbody = document.querySelector("#tabela-dados tbody");
+                                    .then(res => res.text())
+                                    .then(csv => {
+                                        Papa.parse(csv, {
+                                            header: true,
+                                            skipEmptyLines: true,
+                                            complete: function(results) {
+                                                dadosPlanilha = results.data;
+                                                const thead = document.querySelector("#tabela-dados thead");
+                                                const tbody = document.querySelector("#tabela-dados tbody");
 
-                                            // Limpa tabela
-                                            thead.innerHTML = '';
-                                            tbody.innerHTML = '';
+                                                // Limpa tabela
+                                                thead.innerHTML = '';
+                                                tbody.innerHTML = '';
 
-                                            const headers = Object.keys(data[0]);
-                                            const headerRow = document.createElement("tr");
-                                            headers.forEach(h => {
-                                                const th = document.createElement("th");
-                                                th.textContent = h;
-                                                headerRow.appendChild(th);
-                                            });
-                                            thead.appendChild(headerRow);
+                                                if (dadosPlanilha.length === 0) {
+                                                    alert("Nenhum dado encontrado na planilha.");
+                                                    button.disabled = false;
+                                                    button.textContent = "Carregar";
+                                                    return;
+                                                }
 
-                                            data.forEach(row => {
-                                                const tr = document.createElement("tr");
+                                                const headers = Object.keys(dadosPlanilha[0]);
+                                                const headerRow = document.createElement("tr");
                                                 headers.forEach(h => {
-                                                    const td = document.createElement("td");
-                                                    td.textContent = row[h];
-                                                    tr.appendChild(td);
+                                                    const th = document.createElement("th");
+                                                    th.textContent = h;
+                                                    headerRow.appendChild(th);
                                                 });
-                                                tbody.appendChild(tr);
-                                            });
-                                        }
+                                                thead.appendChild(headerRow);
+
+                                                dadosPlanilha.forEach(row => {
+                                                    const tr = document.createElement("tr");
+                                                    headers.forEach(h => {
+                                                        const td = document.createElement("td");
+                                                        td.textContent = row[h] || '';
+                                                        tr.appendChild(td);
+                                                    });
+                                                    tbody.appendChild(tr);
+                                                });
+
+                                                button.disabled = false;
+                                                button.textContent = "Carregar";
+                                            },
+                                            error: function(error) {
+                                                alert("Erro ao parsear o CSV: " + error);
+                                                button.disabled = false;
+                                                button.textContent = "Carregar";
+                                            }
+                                        });
+                                    })
+                                    .catch(err => {
+                                        alert("Erro ao carregar a planilha: " + err);
+                                        button.disabled = false;
+                                        button.textContent = "Carregar";
                                     });
-                                });
                             }
 
                             function importarParaBanco() {
@@ -160,19 +202,40 @@
                                     return;
                                 }
 
+                                const button = document.querySelector('button[onclick="importarParaBanco()"]');
+                                button.disabled = true;
+                                button.textContent = "Importando...";
+
+                                const csrfToken = document.getElementById('csrf_token').value;
+
                                 fetch('importar_formulario.php', {
                                     method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(dadosPlanilha)
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-Token': csrfToken
+                                    },
+                                    body: JSON.stringify({
+                                        dados: dadosPlanilha,
+                                        formularioId: document.getElementById('formularioId').value
+                                    })
                                 })
                                 .then(response => response.json())
                                 .then(data => {
                                     const box = document.getElementById("message-box");
-                                    box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
+                                    if (data.mensagem.includes("Erro")) {
+                                        box.innerHTML = `<div class="mensagem-erro">${data.mensagem}</div>`;
+                                    } else {
+                                        box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
+                                    }
+                                    button.disabled = false;
+                                    button.textContent = "Importar para o banco";
                                 })
                                 .catch(err => {
                                     console.error(err);
-                                    alert("Erro ao importar os dados.");
+                                    const box = document.getElementById("message-box");
+                                    box.innerHTML = `<div class="mensagem-erro">Erro ao importar os dados: ${err}</div>`;
+                                    button.disabled = false;
+                                    button.textContent = "Importar para o banco";
                                 });
                             }
                         </script>
@@ -196,7 +259,7 @@
 
     <!-- Scripts -->
     <footer>
-        <p>&copy; 2025 evoGraph. All rights reserved.</p>
+        <p>© 2025 evoGraph. All rights reserved.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
