@@ -39,18 +39,30 @@ if ($formulario_id) {
               FROM perguntas_formulario
               WHERE formulario_id = '$formulario_id'";
     $result = $conn->query($query);
-    while ($row = $result->fetch_assoc()) {
-        $pergunta = $row['pergunta_texto'];
-        $pergunta_escaped = $conn->real_escape_string($pergunta);
-        $resposta_correta = $row['resposta_correta'] ? $conn->real_escape_string($row['resposta_correta']) : '';
-        $query_acertos = "SELECT COUNT(*) AS total,
-                                 SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '\"$resposta_correta\"' THEN 1 ELSE 0 END) AS acertos
-                          FROM respostas_formulario
-                          WHERE formulario_id = '$formulario_id'";
-        $result_acertos = $conn->query($query_acertos);
-        $acertos_row = $result_acertos->fetch_assoc();
-        $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
-        fputcsv($output, [$pergunta, $row['bncc_habilidade'] ?: 'N/A', "$percentual%"]);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $pergunta = $row['pergunta_texto'];
+            $pergunta_escaped = $conn->real_escape_string($pergunta);
+            $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
+            if ($resposta_correta) {
+                $query_acertos = "SELECT COUNT(*) AS total,
+                                         SUM(CASE WHEN LOWER(TRIM(JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"'))) = LOWER(TRIM('$resposta_correta')) THEN 1 ELSE 0 END) AS acertos
+                                  FROM respostas_formulario
+                                  WHERE formulario_id = '$formulario_id'";
+                $result_acertos = $conn->query($query_acertos);
+                if ($result_acertos) {
+                    $acertos_row = $result_acertos->fetch_assoc();
+                    $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
+                } else {
+                    $percentual = 0;
+                }
+            } else {
+                $percentual = 0; // Resposta correta não definida
+            }
+            fputcsv($output, [$pergunta, $row['bncc_habilidade'] ?: 'N/A', "$percentual%"]);
+        }
+    } else {
+        fputcsv($output, ['Nenhuma pergunta encontrada para o formulário selecionado.', '', '']);
     }
 }
 
