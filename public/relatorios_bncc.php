@@ -55,7 +55,7 @@
             margin-right: 10px;
         }
         canvas {
-            max-width: 600px;
+            max-width: 300px; /* Limitar a largura do gráfico */
             margin: 20px 0;
         }
         .paginacao a {
@@ -71,7 +71,7 @@
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-X3kW5v4xhmz3jYOkOof3gT3K2hvsqxCisv1KJSfRwROh8+2S2rF0P3V7lKXUq1vF" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-mD2fnMWkMhvPDqX1tY2e+2GksWHCf0HN5Z1h4oUoZauF6p+UcSp5jA+xUL4JxR+v" crossorigin="anonymous"></script>
     <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
     <script>
         // Função para verificar o Chart.js
