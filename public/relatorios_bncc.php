@@ -256,10 +256,10 @@
                 if (isset($_GET['pergunta']) && $formulario_id) {
                     $pergunta = $conn->real_escape_string($_GET['pergunta']);
                     $query = "SELECT JSON_EXTRACT(dados_json, '$.\"$pergunta\"') AS resposta,
-                                     COUNT(*) AS total
-                              FROM respostas_formulario
-                              WHERE formulario_id = '$formulario_id'
-                              GROUP BY resposta";
+                                    COUNT(*) AS total
+                            FROM respostas_formulario
+                            WHERE formulario_id = '$formulario_id'
+                            GROUP BY resposta";
                     $result = $conn->query($query);
                     $respostas = [];
                     $quantidades = [];
@@ -279,41 +279,44 @@
                     <canvas id="graficoRespostas"></canvas>
                 </div>
                 <script>
-                    console.log('Respostas:', <?php echo json_encode($respostas); ?>);
-                    console.log('Quantidades:', <?php echo json_encode($quantidades); ?>);
-                    if (typeof Chart === 'undefined') {
-                        console.error('Chart.js não foi carregado.');
-                    } else {
-                        const ctxRespostas = document.getElementById('graficoRespostas').getContext('2d');
-                        new Chart(ctxRespostas, {
-                            type: 'pie',
-                            data: {
-                                labels: <?php echo json_encode($respostas); ?>,
-                                datasets: [{
-                                    data: <?php echo json_encode($quantidades); ?>,
-                                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'],
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        position: 'top',
-                                    },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(context) {
-                                                let label = context.label || '';
-                                                let value = context.raw || 0;
-                                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                                let percentage = ((value / total) * 100).toFixed(2);
-                                                return `${label}: ${value} (${percentage}%)`;
+                    console.log('Dados para Gráfico de Pizza - Respostas:', <?php echo json_encode($respostas); ?>);
+                    console.log('Dados para Gráfico de Pizza - Quantidades:', <?php echo json_encode($quantidades); ?>);
+                    if (checkChartJs()) {
+                        try {
+                            const ctxRespostas = document.getElementById('graficoRespostas').getContext('2d');
+                            new Chart(ctxRespostas, {
+                                type: 'pie',
+                                data: {
+                                    labels: <?php echo json_encode($respostas); ?>,
+                                    datasets: [{
+                                        data: <?php echo json_encode($quantidades); ?>,
+                                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'],
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    let label = context.label || '';
+                                                    let value = context.raw || 0;
+                                                    let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                                    let percentage = ((value / total) * 100).toFixed(2);
+                                                    return `${label}: ${value} (${percentage}%)`;
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
-                        });
+                            });
+                            console.log('Gráfico de Pizza renderizado.');
+                        } catch (e) {
+                            console.error('Erro ao renderizar Gráfico de Pizza:', e);
+                        }
                     }
                 </script>
                 <?php } ?>
@@ -398,8 +401,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" integrity="sha384-1mO1sCYo4x0gp7kJ3z1tdV7TK1W5zRM1AeDy7M9e0oJCSf2ZcZy2Tk2+1Jma2y2I" crossorigin="anonymous"></script>
+    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./assets/js/utils.js"></script>
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
@@ -409,6 +412,15 @@
     <script src="./assets/js/ajax.js"></script>
 
     <script>
+        // Função para verificar o Chart.js
+        function checkChartJs() {
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js não foi carregado. Verifique a conexão com o CDN ou o arquivo local.');
+                return false;
+            }
+            console.log('Chart.js carregado com sucesso. Versão:', Chart.version);
+            return true;
+        }
         // Gráfico de Média por Série
         const ctx = document.getElementById('graficoMediaSerie').getContext('2d');
         new Chart(ctx, {
