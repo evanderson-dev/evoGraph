@@ -56,6 +56,7 @@
         }
         canvas {
             max-width: 300px; /* Limitar a largura do gráfico */
+            max-height: 300px; /* Limitar a altura do gráfico */
             margin: 20px 0;
         }
         .paginacao a {
