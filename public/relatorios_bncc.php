@@ -58,6 +58,16 @@
             max-width: 600px;
             margin: 20px 0;
         }
+        .paginacao a {
+            padding: 5px 10px;
+            margin: 0 2px;
+            text-decoration: none;
+            color: #333;
+        }
+        .paginacao a.active {
+            background-color: #36A2EB;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -106,31 +116,39 @@
                 <h2>Relatórios BNCC</h2>
                 <div id="message-box"></div>
 
+                <?php
+                require_once "db_connection.php";
+                $formulario_id = isset($_GET['formulario_id']) ? $conn->real_escape_string($_GET['formulario_id']) : '';
+                ?>
+
                 <!-- Filtro -->
                 <form class="filter-form" method="GET">
                     <label for="formulario_id">Filtrar por Formulário:</label>
                     <select name="formulario_id" id="formulario_id" onchange="this.form.submit()">
                         <option value="">Todos</option>
                         <?php
-                        require_once "db_connection.php";
                         $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
                         $result = $conn->query($query);
                         while ($row = $result->fetch_assoc()) {
-                            $selected = (isset($_GET['formulario_id']) && $_GET['formulario_id'] === $row['formulario_id']) ? 'selected' : '';
+                            $selected = ($formulario_id === $row['formulario_id']) ? 'selected' : '';
                             echo "<option value='{$row['formulario_id']}' $selected>{$row['formulario_id']}</option>";
                         }
                         ?>
                     </select>
                     <label for="pergunta">Selecionar Pergunta:</label>
-                    <select name="pergunta" id="pergunta">
+                    <select name="pergunta" id="pergunta" onchange="this.form.submit()">
                         <option value="">Nenhuma</option>
                         <?php
                         if ($formulario_id) {
                             $query = "SELECT pergunta_texto FROM perguntas_formulario WHERE formulario_id = '$formulario_id' ORDER BY pergunta_texto";
                             $result = $conn->query($query);
-                            while ($row = $result->fetch_assoc()) {
-                                $selected = (isset($_GET['pergunta']) && $_GET['pergunta'] === $row['pergunta_texto']) ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['pergunta_texto']) . "' $selected>" . htmlspecialchars($row['pergunta_texto']) . "</option>";
+                            if ($result && $result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $selected = (isset($_GET['pergunta']) && $_GET['pergunta'] === $row['pergunta_texto']) ? 'selected' : '';
+                                    echo "<option value='" . htmlspecialchars($row['pergunta_texto']) . "' $selected>" . htmlspecialchars($row['pergunta_texto']) . "</option>";
+                                }
+                            } else {
+                                echo "<option value='' disabled>Nenhuma pergunta encontrada</option>";
                             }
                         }
                         ?>
@@ -152,7 +170,6 @@
                         </thead>
                         <tbody>
                             <?php
-                            $formulario_id = isset($_GET['formulario_id']) ? $conn->real_escape_string($_GET['formulario_id']) : '';
                             $query = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
                                              AVG(pontuacao) AS media_pontuacao,
                                              COUNT(*) AS total_alunos
@@ -246,10 +263,15 @@
                     $result = $conn->query($query);
                     $respostas = [];
                     $quantidades = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $resposta = $row['resposta'] ? trim($row['resposta'], '"') : 'Não Respondida';
-                        $respostas[] = $resposta;
-                        $quantidades[] = $row['total'];
+                    if ($result && $result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $resposta = $row['resposta'] ? trim($row['resposta'], '"') : 'Não Respondida';
+                            $respostas[] = $resposta;
+                            $quantidades[] = $row['total'];
+                        }
+                    } else {
+                        $respostas = ['Nenhuma resposta'];
+                        $quantidades = [1];
                     }
                 ?>
                 <div class="relatorio-section">
@@ -257,36 +279,42 @@
                     <canvas id="graficoRespostas"></canvas>
                 </div>
                 <script>
-                    const ctxRespostas = document.getElementById('graficoRespostas').getContext('2d');
-                    new Chart(ctxRespostas, {
-                        type: 'pie',
-                        data: {
-                            labels: <?php echo json_encode($respostas); ?>,
-                            datasets: [{
-                                data: <?php echo json_encode($quantidades); ?>,
-                                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'],
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            let label = context.label || '';
-                                            let value = context.raw || 0;
-                                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                            let percentage = ((value / total) * 100).toFixed(2);
-                                            return `${label}: ${value} (${percentage}%)`;
+                    console.log('Respostas:', <?php echo json_encode($respostas); ?>);
+                    console.log('Quantidades:', <?php echo json_encode($quantidades); ?>);
+                    if (typeof Chart === 'undefined') {
+                        console.error('Chart.js não foi carregado.');
+                    } else {
+                        const ctxRespostas = document.getElementById('graficoRespostas').getContext('2d');
+                        new Chart(ctxRespostas, {
+                            type: 'pie',
+                            data: {
+                                labels: <?php echo json_encode($respostas); ?>,
+                                datasets: [{
+                                    data: <?php echo json_encode($quantidades); ?>,
+                                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'],
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                let label = context.label || '';
+                                                let value = context.raw || 0;
+                                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                                let percentage = ((value / total) * 100).toFixed(2);
+                                                return `${label}: ${value} (${percentage}%)`;
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 </script>
                 <?php } ?>
 
@@ -308,12 +336,12 @@
                             $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
                             $offset = ($pagina - 1) * $limite;
                             $query = "SELECT rf.email, rf.pontuacao, JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
-                                            CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
-                                    FROM respostas_formulario rf
-                                    LEFT JOIN alunos a ON rf.aluno_id = a.id
-                                    WHERE rf.pontuacao < 7.0 " . ($formulario_id ? "AND rf.formulario_id = '$formulario_id'" : "") . "
-                                    ORDER BY rf.pontuacao
-                                    LIMIT $limite OFFSET $offset";
+                                             CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
+                                      FROM respostas_formulario rf
+                                      LEFT JOIN alunos a ON rf.aluno_id = a.id
+                                      WHERE rf.pontuacao < 7.0 " . ($formulario_id ? "AND rf.formulario_id = '$formulario_id'" : "") . "
+                                      ORDER BY rf.pontuacao
+                                      LIMIT $limite OFFSET $offset";
                             $result = $conn->query($query);
                             if ($result && $result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
@@ -323,7 +351,7 @@
                                             <td>" . htmlspecialchars($row['email']) . "</td>
                                             <td>$serie</td>
                                             <td>" . $row['pontuacao'] . "</td>
-                                        </tr>";
+                                          </tr>";
                                 }
                             } else {
                                 echo "<tr><td colspan='4'>Nenhum aluno com pontuação abaixo de 7.0.</td></tr>";
@@ -349,18 +377,6 @@
                     }
                     ?>
                 </div>
-                <style>
-                    .paginacao a {
-                        padding: 5px 10px;
-                        margin: 0 2px;
-                        text-decoration: none;
-                        color: #333;
-                    }
-                    .paginacao a.active {
-                        background-color: #36A2EB;
-                        color: white;
-                    }
-                </style>
             </section>
         </div>
     </div>
@@ -433,6 +449,9 @@
         }
 
         $(document).ready(function() {
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js não foi carregado. Verifique a conexão com a internet ou a URL do CDN.');
+            }
             if (localStorage.getItem('sidebarActive') === 'true') {
                 $('#sidebar').addClass('active');
                 $('#main-content').addClass('shifted');
