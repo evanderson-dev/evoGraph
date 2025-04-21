@@ -40,17 +40,6 @@ CREATE TABLE alunos (
     FOREIGN KEY (turma_id) REFERENCES turmas(id)
 );
 
--- Tabela relatorios_alunos
-CREATE TABLE relatorios_alunos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    aluno_id INT NOT NULL,
-    data DATE NOT NULL,
-    conteudo TEXT NOT NULL,
-    criado_por INT NOT NULL,
-    FOREIGN KEY (aluno_id) REFERENCES alunos(id),
-    FOREIGN KEY (criado_por) REFERENCES funcionarios(id)
-);
-
 -- Tabela respostas_formulario
 CREATE TABLE respostas_formulario (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -59,6 +48,7 @@ CREATE TABLE respostas_formulario (
     data_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
     dados_json JSON NOT NULL,
     formulario_id VARCHAR(50) DEFAULT NULL,
+    pontuacao DECIMAL(5,2) DEFAULT NULL,
     FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL
 );
 

@@ -87,17 +87,37 @@ foreach ($dados as $index => $linha) {
 
     // Tenta extrair a pontuação
     $pontuacao = null;
-    if ($has_pontuacao && isset($linha['Pontuação']) && is_numeric($linha['Pontuação'])) {
-        $pontuacao = floatval($linha['Pontuação']);
-        if ($pontuacao >= 0 && $pontuacao <= 100) { // Supondo pontuação entre 0 e 100
-            writeLog("Linha $index: Pontuação extraída: $pontuacao");
+    if ($has_pontuacao && isset($linha['Pontuação']) && !empty($linha['Pontuação'])) {
+        $pontuacao_raw = trim($linha['Pontuação']);
+        // Trata o formato "X / Y" (exemplo: "4 / 10")
+        if (preg_match('/^(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)$/', $pontuacao_raw, $matches)) {
+            $numerador = floatval($matches[1]);
+            $denominador = floatval($matches[2]);
+            if ($denominador > 0 && $numerador >= 0 && $numerador <= $denominador) {
+                $pontuacao = $numerador; // Usa o numerador diretamente (exemplo: 4.00)
+                writeLog("Linha $index: Pontuação extraída: $pontuacao (de $pontuacao_raw)");
+            } else {
+                $erros[] = "Linha $index: Pontuação '$pontuacao_raw' inválida (numerador ou denominador fora do intervalo).";
+                writeLog("Linha $index: Pontuação inválida: $pontuacao_raw");
+            }
         } else {
-            $pontuacao = null;
-            $erros[] = "Linha $index: Pontuação '$pontuacao' fora do intervalo permitido (0-100).";
-            writeLog("Linha $index: Pontuação fora do intervalo permitido.");
+            // Tenta tratar como número puro (exemplo: "4" ou "4.5")
+            if (is_numeric($pontuacao_raw)) {
+                $pontuacao = floatval($pontuacao_raw);
+                if ($pontuacao >= 0 && $pontuacao <= 10) { // Supondo pontuação entre 0 e 10
+                    writeLog("Linha $index: Pontuação numérica extraída: $pontuacao");
+                } else {
+                    $pontuacao = null;
+                    $erros[] = "Linha $index: Pontuação '$pontuacao_raw' fora do intervalo permitido (0-10).";
+                    writeLog("Linha $index: Pontuação fora do intervalo: $pontuacao_raw");
+                }
+            } else {
+                $erros[] = "Linha $index: Formato de pontuação '$pontuacao_raw' não reconhecido.";
+                writeLog("Linha $index: Formato de pontuação não reconhecido: $pontuacao_raw");
+            }
         }
     } else {
-        writeLog("Linha $index: 'Pontuação' não encontrada ou inválida.");
+        writeLog("Linha $index: 'Pontuação' não encontrada ou vazia.");
     }
 
     // Busca aluno pelo email
