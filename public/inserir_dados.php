@@ -16,10 +16,19 @@ try {
     $pdo = new PDO($dsn, $username, $password, $options);
 
     $sql = <<<SQL
-        INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, bncc_habilidade)
+        INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, resposta_correta, bncc_habilidade)
         VALUES
-            ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [1]', 'EF06GE10'),
-            ('Avaliacao_Geografia_2025', '2) Qual tipo de clima o Climograma representa?', 'EF06GE10');
+        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [1]', 'Tropical', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [2]', 'Subropical', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [3]', 'Semiárido', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [4]', 'Tropical de Altitude', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [5]', 'Tropical Litorâneo', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [5]', 'Equatorial', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '2) Qual tipo de clima o Climograma representa?', 'Clima Tropical', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '3) Qual tipo de clima o climograma representa?', 'Clima Equatorial', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '4) Qual tipo de clima o climograma representa:', 'Clima Semiárido', 'EF07GE11'),
+        ('Avaliacao_Geografia_2025', '5) Qual tipo de clima o climograma representa?', 'Clima Subtropical', 'EF07GE11');
+        
         -- INSERT INTO alunos (nome, sobrenome, data_nascimento, matricula, turma_id, email)
         -- VALUES 
         -- ('Ariane', 'da silva dos santos', '2012-01-01', '119042025', 5, 'aluno.1228874669@educacaopg.sp.gov.br'),

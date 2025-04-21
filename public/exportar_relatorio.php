@@ -35,15 +35,16 @@ fputcsv($output, []);
 fputcsv($output, ['Percentual de Acertos por Pergunta', '', '']);
 fputcsv($output, ['Pergunta', 'Habilidade BNCC', 'Percentual de Acertos']);
 if ($formulario_id) {
-    $query = "SELECT pergunta_texto, bncc_habilidade
+    $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
               FROM perguntas_formulario
               WHERE formulario_id = '$formulario_id'";
     $result = $conn->query($query);
     while ($row = $result->fetch_assoc()) {
         $pergunta = $row['pergunta_texto'];
         $pergunta_escaped = $conn->real_escape_string($pergunta);
+        $resposta_correta = $row['resposta_correta'] ? $conn->real_escape_string($row['resposta_correta']) : '';
         $query_acertos = "SELECT COUNT(*) AS total,
-                                 SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '\"Correto\"' THEN 1 ELSE 0 END) AS acertos
+                                 SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '\"$resposta_correta\"' THEN 1 ELSE 0 END) AS acertos
                           FROM respostas_formulario
                           WHERE formulario_id = '$formulario_id'";
         $result_acertos = $conn->query($query_acertos);

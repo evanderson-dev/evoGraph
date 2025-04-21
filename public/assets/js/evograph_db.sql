@@ -58,6 +58,7 @@ CREATE TABLE perguntas_formulario (
     formulario_id VARCHAR(50),
     pergunta_texto TEXT NOT NULL,
     bncc_habilidade VARCHAR(50), -- Exemplo: EF06GE10
+    resposta_correta VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

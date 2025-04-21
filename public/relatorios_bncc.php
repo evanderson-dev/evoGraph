@@ -178,18 +178,18 @@
                         <tbody>
                             <?php
                             if ($formulario_id) {
-                                $query = "SELECT pergunta_texto, bncc_habilidade
-                                          FROM perguntas_formulario
-                                          WHERE formulario_id = '$formulario_id'";
+                                $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
+                                        FROM perguntas_formulario
+                                        WHERE formulario_id = '$formulario_id'";
                                 $result = $conn->query($query);
                                 while ($row = $result->fetch_assoc()) {
                                     $pergunta = $row['pergunta_texto'];
                                     $pergunta_escaped = $conn->real_escape_string($pergunta);
-                                    // Supondo que respostas corretas sejam marcadas como "Correto" no JSON
+                                    $resposta_correta = $conn->real_escape_string($row['resposta_correta']);
                                     $query_acertos = "SELECT COUNT(*) AS total,
-                                                             SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '\"Correto\"' THEN 1 ELSE 0 END) AS acertos
-                                                      FROM respostas_formulario
-                                                      WHERE formulario_id = '$formulario_id'";
+                                                            SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '\"$resposta_correta\"' THEN 1 ELSE 0 END) AS acertos
+                                                    FROM respostas_formulario
+                                                    WHERE formulario_id = '$formulario_id'";
                                     $result_acertos = $conn->query($query_acertos);
                                     $acertos_row = $result_acertos->fetch_assoc();
                                     $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
@@ -197,7 +197,7 @@
                                             <td>" . htmlspecialchars($pergunta) . "</td>
                                             <td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>
                                             <td>$percentual%</td>
-                                          </tr>";
+                                        </tr>";
                                 }
                             } else {
                                 echo "<tr><td colspan='3'>Selecione um formulário para ver as perguntas.</td></tr>";
