@@ -26,6 +26,8 @@ $formulario_id = isset($dados['formularioId']) && !empty(trim($dados['formulario
 $dados = $dados['dados'];
 
 $importados = 0;
+$atualizados = 0;
+$ignorados = 0;
 $erros = [];
 
 // Verifica se a tabela tem o campo formulario_id
@@ -134,27 +136,63 @@ foreach ($dados as $index => $linha) {
         writeLog("Linha $index: Nenhum aluno encontrado para email '$email'.");
     }
 
-    // Prepara os dados JSON
-    $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
+    // Verifica se já existe uma resposta para o mesmo email e formulario_id
+    $formulario_id_escaped = $conn->real_escape_string($formulario_id);
+    $query = "SELECT id, data_envio FROM respostas_formulario WHERE email = '$email_escaped' AND formulario_id = '$formulario_id_escaped'";
+    $result = $conn->query($query);
 
-    // Monta a query
-    $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "");
-    $values = ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta'" . ($has_pontuacao ? ", " . ($pontuacao !== null ? $pontuacao : "NULL") : "") . ($has_formulario_id ? ", '" . $conn->real_escape_string($formulario_id) . "'" : "");
-    
-    $query = "INSERT INTO respostas_formulario ($columns) VALUES ($values)";
-    
-    writeLog("Linha $index: Executando query: $query");
-    
-    if ($conn->query($query)) {
-        $importados++;
-        writeLog("Linha $index: Inserção bem-sucedida.");
+    if ($result && $result->num_rows > 0) {
+        $existing = $result->fetch_assoc();
+        $existing_data_envio = $existing['data_envio'];
+        writeLog("Linha $index: Resposta existente encontrada para email '$email' e formulario_id '$formulario_id' com data_envio '$existing_data_envio'.");
+
+        // Compara data_envio
+        if ($data_envio > $existing_data_envio) {
+            // Nova resposta é mais recente, atualiza o registro
+            $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
+            $query = "UPDATE respostas_formulario SET 
+                      aluno_id = " . ($aluno_id ? $aluno_id : "NULL") . ",
+                      data_envio = '$data_envio',
+                      dados_json = '$json_resposta',
+                      pontuacao = " . ($pontuacao !== null ? $pontuacao : "NULL") . "
+                      WHERE id = " . $existing['id'];
+            
+            writeLog("Linha $index: Atualizando resposta existente com query: $query");
+            
+            if ($conn->query($query)) {
+                $atualizados++;
+                writeLog("Linha $index: Atualização bem-sucedida.");
+            } else {
+                $erros[] = "Erro ao atualizar linha $index com email '$email': " . $conn->error;
+                writeLog("Linha $index: Erro na atualização: " . $conn->error);
+            }
+        } else {
+            // Nova resposta é mais antiga, ignora
+            $ignorados++;
+            writeLog("Linha $index: Resposta ignorada (data_envio '$data_envio' é mais antiga que '$existing_data_envio').");
+            continue;
+        }
     } else {
-        $erros[] = "Erro ao inserir linha $index com email '$email': " . $conn->error;
-        writeLog("Linha $index: Erro na inserção: " . $conn->error);
+        // Nenhuma resposta existente, insere nova
+        $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
+        $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "");
+        $values = ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta'" . ($has_pontuacao ? ", " . ($pontuacao !== null ? $pontuacao : "NULL") : "") . ($has_formulario_id ? ", '$formulario_id_escaped'" : "");
+        
+        $query = "INSERT INTO respostas_formulario ($columns) VALUES ($values)";
+        
+        writeLog("Linha $index: Executando query: $query");
+        
+        if ($conn->query($query)) {
+            $importados++;
+            writeLog("Linha $index: Inserção bem-sucedida.");
+        } else {
+            $erros[] = "Erro ao inserir linha $index com email '$email': " . $conn->error;
+            writeLog("Linha $index: Erro na inserção: " . $conn->error);
+        }
     }
 }
 
-$response = ["mensagem" => "$importados respostas importadas com sucesso."];
+$response = ["mensagem" => "$importados respostas importadas, $atualizados atualizadas, $ignorados ignoradas."];
 if (!empty($erros)) {
     $response["erros"] = $erros;
 }
