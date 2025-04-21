@@ -82,7 +82,8 @@
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="relatorio-google.php"><i class="fa-solid fa-chart-bar"></i>Importar Relatório</a>
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
-            <a href="#" onclick="exportarCSV()"><i class="fa-solid fa-chart-bar"></i>Exportar Relatório (CSV)</a>            <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+            <a href="#" onclick="exportarCSV()"><i class="fa-solid fa-chart-bar"></i>Exportar Relatório (CSV)</a>
+            <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
@@ -108,7 +109,7 @@
                 <!-- Filtro -->
                 <form class="filter-form" method="GET">
                     <label for="formulario_id">Filtrar por Formulário:</label>
-                    <select name="formulario_id" id="formulario_id">
+                    <select name="formulario_id" id="formulario_id" onchange="this.form.submit()">
                         <option value="">Todos</option>
                         <?php
                         require_once "db_connection.php";
@@ -117,6 +118,20 @@
                         while ($row = $result->fetch_assoc()) {
                             $selected = (isset($_GET['formulario_id']) && $_GET['formulario_id'] === $row['formulario_id']) ? 'selected' : '';
                             echo "<option value='{$row['formulario_id']}' $selected>{$row['formulario_id']}</option>";
+                        }
+                        ?>
+                    </select>
+                    <label for="pergunta">Selecionar Pergunta:</label>
+                    <select name="pergunta" id="pergunta">
+                        <option value="">Nenhuma</option>
+                        <?php
+                        if ($formulario_id) {
+                            $query = "SELECT pergunta_texto FROM perguntas_formulario WHERE formulario_id = '$formulario_id' ORDER BY pergunta_texto";
+                            $result = $conn->query($query);
+                            while ($row = $result->fetch_assoc()) {
+                                $selected = (isset($_GET['pergunta']) && $_GET['pergunta'] === $row['pergunta_texto']) ? 'selected' : '';
+                                echo "<option value='" . htmlspecialchars($row['pergunta_texto']) . "' $selected>" . htmlspecialchars($row['pergunta_texto']) . "</option>";
+                            }
                         }
                         ?>
                     </select>
@@ -179,8 +194,8 @@
                             <?php
                             if ($formulario_id) {
                                 $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
-                                        FROM perguntas_formulario
-                                        WHERE formulario_id = '$formulario_id'";
+                                          FROM perguntas_formulario
+                                          WHERE formulario_id = '$formulario_id'";
                                 $result = $conn->query($query);
                                 if ($result && $result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
@@ -189,9 +204,9 @@
                                         $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
                                         if ($resposta_correta) {
                                             $query_acertos = "SELECT COUNT(*) AS total,
-                                                                    SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
-                                                            FROM respostas_formulario
-                                                            WHERE formulario_id = '$formulario_id'";
+                                                                     SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
+                                                              FROM respostas_formulario
+                                                              WHERE formulario_id = '$formulario_id'";
                                             $result_acertos = $conn->query($query_acertos);
                                             if ($result_acertos) {
                                                 $acertos_row = $result_acertos->fetch_assoc();
@@ -206,7 +221,7 @@
                                                 <td>" . htmlspecialchars($pergunta) . "</td>
                                                 <td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>
                                                 <td>$percentual%</td>
-                                            </tr>";
+                                              </tr>";
                                     }
                                 } else {
                                     echo "<tr><td colspan='3'>Nenhuma pergunta encontrada para o formulário selecionado.</td></tr>";
@@ -218,6 +233,134 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Gráfico de Pizza -->
+                <?php
+                if (isset($_GET['pergunta']) && $formulario_id) {
+                    $pergunta = $conn->real_escape_string($_GET['pergunta']);
+                    $query = "SELECT JSON_EXTRACT(dados_json, '$.\"$pergunta\"') AS resposta,
+                                     COUNT(*) AS total
+                              FROM respostas_formulario
+                              WHERE formulario_id = '$formulario_id'
+                              GROUP BY resposta";
+                    $result = $conn->query($query);
+                    $respostas = [];
+                    $quantidades = [];
+                    while ($row = $result->fetch_assoc()) {
+                        $resposta = $row['resposta'] ? trim($row['resposta'], '"') : 'Não Respondida';
+                        $respostas[] = $resposta;
+                        $quantidades[] = $row['total'];
+                    }
+                ?>
+                <div class="relatorio-section">
+                    <h3>Distribuição de Respostas: <?php echo htmlspecialchars($_GET['pergunta']); ?></h3>
+                    <canvas id="graficoRespostas"></canvas>
+                </div>
+                <script>
+                    const ctxRespostas = document.getElementById('graficoRespostas').getContext('2d');
+                    new Chart(ctxRespostas, {
+                        type: 'pie',
+                        data: {
+                            labels: <?php echo json_encode($respostas); ?>,
+                            datasets: [{
+                                data: <?php echo json_encode($quantidades); ?>,
+                                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'],
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.label || '';
+                                            let value = context.raw || 0;
+                                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            let percentage = ((value / total) * 100).toFixed(2);
+                                            return `${label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                </script>
+                <?php } ?>
+
+                <!-- Alunos com Baixo Desempenho -->
+                <div class="relatorio-section">
+                    <h3>Alunos com Pontuação Abaixo de 7.0</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Série</th>
+                                <th>Pontuação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $limite = 10; // Linhas por página
+                            $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+                            $offset = ($pagina - 1) * $limite;
+                            $query = "SELECT rf.email, rf.pontuacao, JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
+                                            CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
+                                    FROM respostas_formulario rf
+                                    LEFT JOIN alunos a ON rf.aluno_id = a.id
+                                    WHERE rf.pontuacao < 7.0 " . ($formulario_id ? "AND rf.formulario_id = '$formulario_id'" : "") . "
+                                    ORDER BY rf.pontuacao
+                                    LIMIT $limite OFFSET $offset";
+                            $result = $conn->query($query);
+                            if ($result && $result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                    echo "<tr>
+                                            <td>" . ($row['nome_completo'] ?: 'N/A') . "</td>
+                                            <td>" . htmlspecialchars($row['email']) . "</td>
+                                            <td>$serie</td>
+                                            <td>" . $row['pontuacao'] . "</td>
+                                        </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='4'>Nenhum aluno com pontuação abaixo de 7.0.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <!-- Paginação -->
+                    <?php
+                    $query_total = "SELECT COUNT(*) AS total
+                                    FROM respostas_formulario rf
+                                    WHERE rf.pontuacao < 7.0 " . ($formulario_id ? "AND rf.formulario_id = '$formulario_id'" : "");
+                    $total_result = $conn->query($query_total);
+                    $total = $total_result->fetch_assoc()['total'];
+                    $total_paginas = ceil($total / $limite);
+                    if ($total_paginas > 1) {
+                        echo '<div class="paginacao">';
+                        for ($i = 1; $i <= $total_paginas; $i++) {
+                            $active = $i == $pagina ? 'active' : '';
+                            echo "<a class='$active' href='relatorios_bncc.php?formulario_id=" . urlencode($formulario_id) . "&pergunta=" . urlencode(isset($_GET['pergunta']) ? $_GET['pergunta'] : '') . "&pagina=$i'>$i</a> ";
+                        }
+                        echo '</div>';
+                    }
+                    ?>
+                </div>
+                <style>
+                    .paginacao a {
+                        padding: 5px 10px;
+                        margin: 0 2px;
+                        text-decoration: none;
+                        color: #333;
+                    }
+                    .paginacao a.active {
+                        background-color: #36A2EB;
+                        color: white;
+                    }
+                </style>
             </section>
         </div>
     </div>
