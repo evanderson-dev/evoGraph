@@ -16,15 +16,10 @@ try {
     $pdo = new PDO($dsn, $username, $password, $options);
 
     $sql = <<<SQL
-        -- Tabela respostas_formulario
-        CREATE TABLE respostas_formulario (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            aluno_id INT,
-            email VARCHAR(150),
-            data_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
-            dados_json JSON NOT NULL,
-            FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL
-        );
+        INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, bncc_habilidade)
+        VALUES
+            ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [1]', 'EF06GE10'),
+            ('Avaliacao_Geografia_2025', '2) Qual tipo de clima o Climograma representa?', 'EF06GE10');
         -- INSERT INTO alunos (nome, sobrenome, data_nascimento, matricula, turma_id, email)
         -- VALUES 
         -- ('Ariane', 'da silva dos santos', '2012-01-01', '119042025', 5, 'aluno.1228874669@educacaopg.sp.gov.br'),

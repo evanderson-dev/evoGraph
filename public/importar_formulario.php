@@ -35,6 +35,13 @@ if ($result && $result->num_rows > 0) {
     $has_formulario_id = true;
 }
 
+// Verifica se a tabela tem o campo pontuacao
+$has_pontuacao = false;
+$result = $conn->query("SHOW COLUMNS FROM respostas_formulario LIKE 'pontuacao'");
+if ($result && $result->num_rows > 0) {
+    $has_pontuacao = true;
+}
+
 foreach ($dados as $index => $linha) {
     // Tenta diferentes variações do campo Email
     $email = null;
@@ -61,7 +68,7 @@ foreach ($dados as $index => $linha) {
             if ($dateTime !== false) {
                 $data_envio = $dateTime->format('Y-m-d H:i:s');
             } else {
-                // Tenta outros formatos, se necessário
+                // Tenta outros formatos
                 $dateTime = DateTime::createFromFormat('m/d/Y H:i:s', $data_raw);
                 if ($dateTime !== false) {
                     $data_envio = $dateTime->format('Y-m-d H:i:s');
@@ -76,6 +83,21 @@ foreach ($dados as $index => $linha) {
         writeLog("Linha $index: 'Carimbo de data/hora' não encontrado ou inválido. Usando CURRENT_TIMESTAMP.");
     } else {
         writeLog("Linha $index: Data extraída: $data_envio");
+    }
+
+    // Tenta extrair a pontuação
+    $pontuacao = null;
+    if ($has_pontuacao && isset($linha['Pontuação']) && is_numeric($linha['Pontuação'])) {
+        $pontuacao = floatval($linha['Pontuação']);
+        if ($pontuacao >= 0 && $pontuacao <= 100) { // Supondo pontuação entre 0 e 100
+            writeLog("Linha $index: Pontuação extraída: $pontuacao");
+        } else {
+            $pontuacao = null;
+            $erros[] = "Linha $index: Pontuação '$pontuacao' fora do intervalo permitido (0-100).";
+            writeLog("Linha $index: Pontuação fora do intervalo permitido.");
+        }
+    } else {
+        writeLog("Linha $index: 'Pontuação' não encontrada ou inválida.");
     }
 
     // Busca aluno pelo email
@@ -95,15 +117,11 @@ foreach ($dados as $index => $linha) {
     // Prepara os dados JSON
     $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
 
-    // Monta a query com ou sem formulario_id
-    if ($has_formulario_id) {
-        $formulario_id_escaped = $conn->real_escape_string($formulario_id);
-        $query = "INSERT INTO respostas_formulario (aluno_id, email, data_envio, dados_json, formulario_id) 
-                  VALUES (" . ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta', '$formulario_id_escaped')";
-    } else {
-        $query = "INSERT INTO respostas_formulario (aluno_id, email, data_envio, dados_json) 
-                  VALUES (" . ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta')";
-    }
+    // Monta a query
+    $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "");
+    $values = ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta'" . ($has_pontuacao ? ", " . ($pontuacao !== null ? $pontuacao : "NULL") : "") . ($has_formulario_id ? ", '" . $conn->real_escape_string($formulario_id) . "'" : "");
+    
+    $query = "INSERT INTO respostas_formulario ($columns) VALUES ($values)";
     
     writeLog("Linha $index: Executando query: $query");
     

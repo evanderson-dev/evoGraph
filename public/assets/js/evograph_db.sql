@@ -62,6 +62,15 @@ CREATE TABLE respostas_formulario (
     FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL
 );
 
+-- Tabela perguntas_formulario
+CREATE TABLE perguntas_formulario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    formulario_id VARCHAR(50),
+    pergunta_texto TEXT NOT NULL,
+    bncc_habilidade VARCHAR(50), -- Exemplo: EF06GE10
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Inserindo funcionários (professores, coordenadores, diretor e administrador)
 INSERT INTO funcionarios (email, senha, nome, sobrenome, data_nascimento, rf, cargo) VALUES
 ('administrador@database.com', '$2y$10$exemploHashAqui', 'Adm', 'Db', '2025-01-01', 'RF999', 'Administrador'),
