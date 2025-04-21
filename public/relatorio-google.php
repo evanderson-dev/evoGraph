@@ -75,7 +75,7 @@
 
         <div class="main-content" id="main-content">
             <div class="titulo-secao">
-                <spanleri><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Formulário do Google Forms</span>
+                <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Formulário do Google Forms</span>
             </div>
 
             <section class="meu-perfil">
@@ -154,6 +154,7 @@
                                                 }
 
                                                 const headers = Object.keys(dadosPlanilha[0]);
+                                                console.log("Cabeçalhos da planilha:", headers); // Log dos cabeçalhos
                                                 const headerRow = document.createElement("tr");
                                                 headers.forEach(h => {
                                                     const th = document.createElement("th");
@@ -214,9 +215,9 @@
                                     const box = document.getElementById("message-box");
                                     let mensagem = data.mensagem;
                                     if (data.erros && data.erros.length > 0) {
-                                        mensagem += "<br>Detalhes: " + data.erros.join("<br>");
+                                        mensagem += "<br>Detalhes:<br>" + data.erros.join("<br>");
                                     }
-                                    if (data.mensagem.includes("Erro")) {
+                                    if (data.mensagem.includes("Erro") || data.erros) {
                                         box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
                                     } else {
                                         box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;

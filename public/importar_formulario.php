@@ -3,16 +3,26 @@ require_once "db_connection.php";
 
 header("Content-Type: application/json");
 
+// Função para gravar logs
+function writeLog($message) {
+    $logFile = 'import_log.txt';
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$timestamp] $message\n", FILE_APPEND);
+}
+
 // Recebe os dados
 $dados = json_decode(file_get_contents("php://input"), true);
 
 if (!$dados || !is_array($dados['dados'])) {
+    writeLog("Erro: Dados inválidos ou nenhum dado recebido.");
     http_response_code(400);
     echo json_encode(["mensagem" => "Dados inválidos ou nenhum dado recebido."]);
     exit;
 }
 
-$formulario_id = isset($dados['formularioId']) ? trim($dados['formularioId']) : null;
+writeLog("Dados recebidos: " . json_encode($dados, JSON_UNESCAPED_UNICODE));
+
+$formulario_id = isset($dados['formularioId']) && !empty(trim($dados['formularioId'])) ? trim($dados['formularioId']) : 'Form_Default';
 $dados = $dados['dados'];
 
 $importados = 0;
@@ -25,10 +35,10 @@ if ($result && $result->num_rows > 0) {
     $has_formulario_id = true;
 }
 
-foreach ($dados as $linha) {
+foreach ($dados as $index => $linha) {
     // Tenta diferentes variações do campo Email
     $email = null;
-    foreach (['Email', 'E-mail', 'email', 'EMAIL', 'E-Mail', 'Endereço de e-mail'] as $key) {
+    foreach (['Email', 'E-mail', 'email', 'EMAIL', 'E-Mail', 'Endereço de e-mail', 'Endereço de Email'] as $key) {
         if (isset($linha[$key]) && !empty($linha[$key])) {
             $email = trim($linha[$key]);
             break;
@@ -36,8 +46,36 @@ foreach ($dados as $linha) {
     }
 
     if (!$email) {
-        $erros[] = "Linha ignorada: Nenhum campo 'Email' encontrado ou vazio.";
+        $erros[] = "Linha $index: Nenhum campo 'Email' encontrado ou vazio.";
+        writeLog("Linha $index: Nenhum campo 'Email' encontrado ou vazio.");
         continue;
+    }
+
+    // Tenta extrair a data de "Carimbo de data/hora"
+    $data_envio = null;
+    foreach (['Carimbo de data/hora', 'Timestamp', 'Data', 'Date'] as $key) {
+        if (isset($linha[$key]) && !empty($linha[$key])) {
+            $data_raw = trim($linha[$key]);
+            // Tenta converter do formato DD/MM/YYYY HH:MM:SS para YYYY-MM-DD HH:MM:SS
+            $dateTime = DateTime::createFromFormat('d/m/Y H:i:s', $data_raw);
+            if ($dateTime !== false) {
+                $data_envio = $dateTime->format('Y-m-d H:i:s');
+            } else {
+                // Tenta outros formatos, se necessário
+                $dateTime = DateTime::createFromFormat('m/d/Y H:i:s', $data_raw);
+                if ($dateTime !== false) {
+                    $data_envio = $dateTime->format('Y-m-d H:i:s');
+                }
+            }
+            break;
+        }
+    }
+
+    if (!$data_envio) {
+        $data_envio = date('Y-m-d H:i:s'); // Fallback para CURRENT_TIMESTAMP
+        writeLog("Linha $index: 'Carimbo de data/hora' não encontrado ou inválido. Usando CURRENT_TIMESTAMP.");
+    } else {
+        writeLog("Linha $index: Data extraída: $data_envio");
     }
 
     // Busca aluno pelo email
@@ -49,25 +87,32 @@ foreach ($dados as $linha) {
     if ($result && $result->num_rows > 0) {
         $aluno = $result->fetch_assoc();
         $aluno_id = $aluno['id'];
+        writeLog("Linha $index: Aluno encontrado com ID $aluno_id para email '$email'.");
+    } else {
+        writeLog("Linha $index: Nenhum aluno encontrado para email '$email'.");
     }
 
     // Prepara os dados JSON
     $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
 
     // Monta a query com ou sem formulario_id
-    if ($has_formulario_id && $formulario_id) {
+    if ($has_formulario_id) {
         $formulario_id_escaped = $conn->real_escape_string($formulario_id);
-        $query = "INSERT INTO respostas_formulario (aluno_id, email, dados_json, formulario_id) 
-                  VALUES (" . ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$json_resposta', '$formulario_id_escaped')";
+        $query = "INSERT INTO respostas_formulario (aluno_id, email, data_envio, dados_json, formulario_id) 
+                  VALUES (" . ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta', '$formulario_id_escaped')";
     } else {
-        $query = "INSERT INTO respostas_formulario (aluno_id, email, dados_json) 
-                  VALUES (" . ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$json_resposta')";
+        $query = "INSERT INTO respostas_formulario (aluno_id, email, data_envio, dados_json) 
+                  VALUES (" . ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta')";
     }
+    
+    writeLog("Linha $index: Executando query: $query");
     
     if ($conn->query($query)) {
         $importados++;
+        writeLog("Linha $index: Inserção bem-sucedida.");
     } else {
-        $erros[] = "Erro ao inserir linha com email '$email': " . $conn->error;
+        $erros[] = "Erro ao inserir linha $index com email '$email': " . $conn->error;
+        writeLog("Linha $index: Erro na inserção: " . $conn->error);
     }
 }
 
@@ -76,6 +121,7 @@ if (!empty($erros)) {
     $response["erros"] = $erros;
 }
 
+writeLog("Resposta final: " . json_encode($response));
 echo json_encode($response);
 $conn->close();
 ?>
