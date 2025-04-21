@@ -46,7 +46,7 @@ if ($formulario_id) {
             $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
             if ($resposta_correta) {
                 $query_acertos = "SELECT COUNT(*) AS total,
-                                         SUM(CASE WHEN LOWER(TRIM(JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"'))) = LOWER(TRIM('$resposta_correta')) THEN 1 ELSE 0 END) AS acertos
+                                         SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
                                   FROM respostas_formulario
                                   WHERE formulario_id = '$formulario_id'";
                 $result_acertos = $conn->query($query_acertos);
