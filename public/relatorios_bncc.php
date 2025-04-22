@@ -17,11 +17,32 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             background-color: #f4f6f9;
+            margin: 0; /* Remove margem padrão do body */
+        }
+        header {
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px; /* Altura fixa do header */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1100;
         }
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 80px auto 60px; /* Espaço para header e footer */
+            padding: 0 20px; /* Padding apenas nas laterais */
+        }
+        .main-content {
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.shifted {
+            margin-left: 250px; /* Desloca o conteúdo quando a sidebar está ativa */
         }
         .mensagem-sucesso {
             background-color: #d4edda;
@@ -70,7 +91,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: sticky;
-            top: 0;
+            top: 60px; /* Abaixo do header */
             z-index: 10;
             margin-bottom: 20px;
             display: flex;
@@ -171,6 +192,17 @@
             color: #fff;
             border-color: #007bff;
         }
+        footer {
+            background-color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px; /* Altura fixa do footer */
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -182,6 +214,16 @@
             .filter-form select, .filter-form button {
                 width: 100%;
                 margin-bottom: 10px;
+            }
+            .main-content.shifted {
+                margin-left: 0; /* Remove deslocamento em mobile */
+            }
+            .sidebar {
+                width: 100%; /* Sidebar ocupa toda a largura em mobile */
+                left: -100%;
+            }
+            .sidebar.active {
+                left: 0;
             }
         }
     </style>
@@ -567,17 +609,6 @@
                 <?php } ?>
             </section>
         </div>
-    </div>
-
-    <!-- Modals -->
-    <div id="modal-cadastrar-turma" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
-    <div id="modal-add-funcionario" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
-    <div id="modal-add-aluno" class="modal" style="display: none;">
-        <div class="modal-content"></div>
     </div>
 
     <!-- Footer -->
