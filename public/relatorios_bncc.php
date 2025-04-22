@@ -53,6 +53,17 @@
             font-size: 20px;
             color: #333;
         }
+        .card-placeholder {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+        }
         .filter-form {
             background-color: #fff;
             padding: 15px;
@@ -278,6 +289,7 @@
                 </form>
 
                 <!-- Média por Série -->
+                <?php if ($formulario_id) { ?>
                 <div class="card grid-container">
                     <div>
                         <h3>Média de Pontuação por Série</h3>
@@ -296,7 +308,7 @@
                                                      AVG(pontuacao) AS media_pontuacao,
                                                      COUNT(*) AS total_alunos
                                               FROM respostas_formulario
-                                              " . ($formulario_id ? "WHERE formulario_id = '$formulario_id'" : "") . "
+                                              WHERE formulario_id = '$formulario_id'
                                               GROUP BY serie
                                               ORDER BY serie";
                                     $result = $conn->query($query);
@@ -321,6 +333,43 @@
                         <canvas id="graficoMediaSerie"></canvas>
                     </div>
                 </div>
+                <script>
+                    // Gráfico de Média por Série
+                    if (checkChartJs()) {
+                        const ctx = document.getElementById('graficoMediaSerie').getContext('2d');
+                        try {
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: <?php echo json_encode($series); ?>,
+                                    datasets: [{
+                                        label: 'Média de Pontuação',
+                                        data: <?php echo json_encode($medias); ?>,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            max: 10
+                                        }
+                                    }
+                                }
+                            });
+                            console.log('Gráfico de Média por Série renderizado.');
+                        } catch (e) {
+                            console.error('Erro ao renderizar Gráfico de Média por Série:', e);
+                        }
+                    }
+                </script>
+                <?php } else { ?>
+                <div class="card-placeholder">
+                    Selecione um formulário para ver a média por série.
+                </div>
+                <?php } ?>
 
                 <!-- Percentual de Acertos por Pergunta -->
                 <div class="card full-width">
@@ -450,6 +499,7 @@
                 <?php } ?>
 
                 <!-- Alunos com Baixo Desempenho -->
+                <?php if ($formulario_id) { ?>
                 <div class="card full-width">
                     <h3>Alunos com Pontuação Abaixo de 7.0</h3>
                     <div class="table-container">
@@ -471,7 +521,7 @@
                                                  CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
                                           FROM respostas_formulario rf
                                           LEFT JOIN alunos a ON rf.aluno_id = a.id
-                                          WHERE rf.pontuacao < 7.0 " . ($formulario_id ? "AND rf.formulario_id = '$formulario_id'" : "") . "
+                                          WHERE rf.pontuacao < 7.0 AND rf.formulario_id = '$formulario_id'
                                           ORDER BY rf.pontuacao
                                           LIMIT $limite OFFSET $offset";
                                 $result = $conn->query($query);
@@ -496,7 +546,7 @@
                     <?php
                     $query_total = "SELECT COUNT(*) AS total
                                     FROM respostas_formulario rf
-                                    WHERE rf.pontuacao < 7.0 " . ($formulario_id ? "AND rf.formulario_id = '$formulario_id'" : "");
+                                    WHERE rf.pontuacao < 7.0 AND rf.formulario_id = '$formulario_id'";
                     $total_result = $conn->query($query_total);
                     $total = $total_result->fetch_assoc()['total'];
                     $total_paginas = ceil($total / $limite);
@@ -510,6 +560,11 @@
                     }
                     ?>
                 </div>
+                <?php } else { ?>
+                <div class="card-placeholder">
+                    Selecione um formulário para ver os alunos com baixo desempenho.
+                </div>
+                <?php } ?>
             </section>
         </div>
     </div>
@@ -540,40 +595,13 @@
     <script src="./assets/js/ajax.js"></script>
 
     <script>
-        // Gráfico de Média por Série
-        if (checkChartJs()) {
-            const ctx = document.getElementById('graficoMediaSerie').getContext('2d');
-            try {
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: <?php echo json_encode($series); ?>,
-                        datasets: [{
-                            label: 'Média de Pontuação',
-                            data: <?php echo json_encode($medias); ?>,
-                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 10
-                            }
-                        }
-                    }
-                });
-                console.log('Gráfico de Média por Série renderizado.');
-            } catch (e) {
-                console.error('Erro ao renderizar Gráfico de Média por Série:', e);
-            }
-        }
-
         // Função para exportar como CSV
         function exportarCSV() {
             const formulario_id = document.getElementById('formulario_id').value;
+            if (!formulario_id) {
+                alert('Por favor, selecione um formulário antes de exportar.');
+                return;
+            }
             window.location.href = 'exportar_relatorio.php?formulario_id=' + encodeURIComponent(formulario_id);
         }
 
