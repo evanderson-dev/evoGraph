@@ -4,20 +4,179 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="./assets/css/style.css" /> -->
+    <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/dashboard.css" />
     <link rel="stylesheet" href="./assets/css/sidebar.css" />
-    <link rel="stylesheet" href="./assets/css/relatorios_bncc.css" />
     <link rel="stylesheet" href="./assets/css/relatorio-google.css" />
     <link rel="stylesheet" href="./assets/css/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./assets/css/modal-add-turma.css" />
     <link rel="stylesheet" href="./assets/css/modal-add-aluno.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Relatórios BNCC</title>
-    
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .mensagem-sucesso {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .mensagem-erro {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .relatorio-section {
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            margin: 0 0 15px;
+            font-size: 20px;
+            color: #333;
+        }
+        .filter-form {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .filter-form label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .filter-form select, .filter-form button {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .filter-form select {
+            min-width: 200px;
+        }
+        .filter-form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
+        .filter-form button.export-btn {
+            background-color: #28a745;
+        }
+        .filter-form button.export-btn:hover {
+            background-color: #218838;
+        }
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        canvas {
+            max-width: 400px;
+            max-height: 400px;
+            margin: 20px auto;
+            display: block;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .paginacao {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .paginacao a {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+        .paginacao a:hover {
+            background-color: #f1f1f1;
+        }
+        .paginacao a.active {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .filter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-form select, .filter-form button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-OoNX0uQ6o7nT2fY2cW7g4l6oA8l6aG7oQ8mP0k3z5uW9f8g9h0j6k7l8m9n0p1q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-b0GXujLkk9eYYSmcSfoyZbfyElGAQnDyY0skCHSG6w3JgTMFnz11ggrTAr7seu9f" crossorigin="anonymous"></script>
     <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
     <script>
         // Função para verificar o Chart.js
@@ -115,101 +274,109 @@
                         ?>
                     </select>
                     <button type="submit">Filtrar</button>
-                    <button type="button" onclick="exportarCSV()">Exportar como CSV</button>
+                    <button type="button" class="export-btn" onclick="exportarCSV()">Exportar como CSV</button>
                 </form>
 
                 <!-- Média por Série -->
-                <div class="relatorio-section">
-                    <h3>Média de Pontuação por Série</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Série</th>
-                                <th>Média de Pontuação</th>
-                                <th>Total de Alunos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $query = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
-                                             AVG(pontuacao) AS media_pontuacao,
-                                             COUNT(*) AS total_alunos
-                                      FROM respostas_formulario
-                                      " . ($formulario_id ? "WHERE formulario_id = '$formulario_id'" : "") . "
-                                      GROUP BY serie
-                                      ORDER BY serie";
-                            $result = $conn->query($query);
-                            $series = [];
-                            $medias = [];
-                            while ($row = $result->fetch_assoc()) {
-                                $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                $series[] = $serie;
-                                $medias[] = round($row['media_pontuacao'], 2);
-                                echo "<tr>
-                                        <td>$serie</td>
-                                        <td>" . round($row['media_pontuacao'], 2) . "</td>
-                                        <td>{$row['total_alunos']}</td>
-                                      </tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <canvas id="graficoMediaSerie"></canvas>
+                <div class="card grid-container">
+                    <div>
+                        <h3>Média de Pontuação por Série</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Série</th>
+                                        <th>Média de Pontuação</th>
+                                        <th>Total de Alunos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $query = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
+                                                     AVG(pontuacao) AS media_pontuacao,
+                                                     COUNT(*) AS total_alunos
+                                              FROM respostas_formulario
+                                              " . ($formulario_id ? "WHERE formulario_id = '$formulario_id'" : "") . "
+                                              GROUP BY serie
+                                              ORDER BY serie";
+                                    $result = $conn->query($query);
+                                    $series = [];
+                                    $medias = [];
+                                    while ($row = $result->fetch_assoc()) {
+                                        $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                        $series[] = $serie;
+                                        $medias[] = round($row['media_pontuacao'], 2);
+                                        echo "<tr>
+                                                <td>$serie</td>
+                                                <td>" . round($row['media_pontuacao'], 2) . "</td>
+                                                <td>{$row['total_alunos']}</td>
+                                              </tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <canvas id="graficoMediaSerie"></canvas>
+                    </div>
                 </div>
 
                 <!-- Percentual de Acertos por Pergunta -->
-                <div class="relatorio-section">
+                <div class="card full-width">
                     <h3>Percentual de Acertos por Pergunta</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Pergunta</th>
-                                <th>Habilidade BNCC</th>
-                                <th>Percentual de Acertos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if ($formulario_id) {
-                                $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
-                                          FROM perguntas_formulario
-                                          WHERE formulario_id = '$formulario_id'";
-                                $result = $conn->query($query);
-                                if ($result && $result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        $pergunta = $row['pergunta_texto'];
-                                        $pergunta_escaped = $conn->real_escape_string($pergunta);
-                                        $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
-                                        if ($resposta_correta) {
-                                            $query_acertos = "SELECT COUNT(*) AS total,
-                                                                     SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
-                                                              FROM respostas_formulario
-                                                              WHERE formulario_id = '$formulario_id'";
-                                            $result_acertos = $conn->query($query_acertos);
-                                            if ($result_acertos) {
-                                                $acertos_row = $result_acertos->fetch_assoc();
-                                                $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pergunta</th>
+                                    <th>Habilidade BNCC</th>
+                                    <th>Percentual de Acertos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($formulario_id) {
+                                    $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
+                                              FROM perguntas_formulario
+                                              WHERE formulario_id = '$formulario_id'";
+                                    $result = $conn->query($query);
+                                    if ($result && $result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            $pergunta = $row['pergunta_texto'];
+                                            $pergunta_escaped = $conn->real_escape_string($pergunta);
+                                            $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
+                                            if ($resposta_correta) {
+                                                $query_acertos = "SELECT COUNT(*) AS total,
+                                                                         SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
+                                                                  FROM respostas_formulario
+                                                                  WHERE formulario_id = '$formulario_id'";
+                                                $result_acertos = $conn->query($query_acertos);
+                                                if ($result_acertos) {
+                                                    $acertos_row = $result_acertos->fetch_assoc();
+                                                    $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
+                                                } else {
+                                                    $percentual = 0;
+                                                }
                                             } else {
-                                                $percentual = 0;
+                                                $percentual = 0; // Resposta correta não definida
                                             }
-                                        } else {
-                                            $percentual = 0; // Resposta correta não definida
+                                            echo "<tr>
+                                                    <td>" . htmlspecialchars($pergunta) . "</td>
+                                                    <td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>
+                                                    <td>$percentual%</td>
+                                                  </tr>";
                                         }
-                                        echo "<tr>
-                                                <td>" . htmlspecialchars($pergunta) . "</td>
-                                                <td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>
-                                                <td>$percentual%</td>
-                                              </tr>";
+                                    } else {
+                                        echo "<tr><td colspan='3'>Nenhuma pergunta encontrada para o formulário selecionado.</td></tr>";
                                     }
                                 } else {
-                                    echo "<tr><td colspan='3'>Nenhuma pergunta encontrada para o formulário selecionado.</td></tr>";
+                                    echo "<tr><td colspan='3'>Selecione um formulário para ver as perguntas.</td></tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='3'>Selecione um formulário para ver as perguntas.</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- Gráfico de Pizza -->
@@ -235,7 +402,7 @@
                         $quantidades = [1];
                     }
                 ?>
-                <div class="relatorio-section">
+                <div class="card full-width">
                     <h3>Distribuição de Respostas: <?php echo htmlspecialchars($_GET['pergunta']); ?></h3>
                     <canvas id="graficoRespostas"></canvas>
                 </div>
@@ -283,46 +450,48 @@
                 <?php } ?>
 
                 <!-- Alunos com Baixo Desempenho -->
-                <div class="relatorio-section">
+                <div class="card full-width">
                     <h3>Alunos com Pontuação Abaixo de 7.0</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Série</th>
-                                <th>Pontuação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $limite = 10; // Linhas por página
-                            $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-                            $offset = ($pagina - 1) * $limite;
-                            $query = "SELECT rf.email, rf.pontuacao, JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
-                                             CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
-                                      FROM respostas_formulario rf
-                                      LEFT JOIN alunos a ON rf.aluno_id = a.id
-                                      WHERE rf.pontuacao < 7.0 " . ($formulario_id ? "AND rf.formulario_id = '$formulario_id'" : "") . "
-                                      ORDER BY rf.pontuacao
-                                      LIMIT $limite OFFSET $offset";
-                            $result = $conn->query($query);
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                    echo "<tr>
-                                            <td>" . ($row['nome_completo'] ?: 'N/A') . "</td>
-                                            <td>" . htmlspecialchars($row['email']) . "</td>
-                                            <td>$serie</td>
-                                            <td>" . $row['pontuacao'] . "</td>
-                                          </tr>";
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Série</th>
+                                    <th>Pontuação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $limite = 10; // Linhas por página
+                                $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+                                $offset = ($pagina - 1) * $limite;
+                                $query = "SELECT rf.email, rf.pontuacao, JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
+                                                 CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
+                                          FROM respostas_formulario rf
+                                          LEFT JOIN alunos a ON rf.aluno_id = a.id
+                                          WHERE rf.pontuacao < 7.0 " . ($formulario_id ? "AND rf.formulario_id = '$formulario_id'" : "") . "
+                                          ORDER BY rf.pontuacao
+                                          LIMIT $limite OFFSET $offset";
+                                $result = $conn->query($query);
+                                if ($result && $result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                        echo "<tr>
+                                                <td>" . ($row['nome_completo'] ?: 'N/A') . "</td>
+                                                <td>" . htmlspecialchars($row['email']) . "</td>
+                                                <td>$serie</td>
+                                                <td>" . $row['pontuacao'] . "</td>
+                                              </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='4'>Nenhum aluno com pontuação abaixo de 7.0.</td></tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='4'>Nenhum aluno com pontuação abaixo de 7.0.</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                     <!-- Paginação -->
                     <?php
                     $query_total = "SELECT COUNT(*) AS total
