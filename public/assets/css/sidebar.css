@@ -1,15 +1,14 @@
 .sidebar {
     width: 250px;
+    border-width: 0 1px 0 0; /* Borda à direita da sidebar */
     background-color: #444;
+    position: relative;
+    top: 0px; /* Abaixo do header */
+    bottom: auto; /* Acima do footer */
     color: white;
-    padding: 20px;
-    position: fixed; /* Fixa a sidebar na tela */
-    top: 60px; /* Ajuste conforme a altura do header */
-    bottom: 40px; /* Ajuste conforme a altura do footer */
-    left: -250px; /* Esconde inicialmente */
-    transition: left 0.3s ease; /* Animação suave */
-    z-index: 1000; /* Garante que a sidebar fique acima do conteúdo */
-    border-right: 1px solid #555; /* Borda à direita */
+    padding: 20px; /* Espaçamento interno */
+    left: -250px; /* Para esconder inicialmente */
+    transition: 0.3s ease; /* Para animação ao abrir/recolher */
 }
 
 .sidebar.active {
@@ -34,7 +33,7 @@
 .sidebar a {
     display: block; /* Transforma o link em bloco */
     text-decoration: none; /* Remove sublinhado */
-    padding: 10px; /* Espaçamento interno AlturaPx EsquerdaPx */
+    padding: 10px 10px; /* Espaçamento interno AlturaPx EsquerdaPx */
     color: white; /* Cor do texto */
 }
 
