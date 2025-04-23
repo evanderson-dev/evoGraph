@@ -16,8 +16,7 @@
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>
-    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
     <script src="./assets/js/relatorios_bncc.js"></script>
 </head>
 <body>
@@ -278,26 +277,22 @@
                             $limite = 10;
                             $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
                             $offset = ($pagina - 1) * $limite;
-                            $query = "SELECT rf.email,
-                                     JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
-                                     JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao,
-                                     CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
-                              FROM respostas_formulario rf
-                              LEFT JOIN alunos a ON rf.aluno_id = a.id
-                              WHERE CAST(REGEXP_REPLACE(JSON_EXTRACT(dados_json, '$.\"Pontuação\"'), '[^0-9.]', '') AS DECIMAL) < 7.0
-                              AND rf.formulario_id = '$formulario_id'
-                              ORDER BY CAST(REGEXP_REPLACE(JSON_EXTRACT(dados_json, '$.\"Pontuação\"'), '[^0-9.]', '') AS DECIMAL)
-                              LIMIT $limite OFFSET $offset";
+                            $query = "SELECT rf.email, rf.pontuacao, JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
+                                             CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
+                                      FROM respostas_formulario rf
+                                      LEFT JOIN alunos a ON rf.aluno_id = a.id
+                                      WHERE rf.pontuacao < 7.0 AND rf.formulario_id = '$formulario_id'
+                                      ORDER BY rf.pontuacao
+                                      LIMIT $limite OFFSET $offset";
                             $result = $conn->query($query);
                             if ($result && $result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                    $pontuacao = $row['pontuacao'] ? trim($row['pontuacao'], '"') : '0 / 10';
                                     echo "<tr>
                                             <td>" . ($row['nome_completo'] ?: 'N/A') . "</td>
                                             <td>" . htmlspecialchars($row['email']) . "</td>
                                             <td>$serie</td>
-                                            <td>" . htmlspecialchars($pontuacao) . "</td>
+                                            <td>" . $row['pontuacao'] . "</td>
                                           </tr>";
                                 }
                             } else {
@@ -310,7 +305,7 @@
                     $query_total = "SELECT COUNT(*) AS total
                                     FROM respostas_formulario rf
                                     WHERE CAST(REGEXP_REPLACE(JSON_EXTRACT(dados_json, '$.\"Pontuação\"'), '[^0-9.]', '') AS DECIMAL) < 7.0
-                                    AND rf.formulario_id = '$formulario_id'";
+                                    AND rf.formulario_id = '$formulario_id'";                    $total_result = $conn->query($query_total);
                     $total_result = $conn->query($query_total);
                     $total = $total_result->fetch_assoc()['total'];
                     $total_paginas = ceil($total / $limite);
