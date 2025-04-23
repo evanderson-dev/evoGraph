@@ -18,11 +18,20 @@
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-OoNX0uQ6o7nT2fY2cW7g4l6oA8l6aG7oQ8mP0k3z5uW9f8g9h0j6k7l8m9n0p1q" crossorigin="anonymous"></script>
     <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
-    <script src="./assets/js/relatorios_bncc.js"></script>
+    <script>
+        function checkChartJs() {
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js não foi carregado. Verifique a conexão com o CDN ou o arquivo local.');
+                return false;
+            }
+            console.log('Chart.js carregado com sucesso. Versão:', Chart.version);
+            return true;
+        }
+    </script>
 </head>
 <body>
     <header>
-        <div class="menu-toggle" id="menu-toggle">
+        <div class="menu-toggle" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </div>
         <h1>evoGraph</h1>
@@ -138,7 +147,38 @@
                             ?>
                         </tbody>
                     </table>
-                    <canvas id="graficoMediaSerie" data-series='<?php echo json_encode($series); ?>' data-medias='<?php echo json_encode($medias); ?>'></canvas>
+                    <canvas id="graficoMediaSerie"></canvas>
+                    <script>
+                        if (checkChartJs()) {
+                            const ctx = document.getElementById('graficoMediaSerie').getContext('2d');
+                            try {
+                                new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: <?php echo json_encode($series); ?>,
+                                        datasets: [{
+                                            label: 'Média de Pontuação',
+                                            data: <?php echo json_encode($medias); ?>,
+                                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                            borderColor: 'rgba(54, 162, 235, 1)',
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 10
+                                            }
+                                        }
+                                    }
+                                });
+                                console.log('Gráfico de Média por Série renderizado.');
+                            } catch (e) {
+                                console.error('Erro ao renderizar Gráfico de Média por Série:', e);
+                            }
+                        }
+                    </script>
                 </div>
                 <?php } else { ?>
                 <div class="relatorio-section">
@@ -224,7 +264,46 @@
                 ?>
                 <div class="relatorio-section">
                     <h3>Distribuição de Respostas: <?php echo htmlspecialchars($_GET['pergunta']); ?></h3>
-                    <canvas id="graficoRespostas" data-respostas='<?php echo json_encode($respostas); ?>' data-quantidades='<?php echo json_encode($quantidades); ?>'></canvas>
+                    <canvas id="graficoRespostas"></canvas>
+                    <script>
+                        console.log('Dados para Gráfico de Pizza - Respostas:', <?php echo json_encode($respostas); ?>);
+                        console.log('Dados para Gráfico de Pizza - Quantidades:', <?php echo json_encode($quantidades); ?>);
+                        if (checkChartJs()) {
+                            try {
+                                const ctxRespostas = document.getElementById('graficoRespostas').getContext('2d');
+                                new Chart(ctxRespostas, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: <?php echo json_encode($respostas); ?>,
+                                        datasets: [{
+                                            data: <?php echo json_encode($quantidades); ?>,
+                                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'],
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: { position: 'top' },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(context) {
+                                                        let label = context.label || '';
+                                                        let value = context.raw || 0;
+                                                        let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                                        let percentage = ((value / total) * 100).toFixed(2);
+                                                        return `${label}: ${value} (${percentage}%)`;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                console.log('Gráfico de Pizza renderizado.');
+                            } catch (e) {
+                                console.error('Erro ao renderizar Gráfico de Pizza:', e);
+                            }
+                        }
+                    </script>
                 </div>
                 <?php } ?>
 
@@ -316,5 +395,41 @@
     <script src="./assets/js/my-profile.js"></script>
     <script src="./assets/js/dashboard.js"></script>
     <script src="./assets/js/ajax.js"></script>
+
+    <script>
+        function exportarCSV() {
+            const formulario_id = document.getElementById('formulario_id').value;
+            if (!formulario_id) {
+                alert('Por favor, selecione um formulário antes de exportar.');
+                return;
+            }
+            window.location.href = 'exportar_relatorio.php?formulario_id=' + encodeURIComponent(formulario_id);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('shifted');
+            localStorage.setItem('sidebarActive', sidebar.classList.contains('active'));
+        }
+
+        jQuery(document).ready(function($) {
+            if (localStorage.getItem('sidebarActive') === 'true') {
+                $('#sidebar').addClass('active');
+                $('#main-content').addClass('shifted');
+            }
+            $('#menu-toggle').on('click', function() {
+                toggleSidebar();
+            });
+            $('.sidebar-toggle').on('click', function(e) {
+                e.preventDefault();
+                const $submenu = $(this).next('.submenu');
+                const $toggleIcon = $(this).find('.submenu-toggle');
+                $submenu.slideToggle(200);
+                $toggleIcon.toggleClass('open');
+            });
+        });
+    </script>
 </body>
 </html>
