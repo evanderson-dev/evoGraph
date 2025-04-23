@@ -101,49 +101,176 @@
                     <button type="button" onclick="exportarCSV()">Exportar como CSV</button>
                 </form>
 
-                <?php if ($formulario_id) { ?>
-                <div class="relatorio-section">
+                <!-- ################################### -->
+
+                <style>
+                .relatorio-section {
+                    margin: 20px 0;
+                }
+
+                .media-por-serie-container {
+                    text-align: center;
+                }
+
+                .media-por-serie-wrapper {
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-start;
+                    gap: 20px;
+                    flex-wrap: wrap;
+                }
+
+                .media-table-container {
+                    flex: 1;
+                    min-width: 300px;
+                    max-width: 400px;
+                }
+
+                #media-por-serie-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 0 auto;
+                }
+
+                #media-por-serie-table th,
+                #media-por-serie-table td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: center;
+                }
+
+                #media-por-serie-table th {
+                    background-color: #f2f2f2;
+                    font-weight: bold;
+                }
+
+                .media-chart-container {
+                    flex: 1;
+                    min-width: 400px;
+                    max-width: 500px;
+                }
+
+                @media (max-width: 768px) {
+                    .media-por-serie-wrapper {
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    .media-table-container,
+                    .media-chart-container {
+                        max-width: 100%;
+                    }
+                }
+                </style>
+
+                <div class="relatorio-section media-por-serie-container">
                     <h3>Média de Pontuação por Série</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Série</th>
-                                <th>Média de Pontuação</th>
-                                <th>Total de Alunos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $query = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
-                                             AVG(pontuacao) AS media_pontuacao,
-                                             COUNT(*) AS total_alunos
-                                      FROM respostas_formulario
-                                      WHERE formulario_id = '$formulario_id'
-                                      GROUP BY serie
-                                      ORDER BY serie";
-                            $result = $conn->query($query);
-                            $series = [];
-                            $medias = [];
-                            while ($row = $result->fetch_assoc()) {
-                                $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                $series[] = $serie;
-                                $medias[] = round($row['media_pontuacao'], 2);
-                                echo "<tr>
-                                        <td>$serie</td>
-                                        <td>" . round($row['media_pontuacao'], 2) . "</td>
-                                        <td>{$row['total_alunos']}</td>
-                                      </tr>";
+                    <div class="media-por-serie-wrapper">
+                        <!-- Tabela de Médias -->
+                        <div class="media-table-container">
+                            <table id="media-por-serie-table">
+                                <thead>
+                                    <tr>
+                                        <th>Série</th>
+                                        <th>Média de Pontuação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="media-por-serie-table-body">
+                                    <?php
+                                    if ($formulario_id) {
+                                        $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
+                                                        AVG(CAST(REGEXP_REPLACE(JSON_EXTRACT(dados_json, '$.\"Pontuação\"'), '[^0-9.]', '') AS DECIMAL)) AS media
+                                                FROM respostas_formulario
+                                                WHERE formulario_id = '$formulario_id'
+                                                GROUP BY JSON_EXTRACT(dados_json, '$.\"Série:\"')
+                                                ORDER BY serie";
+                                        $result_medias = $conn->query($query_medias);
+                                        $series_medias = [];
+                                        $medias = [];
+                                        if ($result_medias && $result_medias->num_rows > 0) {
+                                            while ($row = $result_medias->fetch_assoc()) {
+                                                $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                                $media = round($row['media'], 2);
+                                                $series_medias[] = $serie;
+                                                $medias[] = $media;
+                                                echo "<tr>";
+                                                echo "<td>" . htmlspecialchars($serie) . "</td>";
+                                                echo "<td>$media</td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='2'>Nenhuma média encontrada para o formulário selecionado.</td></tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='2'>Selecione um formulário para ver as médias.</td></tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Gráfico de Barras -->
+                        <div class="media-chart-container">
+                            <canvas id="mediaPorSerieChart" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    console.log("Chart.js carregado com sucesso. Versão:", Chart.version);
+
+                    // Dados para o gráfico de barras
+                    const seriesMedias = <?php echo json_encode($series_medias); ?>;
+                    const medias = <?php echo json_encode($medias); ?>;
+
+                    const ctxMedia = document.getElementById('mediaPorSerieChart').getContext('2d');
+                    const mediaPorSerieChart = new Chart(ctxMedia, {
+                        type: 'bar',
+                        data: {
+                            labels: seriesMedias,
+                            datasets: [{
+                                label: 'Média de Pontuação',
+                                data: medias,
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 10,
+                                    title: {
+                                        display: true,
+                                        text: 'Média (0-10)'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Série'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Média de Pontuação por Série'
+                                }
                             }
-                            ?>
-                        </tbody>
-                    </table>
-                    <canvas id="graficoMediaSerie" data-series='<?php echo json_encode($series); ?>' data-medias='<?php echo json_encode($medias); ?>'></canvas>
-                </div>
-                <?php } else { ?>
-                <div class="relatorio-section">
-                    <div class="placeholder">Selecione um formulário para ver a média por série.</div>
-                </div>
-                <?php } ?>
+                        }
+                    });
+
+                    console.log("Gráfico de Média por Série renderizado.");
+                });
+                </script>
+
+                <!-- ################################### -->
 
                 <div class="relatorio-section">
                 <h3>Percentual de Acertos por Série</h3>
