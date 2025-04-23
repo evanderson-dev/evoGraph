@@ -303,8 +303,7 @@
                     <?php
                     $query_total = "SELECT COUNT(*) AS total
                                     FROM respostas_formulario rf
-                                    WHERE CAST(REGEXP_REPLACE(JSON_EXTRACT(dados_json, '$.\"Pontuação\"'), '[^0-9.]', '') AS DECIMAL) < 7.0
-                                    AND rf.formulario_id = '$formulario_id'";                    $total_result = $conn->query($query_total);
+                                    WHERE rf.pontuacao < 7.0 AND rf.formulario_id = '$formulario_id'";
                     $total_result = $conn->query($query_total);
                     $total = $total_result->fetch_assoc()['total'];
                     $total_paginas = ceil($total / $limite);
