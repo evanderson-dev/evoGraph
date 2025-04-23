@@ -95,7 +95,8 @@
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
+    margin: 20px 0; /* ADICIONADO */
 }
 
 .relatorio-section h3 {
@@ -121,8 +122,8 @@ th, td {
 }
 
 th {
-    background-color: #73b4ff;
-    color: #333;
+    background-color: #5599e6;
+    color: white;
     font-weight: 600;
 }
 
@@ -208,8 +209,60 @@ canvas {
     margin-bottom: 20px;
 }
 
+.media-por-serie-container {
+    text-align: center;
+}
+
+.media-por-serie-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.media-table-container {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+#media-por-serie-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+#media-por-serie-table th,
+#media-por-serie-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+#media-por-serie-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.media-chart-container {
+    flex: 1;
+    min-width: 400px;
+    max-width: 500px;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
+    .media-por-serie-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .media-table-container,
+    .media-chart-container {
+        max-width: 100%;
+    }
+
     .titulo-secao {
         padding: 10px 15px;
         font-size: 14px;
