@@ -89,24 +89,24 @@
                         }
                         ?>
                     </select>
-                    // <label for="pergunta">Selecionar Pergunta:</label>
-                    // <select name="pergunta" id="pergunta" onchange="this.form.submit()">
-                    //     <option value="">Nenhuma</option>
-                    //     <?php
-                    //     if ($formulario_id) {
-                    //         $query = "SELECT pergunta_texto FROM perguntas_formulario WHERE formulario_id = '$formulario_id' ORDER BY pergunta_texto";
-                    //         $result = $conn->query($query);
-                    //         if ($result && $result->num_rows > 0) {
-                    //             while ($row = $result->fetch_assoc()) {
-                    //                 $selected = (isset($_GET['pergunta']) && $_GET['pergunta'] === $row['pergunta_texto']) ? 'selected' : '';
-                    //                 echo "<option value='" . htmlspecialchars($row['pergunta_texto']) . "' $selected>" . htmlspecialchars($row['pergunta_texto']) . "</option>";
-                    //             }
-                    //         } else {
-                    //             echo "<option value='' disabled>Nenhuma pergunta encontrada</option>";
-                    //         }
-                    //     }
-                    //     ?>
-                    // </select>
+                    <label for="pergunta">Selecionar Pergunta:</label>
+                    <select name="pergunta" id="pergunta" onchange="this.form.submit()">
+                        <option value="">Nenhuma</option>
+                        <?php
+                        if ($formulario_id) {
+                            $query = "SELECT pergunta_texto FROM perguntas_formulario WHERE formulario_id = '$formulario_id' ORDER BY pergunta_texto";
+                            $result = $conn->query($query);
+                            if ($result && $result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $selected = (isset($_GET['pergunta']) && $_GET['pergunta'] === $row['pergunta_texto']) ? 'selected' : '';
+                                    echo "<option value='" . htmlspecialchars($row['pergunta_texto']) . "' $selected>" . htmlspecialchars($row['pergunta_texto']) . "</option>";
+                                }
+                            } else {
+                                echo "<option value='' disabled>Nenhuma pergunta encontrada</option>";
+                            }
+                        }
+                        ?>
+                    </select>
                     <button type="submit">Filtrar</button>
                     <button type="button" onclick="exportarCSV()">Exportar como CSV</button>
                 </form>
@@ -263,24 +263,6 @@
                     }
                 ?>
                 <div class="relatorio-section">
-                    <label for="pergunta">Selecionar Pergunta:</label>
-                    <select name="pergunta" id="pergunta" onchange="this.form.submit()">
-                        <option value="">Nenhuma</option>
-                        <?php
-                        if ($formulario_id) {
-                            $query = "SELECT pergunta_texto FROM perguntas_formulario WHERE formulario_id = '$formulario_id' ORDER BY pergunta_texto";
-                            $result = $conn->query($query);
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $selected = (isset($_GET['pergunta']) && $_GET['pergunta'] === $row['pergunta_texto']) ? 'selected' : '';
-                                    echo "<option value='" . htmlspecialchars($row['pergunta_texto']) . "' $selected>" . htmlspecialchars($row['pergunta_texto']) . "</option>";
-                                }
-                            } else {
-                                echo "<option value='' disabled>Nenhuma pergunta encontrada</option>";
-                            }
-                        }
-                        ?>
-                    </select>
                     <h3>Distribuição de Respostas: <?php echo htmlspecialchars($_GET['pergunta']); ?></h3>
                     <canvas id="graficoRespostas"></canvas>
                     <script>
