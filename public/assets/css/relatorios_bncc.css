@@ -104,6 +104,7 @@
     margin: 0 0 15px;
     padding-bottom: 10px;
     border-bottom: 2px solid #73b4ff;
+    text-align: center; /* Centraliza o título */
 }
 
 /* Tabelas */
@@ -230,11 +231,6 @@ canvas {
 /* Estilos para Percentual de Acertos por Série */
 .percentual-por-serie-container {
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
 }
 
 #percentual-por-serie-table {
@@ -265,11 +261,6 @@ canvas {
 /* Estilos para Alunos com Pontuação Abaixo de 7.0 */
 .alunos-abaixo-7-container {
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
 }
 
 #alunos-abaixo-7-table {
