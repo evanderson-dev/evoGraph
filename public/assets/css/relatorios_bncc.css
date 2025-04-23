@@ -1,40 +1,32 @@
-.titulo-secao i { /* Ícone do título */
-    color: #73b4ff; /* Cor do ícone */
-    margin-right: 5px; /* Espaço entre ícone e texto */
+/* Ícone do título */
+.titulo-secao i {
+    color: #73b4ff;
+    margin-right: 8px;
 }
 
+/* Container do título da seção */
 .titulo-secao {
-    border-radius: 10px;
+    border-radius: 8px;
     background-color: white;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex; /* Usar Flexbox no container principal */
-    flex-direction: column; /* Itens em coluna */
-    font-weight: bold;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    border-top: 3px solid #73b4ff;
+    margin-bottom: 20px;
 }
 
+/* Texto dentro do título */
 .titulo-secao p {
-    margin: 0; /* Remove margem padrão */
-    display: flex; /* Alinha os elementos horizontalmente */
-    /*justify-content: flex-end; /* Alinha os filtros à direita */
-    align-items: center; /* Alinha os elementos verticalmente */
-}
-
-.titulo-secao p {
-    margin: 0; /* Remove margem padrão */
-    display: flex; /* Alinha os elementos horizontalmente */
-    /*justify-content: flex-end; /* Alinha os filtros à direita */
-    align-items: center; /* Alinha os elementos verticalmente */
-}
-
-/* Estilização dos filtros */
-.titulo-secao .filtros {
+    margin: 0;
     display: flex;
     align-items: center;
-    gap: 10px;
-    flex-shrink: 0; /* Impede que os filtros encolham demais */
+    font-size: 16px;
+    color: #333;
 }
 
+/* Link para home */
 .titulo-secao .home-link i {
     color: #333;
     text-decoration: none;
@@ -46,77 +38,165 @@
     color: #5599e6;
 }
 
-/* Título das Seções */
-.section-title {
-    width: 100%;
-    font-size: 18px;
-    color: #333;
-    margin: 5px 0 0px;
-    background-color: #73b4ff;
-    padding: 10px 15px;
+/* Filtros */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 25px;
+    background-color: #f8f9fa;
+    padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.mensagem-sucesso {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
+.filter-form label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-right: 8px;
 }
-.mensagem-erro {
-    background-color: #f8d7da;
-    color: #721c24;
+
+.filter-form select {
     padding: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    margin-bottom: 10px;
+    font-size: 14px;
+    min-width: 200px;
+    transition: border-color 0.3s ease;
 }
+
+.filter-form select:focus {
+    outline: none;
+    border-color: #73b4ff;
+    box-shadow: 0 0 5px rgba(115, 180, 255, 0.3);
+}
+
+.filter-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #73b4ff;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-form button:hover {
+    background-color: #5599e6;
+}
+
+/* Seções de relatórios */
 .relatorio-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
 }
+
 .relatorio-section h3 {
-    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #73b4ff;
 }
+
+/* Tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-}
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-th {
-    background-color: #f2f2f2;
-}
-.filter-form {
-    margin-bottom: 20px;
-}
-.filter-form select, .filter-form button {
-    padding: 8px;
-    margin-right: 10px;
-}
-canvas {
-    max-width: 400px;
-    max-height: 400px;
-    margin: 20px 0;
-}
-.paginacao a {
-    padding: 5px 10px;
-    margin: 0 2px;
-    text-decoration: none;
-    color: #333;
-}
-.paginacao a.active {
-    background-color: #36A2EB;
-    color: white;
+    font-size: 14px;
 }
 
-/* Estilo para placeholders */
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: #5599e6;
+    color: white;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f5ff;
+    transition: background-color 0.2s ease;
+}
+
+/* Gráficos */
+canvas {
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+    display: block;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Paginação */
+.paginacao {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.paginacao a {
+    padding: 8px 14px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.paginacao a:hover {
+    background-color: #73b4ff;
+    color: white;
+    border-color: #73b4ff;
+}
+
+.paginacao a.active {
+    background-color: #5599e6;
+    color: white;
+    border-color: #5599e6;
+}
+
+/* Mensagens */
+.mensagem-sucesso {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.mensagem-erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* Placeholder */
 .placeholder {
     background-color: white;
     padding: 15px;
@@ -126,4 +206,78 @@ canvas {
     color: #666;
     font-size: 16px;
     margin-bottom: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .titulo-secao {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .filter-form select {
+        min-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .filter-form button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .relatorio-section {
+        padding: 15px;
+    }
+
+    .relatorio-section h3 {
+        font-size: 16px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    canvas {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .paginacao a {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-secao p {
+        font-size: 14px;
+    }
+
+    .filter-form label {
+        font-size: 12px;
+    }
+
+    .filter-form select,
+    .filter-form button {
+        font-size: 12px;
+    }
+
+    .relatorio-section h3 {
+        font-size: 14px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
 }
