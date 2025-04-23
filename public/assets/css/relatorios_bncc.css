@@ -227,6 +227,56 @@ canvas {
     max-width: 500px;
 }
 
+/* Estilos para Percentual de Acertos por Série */
+.percentual-por-serie-container {
+    text-align: center;
+}
+
+#percentual-por-serie-table {
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+#percentual-por-serie-table th,
+#percentual-por-serie-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+#percentual-por-serie-table th {
+    background-color: #f2f2f2;
+    color: #333; /* Texto escuro para contraste com o fundo claro */
+    font-weight: bold;
+}
+
+/* Estilos para Alunos com Pontuação Abaixo de 7.0 */
+.alunos-abaixo-7-container {
+    text-align: center;
+}
+
+#alunos-abaixo-7-table {
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+#alunos-abaixo-7-table th,
+#alunos-abaixo-7-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+#alunos-abaixo-7-table th {
+    background-color: #f2f2f2;
+    color: #333; /* Texto escuro para contraste com o fundo claro */
+    font-weight: bold;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .titulo-secao {
@@ -283,6 +333,20 @@ canvas {
 
     .media-chart-container {
         max-width: 100%;
+    }
+
+    #percentual-por-serie-table,
+    #alunos-abaixo-7-table {
+        font-size: 12px;
+        display: block;
+        overflow-x: auto;
+    }
+
+    #percentual-por-serie-table th,
+    #percentual-por-serie-table td,
+    #alunos-abaixo-7-table th,
+    #alunos-abaixo-7-table td {
+        padding: 8px;
     }
 }
 

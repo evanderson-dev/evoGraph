@@ -221,31 +221,6 @@ canvas {
     flex-wrap: wrap;
 }
 
-.media-table-container {
-    flex: 1;
-    min-width: 300px;
-    max-width: 400px;
-}
-
-#media-por-serie-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto;
-}
-
-#media-por-serie-table th,
-#media-por-serie-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-#media-por-serie-table th {
-    background-color: #f2f2f2;
-    color: #333; /* Texto escuro para contraste com o fundo claro */
-    font-weight: bold;
-}
-
 .media-chart-container {
     flex: 1;
     min-width: 400px;
@@ -306,7 +281,6 @@ canvas {
         align-items: center;
     }
 
-    .media-table-container,
     .media-chart-container {
         max-width: 100%;
     }
