@@ -25,7 +25,7 @@
         if (checkChartJs()) {
             try {
                 const ctx = canvas.getContext('2d');
-                new Chart(ctx, {
+                const mediaPorSerieChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: series,
@@ -68,6 +68,144 @@
                 console.log('Gráfico de Média por Série renderizado.');
             } catch (e) {
                 console.error('Erro ao renderizar Gráfico de Média por Série:', e);
+            }
+        }
+    }
+
+    // Função para renderizar o gráfico de barras agrupadas (Percentual de Acertos por Série)
+    function renderGraficoPercentualSerie() {
+        const canvas = document.getElementById('percentualPorSerieChart');
+        if (!canvas) return;
+
+        const series = JSON.parse(canvas.dataset.series || '[]');
+        const perguntas = JSON.parse(canvas.dataset.perguntas || '[]');
+        const percentuais = JSON.parse(canvas.dataset.percentuais || '{}');
+
+        if (series.length === 0 || perguntas.length === 0 || Object.keys(percentuais).length === 0) {
+            console.warn('Dados insuficientes para renderizar o Gráfico de Percentual por Série.');
+            return;
+        }
+
+        if (checkChartJs()) {
+            try {
+                const ctx = canvas.getContext('2d');
+                const datasets = series.map((serie, index) => {
+                    const colors = [
+                        'rgba(54, 162, 235, 0.6)',  // Azul
+                        'rgba(255, 99, 132, 0.6)',  // Vermelho
+                        'rgba(75, 192, 192, 0.6)',  // Verde
+                        'rgba(255, 205, 86, 0.6)',  // Amarelo
+                        'rgba(153, 102, 255, 0.6)'  // Roxo
+                    ];
+                    return {
+                        label: `Série ${serie}`,
+                        data: perguntas.map(pergunta => percentuais[pergunta][serie] || 0),
+                        backgroundColor: colors[index % colors.length],
+                        borderColor: colors[index % colors.length].replace('0.6', '1'),
+                        borderWidth: 1
+                    };
+                });
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: perguntas,
+                        datasets: datasets
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Percentual de Acertos (%)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Pergunta'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Percentual de Acertos por Série'
+                            }
+                        }
+                    }
+                });
+                console.log('Gráfico de Percentual por Série renderizado.');
+            } catch (e) {
+                console.error('Erro ao renderizar Gráfico de Percentual por Série:', e);
+            }
+        }
+    }
+
+    // Função para renderizar o gráfico de barras horizontais (Alunos com Pontuação Abaixo de 7.0)
+    function renderGraficoAlunosAbaixo7() {
+        const canvas = document.getElementById('alunosAbaixo7Chart');
+        if (!canvas) return;
+
+        const series = JSON.parse(canvas.dataset.series || '[]');
+        const quantidades = JSON.parse(canvas.dataset.quantidades || '[]');
+
+        if (series.length === 0 || quantidades.length === 0) {
+            console.warn('Dados insuficientes para renderizar o Gráfico de Alunos Abaixo de 7.0.');
+            return;
+        }
+
+        if (checkChartJs()) {
+            try {
+                const ctx = canvas.getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: series,
+                        datasets: [{
+                            label: 'Número de Alunos',
+                            data: quantidades,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y', // Torna o gráfico horizontal
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Número de Alunos'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Série'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Alunos com Pontuação Abaixo de 7.0 por Série'
+                            }
+                        }
+                    }
+                });
+                console.log('Gráfico de Alunos Abaixo de 7.0 renderizado.');
+            } catch (e) {
+                console.error('Erro ao renderizar Gráfico de Alunos Abaixo de 7.0:', e);
             }
         }
     }
@@ -169,6 +307,8 @@
         // Renderizar gráficos
         renderGraficoMediaSerie();
         renderGraficoRespostas();
+        renderGraficoPercentualSerie();
+        renderGraficoAlunosAbaixo7();
 
         // Expor exportarCSV globalmente
         window.exportarCSV = exportarCSV;

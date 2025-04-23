@@ -208,25 +208,6 @@ canvas {
     margin-bottom: 20px;
 }
 
-/* Estilos para Média de Pontuação por Série */
-.media-por-serie-container {
-    text-align: center;
-}
-
-.media-por-serie-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.media-chart-container {
-    flex: 1;
-    min-width: 400px;
-    max-width: 500px;
-}
-
 /* Estilos para Percentual de Acertos por Série */
 .percentual-por-serie-container {
     text-align: center;
@@ -237,8 +218,28 @@ canvas {
     flex-wrap: wrap;
 }
 
+.table-chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.table-container {
+    flex: 1;
+    min-width: 500px;
+    max-width: 600px;
+}
+
+.chart-container {
+    flex: 1;
+    min-width: 400px;
+    max-width: 500px;
+}
+
 #percentual-por-serie-table {
-    width: auto;
+    width: 100%;
     max-width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
@@ -262,6 +263,23 @@ canvas {
     font-weight: bold;
 }
 
+/* Estilos para Média de Pontuação por Série */
+.media-por-serie-container {
+    text-align: center;
+}
+
+.media-por-serie-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.media-chart-container {
+    min-width: 400px;
+    max-width: 500px;
+}
+
 /* Estilos para Alunos com Pontuação Abaixo de 7.0 */
 .alunos-abaixo-7-container {
     text-align: center;
@@ -273,7 +291,7 @@ canvas {
 }
 
 #alunos-abaixo-7-table {
-    width: auto;
+    width: 100%;
     max-width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
@@ -346,19 +364,20 @@ canvas {
         font-size: 12px;
     }
 
-    .media-por-serie-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .media-chart-container {
-        max-width: 100%;
-    }
-
     .percentual-por-serie-container,
     .alunos-abaixo-7-container {
         flex-direction: column;
         align-items: center;
+    }
+
+    .table-chart-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .table-container,
+    .chart-container {
+        max-width: 100%;
     }
 
     #percentual-por-serie-table,
@@ -373,6 +392,15 @@ canvas {
     #alunos-abaixo-7-table th,
     #alunos-abaixo-7-table td {
         padding: 8px;
+    }
+
+    .media-por-serie-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .media-chart-container {
+        max-width: 100%;
     }
 }
 
