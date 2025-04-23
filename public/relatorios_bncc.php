@@ -101,131 +101,49 @@
                     <button type="button" onclick="exportarCSV()">Exportar como CSV</button>
                 </form>
 
-                <!-- ################################### -->
-
-                <style>
-                .relatorio-section {
-                    margin: 20px 0;
-                }
-
-                .media-por-serie-container {
-                    text-align: center;
-                }
-
-                .media-por-serie-wrapper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: flex-start;
-                    gap: 20px;
-                    flex-wrap: wrap;
-                }
-
-                .media-table-container {
-                    flex: 1;
-                    min-width: 300px;
-                    max-width: 400px;
-                }
-
-                #media-por-serie-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 0 auto;
-                }
-
-                #media-por-serie-table th,
-                #media-por-serie-table td {
-                    border: 1px solid #ddd;
-                    padding: 8px;
-                    text-align: center;
-                }
-
-                #media-por-serie-table th {
-                    background-color: #f2f2f2;
-                    font-weight: bold;
-                }
-
-                .media-chart-container {
-                    flex: 1;
-                    min-width: 400px;
-                    max-width: 500px;
-                }
-
-                @media (max-width: 768px) {
-                    .media-por-serie-wrapper {
-                        flex-direction: column;
-                        align-items: center;
-                    }
-
-                    .media-table-container,
-                    .media-chart-container {
-                        max-width: 100%;
-                    }
-                }
-                </style>
+                <!-- ################################### -->                
 
                 <div class="relatorio-section media-por-serie-container">
                     <h3>Média de Pontuação por Série</h3>
                     <div class="media-por-serie-wrapper">
-                        <!-- Tabela de Médias -->
-                        <div class="media-table-container">
-                            <table id="media-por-serie-table">
-                                <thead>
-                                    <tr>
-                                        <th>Série</th>
-                                        <th>Média de Pontuação</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="media-por-serie-table-body">
-                                    <?php
-                                    if ($formulario_id) {
-                                        // Buscar todas as respostas para calcular a média manualmente
-                                        $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
-                                                        JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao
-                                                FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id'
-                                                ORDER BY serie";
-                                        $result_medias = $conn->query($query_medias);
-                                        $series_medias = [];
-                                        $medias = [];
-                                        $pontuacoes_por_serie = [];
-
-                                        if ($result_medias && $result_medias->num_rows > 0) {
-                                            // Agrupar pontuações por série
-                                            while ($row = $result_medias->fetch_assoc()) {
-                                                $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                                $pontuacao = $row['pontuacao'] ? trim($row['pontuacao'], '"') : '0 / 10';
-                                                // Extrair o número antes de " / 10"
-                                                $pontuacao_valor = (float) explode(' / ', $pontuacao)[0];
-                                                if (!isset($pontuacoes_por_serie[$serie])) {
-                                                    $pontuacoes_por_serie[$serie] = [];
-                                                }
-                                                $pontuacoes_por_serie[$serie][] = $pontuacao_valor;
-                                            }
-
-                                            // Calcular médias e preencher a tabela
-                                            foreach ($pontuacoes_por_serie as $serie => $pontuacoes) {
-                                                $media = count($pontuacoes) > 0 ? array_sum($pontuacoes) / count($pontuacoes) : 0;
-                                                $media = round($media, 2);
-                                                $series_medias[] = $serie;
-                                                $medias[] = $media;
-                                                echo "<tr>";
-                                                echo "<td>" . htmlspecialchars($serie) . "</td>";
-                                                echo "<td>$media</td>";
-                                                echo "</tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='2'>Nenhuma média encontrada para o formulário selecionado.</td></tr>";
-                                        }
-                                    } else {
-                                        echo "<tr><td colspan='2'>Selecione um formulário para ver as médias.</td></tr>";
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
-
                         <!-- Gráfico de Barras -->
                         <div class="media-chart-container">
+                            <?php
+                            if ($formulario_id) {
+                                // Buscar todas as respostas para calcular a média
+                                $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
+                                                JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao
+                                        FROM respostas_formulario
+                                        WHERE formulario_id = '$formulario_id'
+                                        ORDER BY serie";
+                                $result_medias = $conn->query($query_medias);
+                                $series_medias = [];
+                                $medias = [];
+                                $pontuacoes_por_serie = [];
+
+                                if ($result_medias && $result_medias->num_rows > 0) {
+                                    // Agrupar pontuações por série
+                                    while ($row = $result_medias->fetch_assoc()) {
+                                        $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                        $pontuacao = $row['pontuacao'] ? trim($row['pontuacao'], '"') : '0 / 10';
+                                        // Extrair o número antes de " / 10"
+                                        $pontuacao_valor = (float) explode(' / ', $pontuacao)[0];
+                                        if (!isset($pontuacoes_por_serie[$serie])) {
+                                            $pontuacoes_por_serie[$serie] = [];
+                                        }
+                                        $pontuacoes_por_serie[$serie][] = $pontuacao_valor;
+                                    }
+
+                                    // Calcular médias
+                                    foreach ($pontuacoes_por_serie as $serie => $pontuacoes) {
+                                        $media = count($pontuacoes) > 0 ? array_sum($pontuacoes) / count($pontuacoes) : 0;
+                                        $media = round($media, 2);
+                                        $series_medias[] = $serie;
+                                        $medias[] = $media;
+                                    }
+                                }
+                            }
+                            ?>
                             <canvas id="mediaPorSerieChart" width="400" height="300"
                                     data-series='<?php echo json_encode($series_medias); ?>'
                                     data-medias='<?php echo json_encode($medias); ?>'></canvas>

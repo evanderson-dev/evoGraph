@@ -16,8 +16,7 @@
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-OoNX0uQ6o7nT2fY2cW7g4l6oA8l6aG7oQ8mP0k3z5uW9f8g9h0j6k7l8m9n0p1q" crossorigin="anonymous"></script>
-    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
     <script src="./assets/js/relatorios_bncc.js"></script>
 </head>
 <body>
@@ -102,103 +101,229 @@
                     <button type="button" onclick="exportarCSV()">Exportar como CSV</button>
                 </form>
 
-                <?php if ($formulario_id) { ?>
-                <div class="relatorio-section">
+                <!-- ################################### -->
+
+                <style>
+                .relatorio-section {
+                    margin: 20px 0;
+                }
+
+                .media-por-serie-container {
+                    text-align: center;
+                }
+
+                .media-por-serie-wrapper {
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-start;
+                    gap: 20px;
+                    flex-wrap: wrap;
+                }
+
+                .media-table-container {
+                    flex: 1;
+                    min-width: 300px;
+                    max-width: 400px;
+                }
+
+                #media-por-serie-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 0 auto;
+                }
+
+                #media-por-serie-table th,
+                #media-por-serie-table td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: center;
+                }
+
+                #media-por-serie-table th {
+                    background-color: #f2f2f2;
+                    font-weight: bold;
+                }
+
+                .media-chart-container {
+                    flex: 1;
+                    min-width: 400px;
+                    max-width: 500px;
+                }
+
+                @media (max-width: 768px) {
+                    .media-por-serie-wrapper {
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    .media-table-container,
+                    .media-chart-container {
+                        max-width: 100%;
+                    }
+                }
+                </style>
+
+                <div class="relatorio-section media-por-serie-container">
                     <h3>Média de Pontuação por Série</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Série</th>
-                                <th>Média de Pontuação</th>
-                                <th>Total de Alunos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $query = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
-                                             AVG(pontuacao) AS media_pontuacao,
-                                             COUNT(*) AS total_alunos
-                                      FROM respostas_formulario
-                                      WHERE formulario_id = '$formulario_id'
-                                      GROUP BY serie
-                                      ORDER BY serie";
-                            $result = $conn->query($query);
-                            $series = [];
-                            $medias = [];
-                            while ($row = $result->fetch_assoc()) {
-                                $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                $series[] = $serie;
-                                $medias[] = round($row['media_pontuacao'], 2);
-                                echo "<tr>
-                                        <td>$serie</td>
-                                        <td>" . round($row['media_pontuacao'], 2) . "</td>
-                                        <td>{$row['total_alunos']}</td>
-                                      </tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <canvas id="graficoMediaSerie" data-series='<?php echo json_encode($series); ?>' data-medias='<?php echo json_encode($medias); ?>'></canvas>
+                    <div class="media-por-serie-wrapper">
+                        <!-- Tabela de Médias -->
+                        <div class="media-table-container">
+                            <table id="media-por-serie-table">
+                                <thead>
+                                    <tr>
+                                        <th>Série</th>
+                                        <th>Média de Pontuação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="media-por-serie-table-body">
+                                    <?php
+                                    if ($formulario_id) {
+                                        // Buscar todas as respostas para calcular a média manualmente
+                                        $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
+                                                        JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao
+                                                FROM respostas_formulario
+                                                WHERE formulario_id = '$formulario_id'
+                                                ORDER BY serie";
+                                        $result_medias = $conn->query($query_medias);
+                                        $series_medias = [];
+                                        $medias = [];
+                                        $pontuacoes_por_serie = [];
+
+                                        if ($result_medias && $result_medias->num_rows > 0) {
+                                            // Agrupar pontuações por série
+                                            while ($row = $result_medias->fetch_assoc()) {
+                                                $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                                $pontuacao = $row['pontuacao'] ? trim($row['pontuacao'], '"') : '0 / 10';
+                                                // Extrair o número antes de " / 10"
+                                                $pontuacao_valor = (float) explode(' / ', $pontuacao)[0];
+                                                if (!isset($pontuacoes_por_serie[$serie])) {
+                                                    $pontuacoes_por_serie[$serie] = [];
+                                                }
+                                                $pontuacoes_por_serie[$serie][] = $pontuacao_valor;
+                                            }
+
+                                            // Calcular médias e preencher a tabela
+                                            foreach ($pontuacoes_por_serie as $serie => $pontuacoes) {
+                                                $media = count($pontuacoes) > 0 ? array_sum($pontuacoes) / count($pontuacoes) : 0;
+                                                $media = round($media, 2);
+                                                $series_medias[] = $serie;
+                                                $medias[] = $media;
+                                                echo "<tr>";
+                                                echo "<td>" . htmlspecialchars($serie) . "</td>";
+                                                echo "<td>$media</td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='2'>Nenhuma média encontrada para o formulário selecionado.</td></tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='2'>Selecione um formulário para ver as médias.</td></tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Gráfico de Barras -->
+                        <div class="media-chart-container">
+                            <canvas id="mediaPorSerieChart" width="400" height="300"
+                                    data-series='<?php echo json_encode($series_medias); ?>'
+                                    data-medias='<?php echo json_encode($medias); ?>'></canvas>
+                        </div>
+                    </div>
                 </div>
-                <?php } else { ?>
-                <div class="relatorio-section">
-                    <div class="placeholder">Selecione um formulário para ver a média por série.</div>
-                </div>
-                <?php } ?>
+                
+                <!-- ################################### -->
 
                 <div class="relatorio-section">
-                    <h3>Percentual de Acertos por Pergunta</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Pergunta</th>
-                                <th>Habilidade BNCC</th>
-                                <th>Percentual de Acertos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <h3>Percentual de Acertos por Série</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pergunta</th>
+                            <th>Habilidade BNCC</th>
                             <?php
                             if ($formulario_id) {
-                                $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
-                                          FROM perguntas_formulario
-                                          WHERE formulario_id = '$formulario_id'";
-                                $result = $conn->query($query);
-                                if ($result && $result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        $pergunta = $row['pergunta_texto'];
-                                        $pergunta_escaped = $conn->real_escape_string($pergunta);
-                                        $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
+                                // Buscar séries/salas distintas
+                                $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
+                                                FROM respostas_formulario
+                                                WHERE formulario_id = '$formulario_id'
+                                                ORDER BY serie";
+                                $result_series = $conn->query($query_series);
+                                $series = [];
+                                while ($row = $result_series->fetch_assoc()) {
+                                    $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                    $series[] = $serie;
+                                    echo "<th>Série $serie</th>";
+                                }
+                            }
+                            ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($formulario_id) {
+                            // Buscar perguntas do formulário
+                            $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
+                                    FROM perguntas_formulario
+                                    WHERE formulario_id = '$formulario_id'";
+                            $result = $conn->query($query);
+                            if ($result && $result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $pergunta = $row['pergunta_texto'];
+                                    $pergunta_escaped = $conn->real_escape_string($pergunta);
+                                    $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
+
+                                    // Log para debug
+                                    error_log("Pergunta: $pergunta_escaped, Resposta Correta: $resposta_correta");
+
+                                    echo "<tr>";
+                                    echo "<td>" . htmlspecialchars($pergunta) . "</td>";
+                                    echo "<td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>";
+
+                                    // Calcular percentual por série
+                                    foreach ($series as $serie) {
+                                        $serie_escaped = $conn->real_escape_string($serie);
                                         if ($resposta_correta) {
+                                            // Ajustar a query para usar TRIM e LOWER
                                             $query_acertos = "SELECT COUNT(*) AS total,
-                                                                     SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
-                                                              FROM respostas_formulario
-                                                              WHERE formulario_id = '$formulario_id'";
+                                                            SUM(CASE WHEN LOWER(JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"')) = LOWER('\"$resposta_correta\"') THEN 1 ELSE 0 END) AS acertos
+                                                    FROM respostas_formulario
+                                                    WHERE formulario_id = '$formulario_id'
+                                                    AND TRIM(JSON_EXTRACT(dados_json, '$.\"Série:\"')) = '\"$serie_escaped\"'";
                                             $result_acertos = $conn->query($query_acertos);
                                             if ($result_acertos) {
                                                 $acertos_row = $result_acertos->fetch_assoc();
-                                                $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
+                                                $total = $acertos_row['total'];
+                                                $acertos = $acertos_row['acertos'];
+                                                $percentual = $total > 0 ? round(($acertos / $total) * 100, 2) : 0;
+
+                                                // Log para debug
+                                                error_log("Série: $serie_escaped, Total: $total, Acertos: $acertos, Percentual: $percentual");
                                             } else {
                                                 $percentual = 0;
+                                                error_log("Erro na query de acertos: " . $conn->error);
                                             }
                                         } else {
                                             $percentual = 0;
+                                            error_log("Resposta correta não definida para a pergunta: $pergunta_escaped");
                                         }
-                                        echo "<tr>
-                                                <td>" . htmlspecialchars($pergunta) . "</td>
-                                                <td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>
-                                                <td>$percentual%</td>
-                                              </tr>";
+                                        echo "<td>$percentual%</td>";
                                     }
-                                } else {
-                                    echo "<tr><td colspan='3'>Nenhuma pergunta encontrada para o formulário selecionado.</td></tr>";
+
+                                    echo "</tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='3'>Selecione um formulário para ver as perguntas.</td></tr>";
+                                $colspan = count($series) + 2;
+                                echo "<tr><td colspan='$colspan'>Nenhuma pergunta encontrada para o formulário selecionado.</td></tr>";
                             }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
+                        } else {
+                            echo "<tr><td colspan='3'>Selecione um formulário para ver as perguntas.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
                 <?php
                 if (isset($_GET['pergunta']) && $formulario_id) {
