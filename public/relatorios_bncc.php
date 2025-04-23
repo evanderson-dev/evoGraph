@@ -16,8 +16,7 @@
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-OoNX0uQ6o7nT2fY2cW7g4l6oA8l6aG7oQ8mP0k3z5uW9f8g9h0j6k7l8m9n0p1q" crossorigin="anonymous"></script>
-    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
     <script src="./assets/js/relatorios_bncc.js"></script>
 </head>
 <body>
@@ -176,41 +175,52 @@
                             if ($formulario_id) {
                                 // Buscar perguntas do formulário
                                 $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
-                                          FROM perguntas_formulario
-                                          WHERE formulario_id = '$formulario_id'";
+                                        FROM perguntas_formulario
+                                        WHERE formulario_id = '$formulario_id'";
                                 $result = $conn->query($query);
                                 if ($result && $result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                         $pergunta = $row['pergunta_texto'];
                                         $pergunta_escaped = $conn->real_escape_string($pergunta);
                                         $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
-                                        
+
+                                        // Log para debug
+                                        error_log("Pergunta: $pergunta_escaped, Resposta Correta: $resposta_correta");
+
                                         echo "<tr>";
                                         echo "<td>" . htmlspecialchars($pergunta) . "</td>";
                                         echo "<td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>";
-                                        
+
                                         // Calcular percentual por série
                                         foreach ($series as $serie) {
                                             $serie_escaped = $conn->real_escape_string($serie);
                                             if ($resposta_correta) {
+                                                // Ajustar a query para comparar corretamente o campo Série
                                                 $query_acertos = "SELECT COUNT(*) AS total,
-                                                                        SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
-                                                                 FROM respostas_formulario
-                                                                 WHERE formulario_id = '$formulario_id'
-                                                                 AND JSON_EXTRACT(dados_json, '$.\"Série:\"') = '\"$serie_escaped\"'";
+                                                                SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '\"$resposta_correta\"' THEN 1 ELSE 0 END) AS acertos
+                                                        FROM respostas_formulario
+                                                        WHERE formulario_id = '$formulario_id'
+                                                        AND JSON_EXTRACT(dados_json, '$.\"Série:\"') = '\"$serie_escaped\"'";
                                                 $result_acertos = $conn->query($query_acertos);
                                                 if ($result_acertos) {
                                                     $acertos_row = $result_acertos->fetch_assoc();
-                                                    $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
+                                                    $total = $acertos_row['total'];
+                                                    $acertos = $acertos_row['acertos'];
+                                                    $percentual = $total > 0 ? round(($acertos / $total) * 100, 2) : 0;
+
+                                                    // Log para debug
+                                                    error_log("Série: $serie_escaped, Total: $total, Acertos: $acertos, Percentual: $percentual");
                                                 } else {
                                                     $percentual = 0;
+                                                    error_log("Erro na query de acertos: " . $conn->error);
                                                 }
                                             } else {
                                                 $percentual = 0;
+                                                error_log("Resposta correta não definida para a pergunta: $pergunta_escaped");
                                             }
                                             echo "<td>$percentual%</td>";
                                         }
-                                        
+
                                         echo "</tr>";
                                     }
                                 } else {
