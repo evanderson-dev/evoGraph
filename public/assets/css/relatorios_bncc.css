@@ -115,3 +115,15 @@ canvas {
     background-color: #36A2EB;
     color: white;
 }
+
+/* Estilo para placeholders */
+.placeholder {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
