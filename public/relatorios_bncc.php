@@ -147,18 +147,34 @@
                 <?php } ?>
 
                 <div class="relatorio-section">
-                    <h3>Percentual de Acertos por Pergunta</h3>
+                    <h3>Percentual de Acertos por Série</h3>
                     <table>
                         <thead>
                             <tr>
                                 <th>Pergunta</th>
                                 <th>Habilidade BNCC</th>
-                                <th>Percentual de Acertos</th>
+                                <?php
+                                if ($formulario_id) {
+                                    // Buscar séries/salas distintas
+                                    $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
+                                                    FROM respostas_formulario
+                                                    WHERE formulario_id = '$formulario_id'
+                                                    ORDER BY serie";
+                                    $result_series = $conn->query($query_series);
+                                    $series = [];
+                                    while ($row = $result_series->fetch_assoc()) {
+                                        $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                        $series[] = $serie;
+                                        echo "<th>Série $serie</th>";
+                                    }
+                                }
+                                ?>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             if ($formulario_id) {
+                                // Buscar perguntas do formulário
                                 $query = "SELECT pergunta_texto, bncc_habilidade, resposta_correta
                                           FROM perguntas_formulario
                                           WHERE formulario_id = '$formulario_id'";
@@ -168,29 +184,38 @@
                                         $pergunta = $row['pergunta_texto'];
                                         $pergunta_escaped = $conn->real_escape_string($pergunta);
                                         $resposta_correta = !empty($row['resposta_correta']) ? $conn->real_escape_string($row['resposta_correta']) : null;
-                                        if ($resposta_correta) {
-                                            $query_acertos = "SELECT COUNT(*) AS total,
-                                                                     SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
-                                                              FROM respostas_formulario
-                                                              WHERE formulario_id = '$formulario_id'";
-                                            $result_acertos = $conn->query($query_acertos);
-                                            if ($result_acertos) {
-                                                $acertos_row = $result_acertos->fetch_assoc();
-                                                $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
+                                        
+                                        echo "<tr>";
+                                        echo "<td>" . htmlspecialchars($pergunta) . "</td>";
+                                        echo "<td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>";
+                                        
+                                        // Calcular percentual por série
+                                        foreach ($series as $serie) {
+                                            $serie_escaped = $conn->real_escape_string($serie);
+                                            if ($resposta_correta) {
+                                                $query_acertos = "SELECT COUNT(*) AS total,
+                                                                        SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '$resposta_correta' THEN 1 ELSE 0 END) AS acertos
+                                                                 FROM respostas_formulario
+                                                                 WHERE formulario_id = '$formulario_id'
+                                                                 AND JSON_EXTRACT(dados_json, '$.\"Série:\"') = '\"$serie_escaped\"'";
+                                                $result_acertos = $conn->query($query_acertos);
+                                                if ($result_acertos) {
+                                                    $acertos_row = $result_acertos->fetch_assoc();
+                                                    $percentual = $acertos_row['total'] > 0 ? round(($acertos_row['acertos'] / $acertos_row['total']) * 100, 2) : 0;
+                                                } else {
+                                                    $percentual = 0;
+                                                }
                                             } else {
                                                 $percentual = 0;
                                             }
-                                        } else {
-                                            $percentual = 0;
+                                            echo "<td>$percentual%</td>";
                                         }
-                                        echo "<tr>
-                                                <td>" . htmlspecialchars($pergunta) . "</td>
-                                                <td>" . ($row['bncc_habilidade'] ?: 'N/A') . "</td>
-                                                <td>$percentual%</td>
-                                              </tr>";
+                                        
+                                        echo "</tr>";
                                     }
                                 } else {
-                                    echo "<tr><td colspan='3'>Nenhuma pergunta encontrada para o formulário selecionado.</td></tr>";
+                                    $colspan = count($series) + 2;
+                                    echo "<tr><td colspan='$colspan'>Nenhuma pergunta encontrada para o formulário selecionado.</td></tr>";
                                 }
                             } else {
                                 echo "<tr><td colspan='3'>Selecione um formulário para ver as perguntas.</td></tr>";
