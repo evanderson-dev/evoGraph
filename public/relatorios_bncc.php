@@ -195,12 +195,12 @@
                                         foreach ($series as $serie) {
                                             $serie_escaped = $conn->real_escape_string($serie);
                                             if ($resposta_correta) {
-                                                // Ajustar a query para comparar corretamente o campo Série
+                                                // Ajustar a query para usar TRIM e LOWER
                                                 $query_acertos = "SELECT COUNT(*) AS total,
-                                                                SUM(CASE WHEN JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"') = '\"$resposta_correta\"' THEN 1 ELSE 0 END) AS acertos
+                                                                SUM(CASE WHEN LOWER(JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"')) = LOWER('\"$resposta_correta\"') THEN 1 ELSE 0 END) AS acertos
                                                         FROM respostas_formulario
                                                         WHERE formulario_id = '$formulario_id'
-                                                        AND JSON_EXTRACT(dados_json, '$.\"Série:\"') = '\"$serie_escaped\"'";
+                                                        AND TRIM(JSON_EXTRACT(dados_json, '$.\"Série:\"')) = '\"$serie_escaped\"'";
                                                 $result_acertos = $conn->query($query_acertos);
                                                 if ($result_acertos) {
                                                     $acertos_row = $result_acertos->fetch_assoc();
