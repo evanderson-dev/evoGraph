@@ -230,6 +230,11 @@ canvas {
 /* Estilos para Percentual de Acertos por Série */
 .percentual-por-serie-container {
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 #percentual-por-serie-table {
@@ -246,15 +251,25 @@ canvas {
     text-align: center;
 }
 
+#percentual-por-serie-table th:first-child,
+#percentual-por-serie-table td:first-child {
+    text-align: left; /* Alinha a coluna "Pergunta" à esquerda */
+}
+
 #percentual-por-serie-table th {
     background-color: #f2f2f2;
-    color: #333; /* Texto escuro para contraste com o fundo claro */
+    color: #333;
     font-weight: bold;
 }
 
 /* Estilos para Alunos com Pontuação Abaixo de 7.0 */
 .alunos-abaixo-7-container {
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 #alunos-abaixo-7-table {
@@ -271,9 +286,14 @@ canvas {
     text-align: center;
 }
 
+#alunos-abaixo-7-table th:first-child,
+#alunos-abaixo-7-table td:first-child {
+    text-align: left; /* Alinha a coluna "Nome" à esquerda */
+}
+
 #alunos-abaixo-7-table th {
     background-color: #f2f2f2;
-    color: #333; /* Texto escuro para contraste com o fundo claro */
+    color: #333;
     font-weight: bold;
 }
 
@@ -333,6 +353,12 @@ canvas {
 
     .media-chart-container {
         max-width: 100%;
+    }
+
+    .percentual-por-serie-container,
+    .alunos-abaixo-7-container {
+        flex-direction: column;
+        align-items: center;
     }
 
     #percentual-por-serie-table,
