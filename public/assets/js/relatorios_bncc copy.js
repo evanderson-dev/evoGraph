@@ -11,7 +11,7 @@
 
     // Função para renderizar o gráfico de barras (Média por Série)
     function renderGraficoMediaSerie() {
-        const canvas = document.getElementById('mediaPorSerieChart');
+        const canvas = document.getElementById('graficoMediaSerie');
         if (!canvas) return;
 
         const series = JSON.parse(canvas.dataset.series || '[]');
@@ -32,7 +32,7 @@
                         datasets: [{
                             label: 'Média de Pontuação',
                             data: medias,
-                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
                             borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1
                         }]
@@ -41,26 +41,7 @@
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                max: 10,
-                                title: {
-                                    display: true,
-                                    text: 'Média (0-10)'
-                                }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Série'
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: 'Média de Pontuação por Série'
+                                max: 10
                             }
                         }
                     }

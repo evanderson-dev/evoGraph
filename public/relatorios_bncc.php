@@ -178,19 +178,34 @@
                                 <tbody id="media-por-serie-table-body">
                                     <?php
                                     if ($formulario_id) {
+                                        // Buscar todas as respostas para calcular a média manualmente
                                         $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
-                                                        AVG(CAST(REGEXP_REPLACE(JSON_EXTRACT(dados_json, '$.\"Pontuação\"'), '[^0-9.]', '') AS DECIMAL)) AS media
+                                                        JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao
                                                 FROM respostas_formulario
                                                 WHERE formulario_id = '$formulario_id'
-                                                GROUP BY JSON_EXTRACT(dados_json, '$.\"Série:\"')
                                                 ORDER BY serie";
                                         $result_medias = $conn->query($query_medias);
                                         $series_medias = [];
                                         $medias = [];
+                                        $pontuacoes_por_serie = [];
+
                                         if ($result_medias && $result_medias->num_rows > 0) {
+                                            // Agrupar pontuações por série
                                             while ($row = $result_medias->fetch_assoc()) {
                                                 $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                                $media = round($row['media'], 2);
+                                                $pontuacao = $row['pontuacao'] ? trim($row['pontuacao'], '"') : '0 / 10';
+                                                // Extrair o número antes de " / 10"
+                                                $pontuacao_valor = (float) explode(' / ', $pontuacao)[0];
+                                                if (!isset($pontuacoes_por_serie[$serie])) {
+                                                    $pontuacoes_por_serie[$serie] = [];
+                                                }
+                                                $pontuacoes_por_serie[$serie][] = $pontuacao_valor;
+                                            }
+
+                                            // Calcular médias e preencher a tabela
+                                            foreach ($pontuacoes_por_serie as $serie => $pontuacoes) {
+                                                $media = count($pontuacoes) > 0 ? array_sum($pontuacoes) / count($pontuacoes) : 0;
+                                                $media = round($media, 2);
                                                 $series_medias[] = $serie;
                                                 $medias[] = $media;
                                                 echo "<tr>";
@@ -211,65 +226,13 @@
 
                         <!-- Gráfico de Barras -->
                         <div class="media-chart-container">
-                            <canvas id="mediaPorSerieChart" width="400" height="300"></canvas>
+                            <canvas id="mediaPorSerieChart" width="400" height="300"
+                                    data-series='<?php echo json_encode($series_medias); ?>'
+                                    data-medias='<?php echo json_encode($medias); ?>'></canvas>
                         </div>
                     </div>
                 </div>
-
-                <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    console.log("Chart.js carregado com sucesso. Versão:", Chart.version);
-
-                    // Dados para o gráfico de barras
-                    const seriesMedias = <?php echo json_encode($series_medias); ?>;
-                    const medias = <?php echo json_encode($medias); ?>;
-
-                    const ctxMedia = document.getElementById('mediaPorSerieChart').getContext('2d');
-                    const mediaPorSerieChart = new Chart(ctxMedia, {
-                        type: 'bar',
-                        data: {
-                            labels: seriesMedias,
-                            datasets: [{
-                                label: 'Média de Pontuação',
-                                data: medias,
-                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    max: 10,
-                                    title: {
-                                        display: true,
-                                        text: 'Média (0-10)'
-                                    }
-                                },
-                                x: {
-                                    title: {
-                                        display: true,
-                                        text: 'Série'
-                                    }
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    display: false
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Média de Pontuação por Série'
-                                }
-                            }
-                        }
-                    });
-
-                    console.log("Gráfico de Média por Série renderizado.");
-                });
-                </script>
-
+                
                 <!-- ################################### -->
 
                 <div class="relatorio-section">
