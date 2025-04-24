@@ -24,6 +24,7 @@ header {
     top: 0;
     left: 0;
     width: 100%; /* Ocupar toda a largura */
+    max-width: 100%; /* Garantir que não exceda a largura da viewport */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -31,15 +32,18 @@ header {
     padding: 10px 20px; /* Espaçamento interno */
     z-index: 10; /* Garante que o header fique acima da sidebar */
     color: white; /* Cor do texto */
+    overflow-x: hidden; /* Evitar overflow horizontal dentro do header */
 }
 
 header h1 {
     font-size: 24px;
+    white-space: nowrap; /* Impede quebra de linha no título */
 }
 
 header .icons {
     display: flex;
     gap: 15px;
+    flex-shrink: 0; /* Impede que os ícones sejam comprimidos */
 }
 
 header .icons i {
@@ -61,9 +65,11 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%; /* Ocupar toda a largura */
+    max-width: 100%; /* Garantir que não exceda a largura da viewport */
     z-index: 10; /* Garante que o footer fique acima da sidebar */
     text-align: center; /* Centraliza o texto */
     color: white; /* Cor do texto */
+    overflow-x: hidden; /* Evitar overflow horizontal dentro do footer */
 }
 
 /* Container principal */
@@ -434,14 +440,16 @@ canvas {
     }
 
     header {
-        padding: 10px;
+        padding: 10px 10px; /* Reduzir o padding horizontal para evitar overflow */
         width: 100%; /* Garantir largura total */
+        max-width: 100%; /* Garantir que não exceda a viewport */
         left: 0;
     }
 
     footer {
-        padding: 10px;
+        padding: 10px 10px; /* Reduzir o padding horizontal para evitar overflow */
         width: 100%; /* Garantir largura total */
+        max-width: 100%; /* Garantir que não exceda a viewport */
         left: 0;
     }
 
