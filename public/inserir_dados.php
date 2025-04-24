@@ -16,7 +16,7 @@ try {
     $pdo = new PDO($dsn, $username, $password, $options);
 
     $sql = <<<SQL
-        Inserindo funcionários (professores, coordenadores, diretor e administrador)
+        -- Inserindo funcionários (professores, coordenadores, diretor e administrador)
         INSERT INTO funcionarios (email, senha, nome, sobrenome, data_nascimento, rf, cargo)
         VALUES
         ('administrador@database.com', '$2y$10$exemploHashAqui', 'Admnistrador', 'Db', '2025-01-01', 'RF999', 'Administrador'),

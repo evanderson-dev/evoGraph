@@ -72,59 +72,6 @@
         }
     }
 
-    // Função para renderizar o gráfico de pizza (Distribuição de Respostas)
-    function renderGraficoRespostas() {
-        const canvas = document.getElementById('graficoRespostas');
-        if (!canvas) return;
-
-        const respostas = JSON.parse(canvas.dataset.respostas || '[]');
-        const quantidades = JSON.parse(canvas.dataset.quantidades || '[]');
-
-        console.log('Dados para Gráfico de Pizza - Respostas:', respostas);
-        console.log('Dados para Gráfico de Pizza - Quantidades:', quantidades);
-
-        if (respostas.length === 0 || quantidades.length === 0) {
-            console.warn('Dados insuficientes para renderizar o Gráfico de Pizza.');
-            return;
-        }
-
-        if (checkChartJs()) {
-            try {
-                const ctx = canvas.getContext('2d');
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: respostas,
-                        datasets: [{
-                            data: quantidades,
-                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'top' },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        let value = context.raw || 0;
-                                        let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                        let percentage = ((value / total) * 100).toFixed(2);
-                                        return `${label}: ${value} (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-                console.log('Gráfico de Pizza renderizado.');
-            } catch (e) {
-                console.error('Erro ao renderizar Gráfico de Pizza:', e);
-            }
-        }
-    }
-
     // Função para exportar CSV
     function exportarCSV() {
         const formulario_id = document.getElementById('formulario_id').value;
@@ -166,9 +113,8 @@
             $toggleIcon.toggleClass('open');
         });
 
-        // Renderizar gráficos
+        // Renderizar gráfico
         renderGraficoMediaSerie();
-        renderGraficoRespostas();
 
         // Expor exportarCSV globalmente
         window.exportarCSV = exportarCSV;

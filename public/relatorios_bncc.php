@@ -230,34 +230,6 @@
                     </table>
                 </div>
 
-                <?php
-                if (isset($_GET['pergunta']) && $formulario_id) {
-                    $pergunta = $conn->real_escape_string($_GET['pergunta']);
-                    $query = "SELECT JSON_EXTRACT(dados_json, '$.\"$pergunta\"') AS resposta,
-                                     COUNT(*) AS total
-                              FROM respostas_formulario
-                              WHERE formulario_id = '$formulario_id'
-                              GROUP BY resposta";
-                    $result = $conn->query($query);
-                    $respostas = [];
-                    $quantidades = [];
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $resposta = $row['resposta'] ? trim($row['resposta'], '"') : 'Não Respondida';
-                            $respostas[] = $resposta;
-                            $quantidades[] = $row['total'];
-                        }
-                    } else {
-                        $respostas = ['Nenhuma resposta'];
-                        $quantidades = [1];
-                    }
-                ?>
-                <div class="relatorio-section">
-                    <h3>Distribuição de Respostas: <?php echo htmlspecialchars($_GET['pergunta']); ?></h3>
-                    <canvas id="graficoRespostas" data-respostas='<?php echo json_encode($respostas); ?>' data-quantidades='<?php echo json_encode($quantidades); ?>'></canvas>
-                </div>
-                <?php } ?>
-
                 <?php if ($formulario_id) { ?>
                 <div class="relatorio-section alunos-abaixo-7-container">
                     <h3>Alunos com Pontuação Abaixo de 7.0</h3>
