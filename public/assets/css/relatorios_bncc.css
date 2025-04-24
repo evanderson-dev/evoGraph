@@ -228,7 +228,7 @@ tr:hover {
 
 /* Gráficos */
 canvas {
-    max-width: 50% !important; /* Sobrescrever qualquer largura fixa */
+    max-width: 40% !important; /* Sobrescrever qualquer largura fixa */
     width: 100% !important; /* Garantir que o canvas ocupe apenas a largura disponível */
     height: 300px; /* Altura fixa inicial para garantir visibilidade */
     min-height: 250px; /* Altura mínima para evitar que fique muito pequeno */
