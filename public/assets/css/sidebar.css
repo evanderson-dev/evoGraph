@@ -3,7 +3,7 @@
     border-width: 0 1px 0 0; /* Borda à direita da sidebar */
     background-color: #444;
     position: relative;
-    top: 0px; /* Abaixo do header */
+    top: 48px; /* Abaixo do header */
     bottom: auto; /* Acima do footer */
     color: white;
     padding: 20px; /* Espaçamento interno */
