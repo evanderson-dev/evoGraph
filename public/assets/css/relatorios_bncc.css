@@ -230,7 +230,8 @@ tr:hover {
 canvas {
     max-width: 100% !important; /* Sobrescrever qualquer largura fixa */
     width: 100% !important; /* Garantir que o canvas ocupe apenas a largura disponível */
-    height: auto;
+    height: 300px; /* Altura fixa inicial para garantir visibilidade */
+    min-height: 200px; /* Altura mínima para evitar que fique muito pequeno */
     margin: 20px auto;
     display: block;
     background-color: white;
@@ -317,6 +318,7 @@ canvas {
     flex: 1;
     min-width: 0; /* Impede que o contêiner force uma largura mínima maior que a tela */
     max-width: 100%; /* Garante que o contêiner não exceda a largura disponível */
+    min-height: 200px; /* Altura mínima para garantir espaço para o canvas */
 }
 
 /* Estilos para Percentual de Acertos por Série */
@@ -494,6 +496,8 @@ canvas {
     canvas {
         max-width: 100% !important; /* Garantir que o canvas não exceda a largura da tela */
         width: 100% !important; /* Forçar a largura a se ajustar */
+        height: 200px; /* Reduzir a altura em telas menores */
+        min-height: 150px; /* Altura mínima para visibilidade */
         padding: 10px;
     }
 

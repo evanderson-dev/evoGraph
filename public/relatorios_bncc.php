@@ -121,7 +121,8 @@
                                 }
                             }
                             ?>
-                            <canvas id="mediaPorSerieChart" width="400" height="300"
+                            // <canvas id="mediaPorSerieChart" width="400" height="300"
+                            <canvas id="mediaPorSerieChart"
                                     data-series='<?php echo json_encode($series_medias); ?>'
                                     data-medias='<?php echo json_encode($medias); ?>'></canvas>
                         </div>
@@ -289,5 +290,25 @@
     <script src="./assets/js/my-profile.js"></script>
     <script src="./assets/js/dashboard.js"></script>
     <script src="./assets/js/ajax.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('mediaPorSerieChart');
+            if (canvas) {
+                // Função para ajustar as dimensões do canvas
+                function resizeCanvas() {
+                    const containerWidth = canvas.parentElement.offsetWidth; // Largura do contêiner pai
+                    canvas.width = containerWidth; // Ajustar a largura do canvas
+                    canvas.height = containerWidth * 0.75; // Manter proporção (altura = 75% da largura)
+                }
+
+                // Ajustar inicialmente
+                resizeCanvas();
+
+                // Ajustar ao redimensionar a janela
+                window.addEventListener('resize', resizeCanvas);
+            }
+        });
+    </script>
 </body>
 </html>
