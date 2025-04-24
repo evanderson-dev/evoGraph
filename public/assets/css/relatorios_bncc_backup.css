@@ -1,3 +1,79 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilização do body */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
+}
+
+/* Estilização do header */
+header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333; /* Cor de fundo do header */
+    padding: 10px 20px; /* Espaçamento interno */
+    z-index: 10; /* Garante que o header fique acima da sidebar */
+    color: white; /* Cor do texto */
+}
+
+header h1 {
+    font-size: 24px;
+}
+
+header .icons {
+    display: flex;
+    gap: 15px;
+}
+
+header .icons i {
+    cursor: pointer;
+}
+
+/* Botão para abrir/fechar a sidebar */
+.menu-toggle {
+    left: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Estilização do footer */
+footer {
+    background-color: #333; /* Cor de fundo do footer */
+    padding: 10px 20px; /* Espaçamento interno */
+    position: relative; /* Para garantir que o footer fique no final da página */
+    z-index: 10; /* Garante que o footer fique acima da sidebar */
+    text-align: center; /* Centraliza o texto */
+    color: white; /* Cor do texto */
+}
+
+/* Container principal */
+.container {
+    display: flex;
+    flex: 1;
+}
+
+/* Conteúdo principal */
+.main-content {
+    padding: 20px;
+    margin-left: -230px;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.shifted {
+    margin-left: 0;
+}
+
 /* Ícone do título */
 .titulo-secao i {
     color: #73b4ff;
