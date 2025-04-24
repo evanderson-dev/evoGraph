@@ -88,9 +88,11 @@
                         <h3>Relatório - Respostas do Google Forms</h3>
                         <div class="input-google-link">
                             <label for="googleSheetLink">Cole o link da planilha do Google:</label>
-                            <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/...">
-                            <input type="text" id="googleSheetTab" placeholder="(Opcional) Nome da aba">
-                            <input type="text" id="formularioId" placeholder="(Opcional) Identificador do formulário"><br>
+                            <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                            <label for="bnccHabilidade">Habilidade BNCC (Opcional):</label>
+                            <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
+                            <label for="formularioId">Identificador do formulário:</label>
+                            <input type="text" id="formularioId" placeholder="Identificador do formulário" required><br>
                             <button type="button" onclick="carregarPlanilha()">Carregar</button><br>
                             <button type="button" onclick="importarParaBanco()">Importar para o banco</button>
                         </div>
@@ -106,7 +108,7 @@
                             let perguntas = []; // Armazenar os cabeçalhos das perguntas
                             let respostasCorretas = []; // Armazenar as respostas corretas
 
-                            function formatGoogleSheetUrl(userInputUrl, sheetName = '') {
+                            function formatGoogleSheetUrl(userInputUrl) {
                                 const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
                                 if (!idMatch) {
                                     alert("Link inválido! Verifique o link da planilha.");
@@ -115,18 +117,12 @@
 
                                 const sheetId = idMatch[1];
                                 let url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
-
-                                if (sheetName) {
-                                    url += `&sheet=${encodeURIComponent(sheetName)}`;
-                                }
-
                                 return url;
                             }
 
                             function carregarPlanilha() {
                                 const urlInput = document.getElementById('googleSheetLink').value;
-                                const abaInput = document.getElementById('googleSheetTab').value;
-                                const formattedUrl = formatGoogleSheetUrl(urlInput, abaInput);
+                                const formattedUrl = formatGoogleSheetUrl(urlInput);
 
                                 if (!formattedUrl) return;
 
@@ -235,6 +231,12 @@
                             }
 
                             function importarParaBanco() {
+                                const formularioIdInput = document.getElementById('formularioId');
+                                if (!formularioIdInput.value.trim()) {
+                                    alert("O campo 'Identificador do formulário' é obrigatório.");
+                                    return;
+                                }
+
                                 if (dadosPlanilha.length === 0) {
                                     alert("Nenhum dado carregado.");
                                     return;
@@ -256,7 +258,8 @@
                                         dados: dadosFiltrados,
                                         formularioId: document.getElementById('formularioId').value,
                                         perguntas: perguntas,
-                                        respostasCorretas: respostasCorretas
+                                        respostasCorretas: respostasCorretas,
+                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
                                     })
                                 })
                                 .then(response => response.json())

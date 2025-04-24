@@ -23,7 +23,9 @@ if (!$dados || !is_array($dados['dados'])) {
 writeLog("Dados recebidos: " . json_encode($dados, JSON_UNESCAPED_UNICODE));
 
 $formulario_id = isset($dados['formularioId']) && !empty(trim($dados['formularioId'])) ? trim($dados['formularioId']) : 'Form_Default';
-$dados = $dados['dados'];
+$dados_alunos = $dados['dados'];
+$perguntas = isset($dados['perguntas']) ? $dados['perguntas'] : [];
+$respostasCorretas = isset($dados['respostasCorretas']) ? $dados['respostasCorretas'] : [];
 
 $importados = 0;
 $atualizados = 0;
@@ -44,7 +46,31 @@ if ($result && $result->num_rows > 0) {
     $has_pontuacao = true;
 }
 
-foreach ($dados as $index => $linha) {
+// Salvar perguntas e respostas corretas na tabela perguntas_formulario
+if (!empty($perguntas) && !empty($respostasCorretas) && count($perguntas) === count($respostasCorretas)) {
+    for ($i = 0; $i < count($perguntas); $i++) {
+        $pergunta_texto = $conn->real_escape_string($perguntas[$i]);
+        $resposta_correta = $conn->real_escape_string($respostasCorretas[$i]);
+
+        $query = "INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, resposta_correta) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sss", $formulario_id, $pergunta_texto, $resposta_correta);
+        
+        if ($stmt->execute()) {
+            writeLog("Pergunta '$pergunta_texto' salva com sucesso para formulario_id '$formulario_id'.");
+        } else {
+            $erros[] = "Erro ao salvar pergunta '$pergunta_texto': " . $stmt->error;
+            writeLog("Erro ao salvar pergunta '$pergunta_texto': " . $stmt->error);
+        }
+        $stmt->close();
+    }
+} else {
+    $erros[] = "Nenhuma pergunta ou resposta correta fornecida para salvar.";
+    writeLog("Nenhuma pergunta ou resposta correta fornecida para salvar.");
+}
+
+// Processar respostas dos alunos
+foreach ($dados_alunos as $index => $linha) {
     // Tenta diferentes variações do campo Email
     $email = null;
     foreach (['Email', 'E-mail', 'email', 'EMAIL', 'E-Mail', 'Endereço de e-mail', 'Endereço de Email'] as $key) {

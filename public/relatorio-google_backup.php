@@ -103,6 +103,8 @@
 
                         <script>
                             let dadosPlanilha = []; // Variável global para armazenar os dados
+                            let perguntas = []; // Armazenar os cabeçalhos das perguntas
+                            let respostasCorretas = []; // Armazenar as respostas corretas
 
                             function formatGoogleSheetUrl(userInputUrl, sheetName = '') {
                                 const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
@@ -154,8 +156,46 @@
                                                     return;
                                                 }
 
+                                                // Identificar cabeçalhos
                                                 const headers = Object.keys(dadosPlanilha[0]);
-                                                console.log("Cabeçalhos da planilha:", headers); // Log dos cabeçalhos
+                                                console.log("Cabeçalhos da planilha:", headers);
+
+                                                // Colunas fixas que não são perguntas
+                                                const fixedColumns = [
+                                                    'Carimbo de data/hora', 'Pontuação', 'Nome:', 'Série:', 'Endereço de e-mail',
+                                                    'Timestamp', 'Data', 'Date', 'Email', 'E-mail', 'EMAIL', 'E-Mail', 'Endereço de Email'
+                                                ];
+
+                                                // Filtrar cabeçalhos que são perguntas
+                                                perguntas = headers.filter(header => !fixedColumns.includes(header));
+                                                console.log("Perguntas identificadas:", perguntas);
+
+                                                // Identificar a linha GABARITO ou com pontuação 10/10
+                                                let gabaritoRow = null;
+                                                for (let row of dadosPlanilha) {
+                                                    if (row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO') {
+                                                        gabaritoRow = row;
+                                                        break;
+                                                    }
+                                                }
+
+                                                if (!gabaritoRow) {
+                                                    // Procurar uma linha com pontuação 10/10
+                                                    gabaritoRow = dadosPlanilha.find(row => row['Pontuação'] === '10 / 10');
+                                                }
+
+                                                if (!gabaritoRow) {
+                                                    alert("Nenhuma linha 'GABARITO' ou com pontuação 10/10 encontrada.");
+                                                    button.disabled = false;
+                                                    button.textContent = "Carregar";
+                                                    return;
+                                                }
+
+                                                // Extrair respostas corretas
+                                                respostasCorretas = perguntas.map(pergunta => gabaritoRow[pergunta] || '');
+                                                console.log("Respostas corretas:", respostasCorretas);
+
+                                                // Exibir tabela (excluindo a linha GABARITO)
                                                 const headerRow = document.createElement("tr");
                                                 headers.forEach(h => {
                                                     const th = document.createElement("th");
@@ -165,6 +205,9 @@
                                                 thead.appendChild(headerRow);
 
                                                 dadosPlanilha.forEach(row => {
+                                                    if (row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO') {
+                                                        return; // Ignora a linha GABARITO na tabela visual
+                                                    }
                                                     const tr = document.createElement("tr");
                                                     headers.forEach(h => {
                                                         const td = document.createElement("td");
@@ -201,14 +244,19 @@
                                 button.disabled = true;
                                 button.textContent = "Importando...";
 
+                                // Preparar dados para enviar (excluindo a linha GABARITO)
+                                const dadosFiltrados = dadosPlanilha.filter(row => !(row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO'));
+
                                 fetch('importar_formulario.php', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
                                     },
                                     body: JSON.stringify({
-                                        dados: dadosPlanilha,
-                                        formularioId: document.getElementById('formularioId').value
+                                        dados: dadosFiltrados,
+                                        formularioId: document.getElementById('formularioId').value,
+                                        perguntas: perguntas,
+                                        respostasCorretas: respostasCorretas
                                     })
                                 })
                                 .then(response => response.json())
