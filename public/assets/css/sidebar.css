@@ -103,7 +103,7 @@
         bottom: 38px; /* Acima do footer (mantido conforme altura do footer) */
         z-index: 20; /* Acima do header e do main-content */
         left: -200px; /* Escondida inicialmente */
-        width: 200px; /* Reduzir a largura em telas menores */
+        width: 300px; /* Reduzir a largura em telas menores */
         overflow-y: auto; /* Permitir rolagem vertical na sidebar, se necessário */
     }
 
@@ -114,7 +114,7 @@
 
 @media (max-width: 480px) {
     .sidebar {
-        width: 150px; /* Reduzir ainda mais a largura em telas muito pequenas */
+        width: 250px; /* Reduzir ainda mais a largura em telas muito pequenas */
         left: -150px; /* Ajustar a posição inicial */
     }
 
