@@ -99,8 +99,8 @@
 @media (max-width: 768px) {
     .sidebar {
         position: fixed; /* Sobrepor ao conteúdo */
-        top: 50px; /* Abaixo do header (ajustado para a altura real do header) */
-        bottom: 40px; /* Acima do footer (mantido conforme altura do footer) */
+        top: 40px; /* Abaixo do header (ajustado para a altura real do header) */
+        bottom: 35px; /* Acima do footer (mantido conforme altura do footer) */
         z-index: 20; /* Acima do header e do main-content */
         left: -200px; /* Escondida inicialmente */
         width: 200px; /* Reduzir a largura em telas menores */
