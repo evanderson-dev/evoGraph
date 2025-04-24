@@ -114,8 +114,8 @@
 
 @media (max-width: 480px) {
     .sidebar {
-        width: auto; /* Reduzir ainda mais a largura em telas muito pequenas */
-        left: -400px; /* Ajustar a posição inicial */
+        width: 230px; /* Reduzir ainda mais a largura em telas muito pequenas */
+        left: -230px; /* Ajustar a posição inicial */
     }
 
     .sidebar.active {
