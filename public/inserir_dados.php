@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $username = "admEvoGraph";
-$password = "evoGraph123";
+$password = "evoGraph@123";
 $database = "evograph_db";
 $charset = "utf8mb4";
 
