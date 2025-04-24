@@ -76,7 +76,7 @@
     function loadAlunosAbaixo7(page = 1) {
         const container = $('#alunos-abaixo-7-content');
         const formulario_id = container.data('formulario-id');
-        const serie = $('#filtro-serie').val();
+        const serie = $('#filtro-serie-abaixo').val();
 
         if (!formulario_id) {
             container.html('<table id="alunos-abaixo-7-table"><thead><tr><th>Nome</th><th>Email</th><th>Série</th><th>Pontuação</th></tr></thead><tbody><tr><td colspan="4">Selecione um formulário para ver os alunos com baixo desempenho.</td></tr></tbody></table>');
@@ -97,6 +97,36 @@
             },
             error: function(xhr, status, error) {
                 console.error('Erro ao carregar a tabela "Alunos com Pontuação Abaixo de 7.0":', error);
+                container.html('<p>Erro ao carregar os dados. Tente novamente.</p>');
+            }
+        });
+    }
+
+    // Função para carregar a tabela "Alunos com Pontuação Acima de 7.0" via AJAX
+    function loadAlunosAcima7(page = 1) {
+        const container = $('#alunos-acima-7-content');
+        const formulario_id = container.data('formulario-id');
+        const serie = $('#filtro-serie-acima').val();
+
+        if (!formulario_id) {
+            container.html('<table id="alunos-acima-7-table"><thead><tr><th>Nome</th><th>Email</th><th>Série</th><th>Pontuação</th></tr></thead><tbody><tr><td colspan="4">Selecione um formulário para ver os alunos com alto desempenho.</td></tr></tbody></table>');
+            return;
+        }
+
+        $.ajax({
+            url: 'fetch_alunos_acima_7.php',
+            method: 'GET',
+            data: {
+                formulario_id: formulario_id,
+                pagina: page,
+                serie: serie
+            },
+            success: function(response) {
+                container.html(response);
+                console.log('Tabela "Alunos com Pontuação Acima de 7.0" carregada com sucesso.');
+            },
+            error: function(xhr, status, error) {
+                console.error('Erro ao carregar a tabela "Alunos com Pontuação Acima de 7.0":', error);
                 container.html('<p>Erro ao carregar os dados. Tente novamente.</p>');
             }
         });
@@ -146,18 +176,29 @@
         // Renderizar gráfico
         renderGraficoMediaSerie();
 
-        // Carregar a tabela "Alunos com Pontuação Abaixo de 7.0" inicialmente
+        // Carregar as tabelas inicialmente
         loadAlunosAbaixo7();
+        loadAlunosAcima7();
 
-        // Evento para os botões de paginação
+        // Eventos para os botões de paginação
         $(document).on('click', '.pagination-btn', function() {
             const page = $(this).data('page');
-            loadAlunosAbaixo7(page);
+            const container = $(this).closest('.relatorio-section');
+            if (container.hasClass('alunos-abaixo-7-container')) {
+                loadAlunosAbaixo7(page);
+            } else if (container.hasClass('alunos-acima-7-container')) {
+                loadAlunosAcima7(page);
+            }
         });
 
-        // Evento para o filtro de série
-        $('#filtro-serie').on('change', function() {
+        // Evento para o filtro de série (Alunos Abaixo de 7.0)
+        $('#filtro-serie-abaixo').on('change', function() {
             loadAlunosAbaixo7(); // Recarrega a tabela com a série selecionada (página 1)
+        });
+
+        // Evento para o filtro de série (Alunos Acima de 7.0)
+        $('#filtro-serie-acima').on('change', function() {
+            loadAlunosAcima7(); // Recarrega a tabela com a série selecionada (página 1)
         });
 
         // Expor exportarCSV globalmente

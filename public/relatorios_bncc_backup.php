@@ -121,7 +121,7 @@
                                 }
                             }
                             ?>
-                            <canvas id="mediaPorSerieChart" width="400" height="300"
+                            <canvas id="mediaPorSerieChart"
                                     data-series='<?php echo json_encode($series_medias); ?>'
                                     data-medias='<?php echo json_encode($medias); ?>'></canvas>
                         </div>
@@ -210,8 +210,8 @@
                 <div class="relatorio-section alunos-abaixo-7-container">
                     <h3>Alunos com Pontuação Abaixo de 7.0</h3>
                     <div class="filter-serie">
-                        <label for="filtro-serie">Filtrar por Série:</label>
-                        <select id="filtro-serie">
+                        <label for="filtro-serie-abaixo">Filtrar por Série:</label>
+                        <select id="filtro-serie-abaixo">
                             <option value="">Todas as Séries</option>
                             <?php
                             if ($formulario_id) {
@@ -233,9 +233,35 @@
                     </div>
                 </div>
 
+                <div class="relatorio-section alunos-acima-7-container">
+                    <h3>Alunos com Pontuação Acima de 7.0</h3>
+                    <div class="filter-serie">
+                        <label for="filtro-serie-acima">Filtrar por Série:</label>
+                        <select id="filtro-serie-acima">
+                            <option value="">Todas as Séries</option>
+                            <?php
+                            if ($formulario_id) {
+                                $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
+                                                FROM respostas_formulario
+                                                WHERE formulario_id = '$formulario_id'
+                                                ORDER BY serie";
+                                $result_series = $conn->query($query_series);
+                                while ($row = $result_series->fetch_assoc()) {
+                                    $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                    echo "<option value='" . htmlspecialchars($serie) . "'>$serie</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div id="alunos-acima-7-content" data-formulario-id="<?php echo htmlspecialchars($formulario_id); ?>">
+                        <!-- Conteúdo será preenchido via AJAX -->
+                    </div>
+                </div>
+
                 <?php if (!$formulario_id) { ?>
                 <div class="relatorio-section">
-                    <div class="placeholder">Selecione um formulário para ver os alunos com baixo desempenho.</div>
+                    <div class="placeholder">Selecione um formulário para ver os alunos com baixo ou alto desempenho.</div>
                 </div>
                 <?php } ?>
             </section>
@@ -263,5 +289,25 @@
     <script src="./assets/js/my-profile.js"></script>
     <script src="./assets/js/dashboard.js"></script>
     <script src="./assets/js/ajax.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('mediaPorSerieChart');
+            if (canvas) {
+                // Função para ajustar as dimensões do canvas
+                function resizeCanvas() {
+                    const containerWidth = canvas.parentElement.offsetWidth; // Largura do contêiner pai
+                    canvas.width = containerWidth; // Ajustar a largura do canvas
+                    canvas.height = containerWidth * 0.75; // Manter proporção (altura = 75% da largura)
+                }
+
+                // Ajustar inicialmente
+                resizeCanvas();
+
+                // Ajustar ao redimensionar a janela
+                window.addEventListener('resize', resizeCanvas);
+            }
+        });
+    </script>
 </body>
 </html>
