@@ -355,7 +355,7 @@ canvas {
 
 #alunos-abaixo-7-table th:first-child,
 #alunos-abaixo-7-table td:first-child {
-    text-align: left; /* Alinha a coluna "Nome" à esquerda */
+    text-align: left;
 }
 
 #alunos-abaixo-7-table th {
