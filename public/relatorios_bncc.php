@@ -121,7 +121,7 @@
                                 }
                             }
                             ?>
-                            <canvas id="mediaPorSerieChart" width="300" height="300"
+                            <canvas id="mediaPorSerieChart" width="400" height="300"
                                     data-series='<?php echo json_encode($series_medias); ?>'
                                     data-medias='<?php echo json_encode($medias); ?>'></canvas>
                         </div>
