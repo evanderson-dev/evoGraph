@@ -99,3 +99,134 @@ footer {
 .sidebar.collapsed ~ .main-content {
     margin-left: 0;
 }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Garante que o layout seja em coluna */
+    }
+
+    .main-content {
+        margin-left: 0; /* Garante que o conteúdo ocupe toda a largura */
+        padding: 10px; /* Reduzir o padding em telas menores */
+        padding-top: 60px; /* Espaço para o header fixo */
+        padding-bottom: 40px; /* Espaço para o footer fixo */
+    }
+
+    header {
+        padding: 10px 10px; /* Reduzir o padding horizontal para evitar overflow */
+        width: 100%; /* Garantir largura total */
+        max-width: 100%; /* Garantir que não exceda a viewport */
+        left: 0;
+    }
+
+    footer {
+        padding: 10px 10px; /* Reduzir o padding horizontal para evitar overflow */
+        width: 100%; /* Garantir largura total */
+        max-width: 100%; /* Garantir que não exceda a viewport */
+        left: 0;
+    }
+
+    .titulo-secao {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .filter-form select {
+        min-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .filter-form button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .relatorio-section {
+        padding: 15px;
+    }
+
+    .relatorio-section h3 {
+        font-size: 16px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    canvas {
+        max-width: 100% !important; /* Garantir que o canvas não exceda a largura da tela */
+        width: 100% !important; /* Forçar a largura a se ajustar */
+        height: 200px; /* Reduzir a altura em telas menores */
+        min-height: 250px; /* Altura mínima para visibilidade */
+        padding: 10px;
+    }
+
+    .paginacao a {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .media-por-serie-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .media-chart-container {
+        max-width: 100%; /* Garantir que o contêiner não exceda a largura da tela */
+    }
+
+    .percentual-por-serie-container,
+    .alunos-abaixo-7-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #percentual-por-serie-table,
+    #alunos-abaixo-7-table {
+        font-size: 12px;
+        display: block;
+        overflow-x: auto;
+    }
+
+    #percentual-por-serie-table th,
+    #percentual-por-serie-table td,
+    #alunos-abaixo-7-table th,
+    #alunos-abaixo-7-table td {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-secao p {
+        font-size: 14px;
+    }
+
+    .filter-form label {
+        font-size: 12px;
+    }
+
+    .filter-form select,
+    .filter-form button {
+        font-size: 12px;
+    }
+
+    .relatorio-section h3 {
+        font-size: 14px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}
