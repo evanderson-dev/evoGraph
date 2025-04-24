@@ -3,7 +3,7 @@
     border-width: 0 1px 0 0; /* Borda à direita da sidebar */
     background-color: #444;
     position: fixed; /* Usar fixed no desktop */
-    top: 60px; /* Abaixo do header (ajustado para a altura real do header) */
+    top: 48px; /* Abaixo do header (ajustado para a altura real do header) */
     bottom: 38px; /* Acima do footer */
     z-index: 20; /* Acima do main-content */
     color: white;
