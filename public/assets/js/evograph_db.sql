@@ -74,8 +74,8 @@ INSERT INTO funcionarios (email, senha, nome, sobrenome, data_nascimento, rf, ca
 
 -- Inserções na tabela turmas
 INSERT INTO turmas (nome, ano, professor_id) VALUES
-    ('7º Ano F', 7, 4),
-    ('7º Ano G', 7, 4),
+('7º Ano F', 7, 4),
+('7º Ano G', 7, 4);
 
 -- Inserindo alunos
 INSERT INTO alunos (nome, sobrenome, data_nascimento, matricula, turma_id, email)
@@ -126,14 +126,14 @@ VALUES
 ('Yara', 'N/A', '2012-01-01', '4419042025', 2, 'aluno.1166730955@educacaopg.sp.gov.br');
 
 INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, resposta_correta, bncc_habilidade)
-        VALUES
-        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [1]', 'Tropical', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [2]', 'Subropical', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [3]', 'Semiárido', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [4]', 'Tropical de Altitude', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [5]', 'Tropical Litorâneo', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [6]', 'Equatorial', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '2) Qual tipo de clima o Climograma representa?', 'Clima Tropical', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '3) Qual tipo de clima o climograma representa?', 'Clima Equatorial', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '4) Qual tipo de clima o climograma representa:', 'Clima Semiárido', 'EF07GE11'),
-        ('Avaliacao_Geografia_2025', '5) Qual tipo de clima o climograma representa?', 'Clima Subtropical', 'EF07GE11');
+VALUES
+('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [1]', 'Tropical', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [2]', 'Subropical', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [3]', 'Semiárido', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [4]', 'Tropical de Altitude', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [5]', 'Tropical Litorâneo', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '1) Indique quais são os tipos de climas do Brasil [6]', 'Equatorial', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '2) Qual tipo de clima o Climograma representa?', 'Clima Tropical', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '3) Qual tipo de clima o climograma representa?', 'Clima Equatorial', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '4) Qual tipo de clima o climograma representa:', 'Clima Semiárido', 'EF07GE11'),
+('Avaliacao_Geografia_2025', '5) Qual tipo de clima o climograma representa?', 'Clima Subtropical', 'EF07GE11');
