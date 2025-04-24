@@ -327,11 +327,11 @@ canvas {
     text-align: left; /* Mantém a coluna "Pergunta" alinhada à esquerda */
 }
 
-.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th {
+/* .relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th {
     background-color: #f2f2f2;
     color: #333;
     font-weight: bold;
-}
+} */
 
 /* Definir largura para as colunas fixas */
 .relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th:nth-child(1),
