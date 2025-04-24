@@ -2,13 +2,14 @@
     width: 250px;
     border-width: 0 1px 0 0; /* Borda à direita da sidebar */
     background-color: #444;
-    position: relative;
-    top: 48px; /* Abaixo do header */
-    bottom: auto; /* Acima do footer */
+    position: fixed; /* Usar fixed no desktop */
+    top: 60px; /* Abaixo do header (ajustado para a altura real do header) */
+    bottom: 38px; /* Acima do footer */
+    z-index: 20; /* Acima do main-content */
     color: white;
     padding: 20px; /* Espaçamento interno */
     left: -250px; /* Para esconder inicialmente */
-    transition: 0.3s ease; /* Para animação ao abrir/recolher */
+    transition: left 0.3s ease; /* Para animação ao abrir/recolher */
 }
 
 .sidebar.active {
@@ -16,7 +17,7 @@
 }
 
 .sidebar.collapsed {
-    transform: translateX(-100%); /* Esconde a sidebar quando recolhida */
+    left: -250px; /* Esconde a sidebar quando recolhida */
 }
 
 .sidebar a.sidebar-active {
@@ -98,10 +99,8 @@
 /* Ajustes para telas menores */
 @media (max-width: 768px) {
     .sidebar {
-        position: fixed; /* Sobrepor ao conteúdo */
-        top: 48px; /* Abaixo do header (ajustado para a altura real do header) */
-        bottom: 38px; /* Acima do footer (mantido conforme altura do footer) */
-        z-index: 20; /* Acima do header e do main-content */
+        top: 48px; /* Abaixo do header no mobile */
+        bottom: 38px; /* Acima do footer */
         left: -300px; /* Escondida inicialmente */
         width: 300px; /* Reduzir a largura em telas menores */
         overflow-y: auto; /* Permitir rolagem vertical na sidebar, se necessário */
@@ -109,6 +108,10 @@
 
     .sidebar.active {
         left: 0; /* Mostra a sidebar */
+    }
+
+    .sidebar.collapsed {
+        left: -300px; /* Esconde a sidebar */
     }
 }
 
@@ -120,5 +123,9 @@
 
     .sidebar.active {
         left: 0;
+    }
+
+    .sidebar.collapsed {
+        left: -230px;
     }
 }
