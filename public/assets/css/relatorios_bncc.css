@@ -339,7 +339,7 @@ canvas {
     text-align: center;
 }
 
-#alunos-abaixo-7-table {
+/* #alunos-abaixo-7-table {
     width: auto;
     max-width: 100%;
     margin: 0 auto;
@@ -362,7 +362,7 @@ canvas {
     background-color: #f2f2f2;
     color: #333;
     font-weight: bold;
-}
+} */
 
 .paginacao button {
     padding: 8px 14px;
