@@ -90,12 +90,12 @@ footer {
 
 /* Ajustar o margin-left do main-content quando a sidebar está ativa (desktop) */
 .sidebar.active ~ .main-content {
-    margin-left: 0px; /* Igual à largura da sidebar no desktop */
+    margin-left: 250px; /* Igual à largura da sidebar no desktop */
 }
 
 /* Garantir que o margin-left volte a 0 quando a sidebar está recolhida (desktop) */
 .sidebar.collapsed ~ .main-content {
-    margin-left: -300px;
+    margin-left: 0;
 }
 
 /* Ícone do título */
