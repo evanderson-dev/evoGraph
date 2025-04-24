@@ -207,65 +207,14 @@
                     </table>
                 </div>
 
-                <?php if ($formulario_id) { ?>
                 <div class="relatorio-section alunos-abaixo-7-container">
                     <h3>Alunos com Pontuação Abaixo de 7.0</h3>
-                    <table id="alunos-abaixo-7-table">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Série</th>
-                                <th>Pontuação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $limite = 10;
-                            $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-                            $offset = ($pagina - 1) * $limite;
-                            $query = "SELECT rf.email, rf.pontuacao, JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
-                                             CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
-                                      FROM respostas_formulario rf
-                                      LEFT JOIN alunos a ON rf.aluno_id = a.id
-                                      WHERE rf.pontuacao < 7.0 AND rf.formulario_id = '$formulario_id'
-                                      ORDER BY rf.pontuacao
-                                      LIMIT $limite OFFSET $offset";
-                            $result = $conn->query($query);
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                    echo "<tr>
-                                            <td>" . ($row['nome_completo'] ?: 'N/A') . "</td>
-                                            <td>" . htmlspecialchars($row['email']) . "</td>
-                                            <td>$serie</td>
-                                            <td>" . $row['pontuacao'] . "</td>
-                                          </tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='4'>Nenhum aluno com pontuação abaixo de 7.0.</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <?php
-                    $query_total = "SELECT COUNT(*) AS total
-                                    FROM respostas_formulario rf
-                                    WHERE rf.pontuacao < 7.0 AND rf.formulario_id = '$formulario_id'";
-                    $total_result = $conn->query($query_total);
-                    $total = $total_result->fetch_assoc()['total'];
-                    $total_paginas = ceil($total / $limite);
-                    if ($total_paginas > 1) {
-                        echo '<div class="paginacao">';
-                        for ($i = 1; $i <= $total_paginas; $i++) {
-                            $active = $i == $pagina ? 'active' : '';
-                            echo "<a class='$active' href='relatorios_bncc.php?formulario_id=" . urlencode($formulario_id) . "&pagina=$i'>$i</a> ";
-                        }
-                        echo '</div>';
-                    }
-                    ?>
+                    <div id="alunos-abaixo-7-content" data-formulario-id="<?php echo htmlspecialchars($formulario_id); ?>">
+                        <!-- Conteúdo será preenchido via AJAX -->
+                    </div>
                 </div>
-                <?php } else { ?>
+
+                <?php if (!$formulario_id) { ?>
                 <div class="relatorio-section">
                     <div class="placeholder">Selecione um formulário para ver os alunos com baixo desempenho.</div>
                 </div>

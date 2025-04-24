@@ -72,6 +72,34 @@
         }
     }
 
+    // Função para carregar a tabela "Alunos com Pontuação Abaixo de 7.0" via AJAX
+    function loadAlunosAbaixo7(page = 1) {
+        const container = $('#alunos-abaixo-7-content');
+        const formulario_id = container.data('formulario-id');
+
+        if (!formulario_id) {
+            container.html('<table id="alunos-abaixo-7-table"><thead><tr><th>Nome</th><th>Email</th><th>Série</th><th>Pontuação</th></tr></thead><tbody><tr><td colspan="4">Selecione um formulário para ver os alunos com baixo desempenho.</td></tr></tbody></table>');
+            return;
+        }
+
+        $.ajax({
+            url: 'fetch_alunos_abaixo_7.php',
+            method: 'GET',
+            data: {
+                formulario_id: formulario_id,
+                pagina: page
+            },
+            success: function(response) {
+                container.html(response);
+                console.log('Tabela "Alunos com Pontuação Abaixo de 7.0" carregada com sucesso.');
+            },
+            error: function(xhr, status, error) {
+                console.error('Erro ao carregar a tabela "Alunos com Pontuação Abaixo de 7.0":', error);
+                container.html('<p>Erro ao carregar os dados. Tente novamente.</p>');
+            }
+        });
+    }
+
     // Função para exportar CSV
     function exportarCSV() {
         const formulario_id = document.getElementById('formulario_id').value;
@@ -115,6 +143,15 @@
 
         // Renderizar gráfico
         renderGraficoMediaSerie();
+
+        // Carregar a tabela "Alunos com Pontuação Abaixo de 7.0" inicialmente
+        loadAlunosAbaixo7();
+
+        // Evento para os botões de paginação
+        $(document).on('click', '.pagination-btn', function() {
+            const page = $(this).data('page');
+            loadAlunosAbaixo7(page);
+        });
 
         // Expor exportarCSV globalmente
         window.exportarCSV = exportarCSV;

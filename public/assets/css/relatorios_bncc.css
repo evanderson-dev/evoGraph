@@ -364,6 +364,30 @@ canvas {
     font-weight: bold;
 }
 
+.paginacao button {
+    padding: 8px 14px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.paginacao button:hover {
+    background-color: #73b4ff;
+    color: white;
+    border-color: #73b4ff;
+}
+
+.paginacao button.active {
+    background-color: #5599e6;
+    color: white;
+    border-color: #5599e6;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .titulo-secao {
