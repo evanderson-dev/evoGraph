@@ -305,33 +305,37 @@ canvas {
 }
 
 /* Estilos para Percentual de Acertos por Série */
-.percentual-por-serie-container {
-    text-align: center;
-}
-
-#percentual-por-serie-table {
-    width: auto;
-    max-width: 100%;
-    margin: 0 auto;
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table {
+    width: 100%; /* Ocupa toda a largura do contêiner */
+    border: 2px solid #666 !important; /* Borda cinza escura para diferenciar */
     border-collapse: collapse;
+    table-layout: fixed; /* Garante que as colunas tenham largura fixa */
 }
 
-#percentual-por-serie-table th,
-#percentual-por-serie-table td {
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th,
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
+    overflow: hidden; /* Evita que o conteúdo transborde */
+    text-overflow: ellipsis; /* Adiciona reticências se o conteúdo for muito longo */
+    white-space: nowrap; /* Impede que o texto quebre em várias linhas */
 }
 
-#percentual-por-serie-table th:first-child,
-#percentual-por-serie-table td:first-child {
-    text-align: left; /* Alinha a coluna "Pergunta" à esquerda */
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th:first-child,
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table td:first-child {
+    text-align: left; /* Mantém a coluna "Pergunta" alinhada à esquerda */
 }
 
-#percentual-por-serie-table th {
-    background-color: #f2f2f2;
-    color: #333;
-    font-weight: bold;
+/* Definir largura para as colunas fixas */
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th:nth-child(1),
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table td:nth-child(1) {
+    width: 40%; /* Mais espaço para a coluna "Pergunta" */
+}
+
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th:nth-child(2),
+.relatorio-section.percentual-por-serie-container table#percentual-por-serie-table td:nth-child(2) {
+    width: 20%; /* Espaço para a coluna "Habilidade BNCC" */
 }
 
 /* Estilos para Alunos com Pontuação Abaixo de 7.0 */
@@ -397,7 +401,7 @@ canvas {
     border-collapse: collapse;
 }
 
-/* Opcional: Adicionar estilo às células para consistência */
+/* Adicionar estilo às células para consistência */
 .relatorio-section.alunos-abaixo-7-container table#alunos-abaixo-7-table th,
 .relatorio-section.alunos-abaixo-7-container table#alunos-abaixo-7-table td,
 .relatorio-section.alunos-acima-7-container table#alunos-acima-7-table th,

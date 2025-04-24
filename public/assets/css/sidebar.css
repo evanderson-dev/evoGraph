@@ -94,3 +94,18 @@
 .submenu-toggle.open {
     transform: rotate(180deg); /* Gira a seta para cima quando aberto */
 }
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed; /* Sobrepor ao conteúdo */
+        top: 0;
+        bottom: 0;
+        z-index: 20; /* Acima do header e do main-content */
+        left: -250px; /* Escondida inicialmente */
+        width: 200px; /* Reduzir a largura em telas menores */
+    }
+
+    .sidebar.active {
+        left: 0; /* Mostra a sidebar */
+    }
+}

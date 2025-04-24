@@ -16,14 +16,17 @@ body {
 
 /* Estilização do header */
 header {
-    position: relative;
+    position: fixed; /* Fixar o header no topo */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Ocupar toda a largura da viewport */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333; /* Cor de fundo do header */
-    padding: 10px 20px; /* Espaçamento interno */
-    z-index: 10; /* Garante que o header fique acima da sidebar */
-    color: white; /* Cor do texto */
+    background-color: #333;
+    padding: 10px 20px;
+    z-index: 10;
+    color: white;
 }
 
 header h1 {
@@ -39,21 +42,22 @@ header .icons i {
     cursor: pointer;
 }
 
+/* Estilização do footer */
+footer {
+    background-color: #333;
+    padding: 10px 20px;
+    position: relative;
+    width: 100vw; /* Ocupar toda a largura da viewport */
+    text-align: center;
+    color: white;
+    z-index: 10;
+}
+
 /* Botão para abrir/fechar a sidebar */
 .menu-toggle {
     left: 10px;
     cursor: pointer;
     font-size: 20px;
-}
-
-/* Estilização do footer */
-footer {
-    background-color: #333; /* Cor de fundo do footer */
-    padding: 10px 20px; /* Espaçamento interno */
-    position: relative; /* Para garantir que o footer fique no final da página */
-    z-index: 10; /* Garante que o footer fique acima da sidebar */
-    text-align: center; /* Centraliza o texto */
-    color: white; /* Cor do texto */
 }
 
 /* Container principal */
@@ -65,7 +69,7 @@ footer {
 /* Conteúdo principal */
 .main-content {
     padding: 20px;
-    margin-left: -230px;
+    margin-left: 0;
     flex: 1;
     transition: margin-left 0.3s ease;
 }
@@ -327,12 +331,6 @@ canvas {
     text-align: left; /* Mantém a coluna "Pergunta" alinhada à esquerda */
 }
 
-/* .relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th {
-    background-color: #f2f2f2;
-    color: #333;
-    font-weight: bold;
-} */
-
 /* Definir largura para as colunas fixas */
 .relatorio-section.percentual-por-serie-container table#percentual-por-serie-table th:nth-child(1),
 .relatorio-section.percentual-por-serie-container table#percentual-por-serie-table td:nth-child(1) {
@@ -343,7 +341,6 @@ canvas {
 .relatorio-section.percentual-por-serie-container table#percentual-por-serie-table td:nth-child(2) {
     width: 20%; /* Espaço para a coluna "Habilidade BNCC" */
 }
-/* As colunas restantes (séries) compartilharão o espaço restante igualmente */
 
 /* Estilos para Alunos com Pontuação Abaixo de 7.0 */
 .alunos-abaixo-7-container {
@@ -408,7 +405,7 @@ canvas {
     border-collapse: collapse;
 }
 
-/* Opcional: Adicionar estilo às células para consistência */
+/* Adicionar estilo às células para consistência */
 .relatorio-section.alunos-abaixo-7-container table#alunos-abaixo-7-table th,
 .relatorio-section.alunos-abaixo-7-container table#alunos-abaixo-7-table td,
 .relatorio-section.alunos-acima-7-container table#alunos-acima-7-table th,
@@ -421,6 +418,27 @@ canvas {
 
 /* Responsividade */
 @media (max-width: 768px) {
+    .main-content {
+        margin-left: 0; /* Garante que o conteúdo ocupe toda a largura */
+        padding: 60px; /* Espaço para o header fixo */
+        /* padding: 10px; Reduzir o padding em telas menores */
+    }
+
+    .container {
+        flex-direction: column; /* Garante que o layout seja em coluna */
+    }
+
+    header {
+        padding: 10px;
+        width: 100vw; /* Garantir largura total */
+        left: 0;
+    }
+
+    footer {
+        padding: 10px;
+        width: 100vw; /* Garantir largura total */
+    }
+    
     .titulo-secao {
         padding: 10px 15px;
         font-size: 14px;
