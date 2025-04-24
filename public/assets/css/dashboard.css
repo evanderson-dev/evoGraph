@@ -4,52 +4,71 @@
     box-sizing: border-box;
 }
 
+/* Estilização do body */
 body {
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
+    margin: 0; /* Remover qualquer margem do body */
+    padding: 0; /* Remover qualquer padding do body */
+    width: 100%; /* Garantir que o body ocupe toda a largura */
+    overflow-x: hidden; /* Evitar barras de rolagem horizontais */
 }
 
+/* Estilização do header */
 header {
-    position: relative;
+    position: fixed; /* Fixar o header no topo */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ocupar toda a largura */
+    max-width: 100%; /* Garantir que não exceda a largura da viewport */
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.menu-toggle { /* Botão para abrir/fechar a sidebar */
-    left: 10px;
-    cursor: pointer;
-    font-size: 20px;
+    background-color: #333; /* Cor de fundo do header */
+    padding: 10px 20px; /* Espaçamento interno */
+    z-index: 10; /* Garante que o header fique acima da sidebar */
+    color: white; /* Cor do texto */
+    overflow-x: hidden; /* Evitar overflow horizontal dentro do header */
 }
 
 header h1 {
     font-size: 24px;
+    white-space: nowrap; /* Impede quebra de linha no título */
 }
 
 header .icons {
     display: flex;
     gap: 15px;
+    flex-shrink: 0; /* Impede que os ícones sejam comprimidos */
 }
 
 header .icons i {
     cursor: pointer;
 }
 
-header,
-footer {
-    background-color: #333; /* Cor de fundo do header e footer */
-    padding: 10px 20px; /* Espaçamento interno */
-    position: relative; /* Para garantir que o footer fique no final da página */
-    z-index: 10; /* Garante que o header e footer fiquem acima da sidebar */
-    text-align: center; /* Centraliza o texto */ 
-    color: white; /* Cor do texto */      
+/* Botão para abrir/fechar a sidebar */
+.menu-toggle {
+    left: 10px;
+    cursor: pointer;
+    font-size: 20px;
 }
 
+/* Estilização do footer */
 footer {
-    text-align: center;
+    background-color: #333; /* Cor de fundo do footer */
+    padding: 10px 20px; /* Espaçamento interno */
+    position: fixed; /* Fixar o footer na parte inferior */
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Ocupar toda a largura */
+    max-width: 100%; /* Garantir que não exceda a largura da viewport */
+    z-index: 10; /* Garante que o footer fique acima da sidebar */
+    text-align: center; /* Centraliza o texto */
+    color: white; /* Cor do texto */
+    overflow-x: hidden; /* Evitar overflow horizontal dentro do footer */
 }
 
 .container { /* Container principal */
@@ -57,13 +76,26 @@ footer {
     flex: 1;
 }
 
+/* Conteúdo principal */
 .main-content {
-    margin-left: -230px;
     padding: 20px;
+    margin-left: 0; /* Remover o margin-left negativo */
     flex: 1;
     transition: margin-left 0.3s ease;
+    padding-top: 60px; /* Espaço para o header fixo */
+    padding-bottom: 40px; /* Espaço para o footer fixo */
 }
 
 .main-content.shifted {
     margin-left: 0px;
+}
+
+/* Ajustar o margin-left do main-content quando a sidebar está ativa (desktop) */
+.sidebar.active ~ .main-content {
+    margin-left: 250px; /* Igual à largura da sidebar no desktop */
+}
+
+/* Garantir que o margin-left volte a 0 quando a sidebar está recolhida (desktop) */
+.sidebar.collapsed ~ .main-content {
+    margin-left: 0;
 }
