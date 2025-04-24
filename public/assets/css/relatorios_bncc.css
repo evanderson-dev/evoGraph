@@ -412,12 +412,25 @@ canvas {
     width: 200px;
 }
 
-.alunos-abaixo-7-container table {
-    border: 1px solid #ff4d4d; /* Borda vermelha para destacar alunos com baixo desempenho */
+.relatorio-section.alunos-abaixo-7-container table#alunos-abaixo-7-table {
+    border: 2px solid #ff4d4d !important; /* Borda vermelha mais grossa para destacar */
+    border-collapse: collapse;
 }
 
-.alunos-acima-7-container table {
-    border: 1px solid #4caf50; /* Borda verde para destacar alunos com alto desempenho */
+.relatorio-section.alunos-acima-7-container table#alunos-acima-7-table {
+    border: 2px solid #4caf50 !important; /* Borda verde mais grossa para destacar */
+    border-collapse: collapse;
+}
+
+/* Opcional: Adicionar estilo às células para consistência */
+.relatorio-section.alunos-abaixo-7-container table#alunos-abaixo-7-table th,
+.relatorio-section.alunos-abaixo-7-container table#alunos-abaixo-7-table td,
+.relatorio-section.alunos-acima-7-container table#alunos-acima-7-table th,
+.relatorio-section.alunos-acima-7-container table#alunos-acima-7-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsividade */
