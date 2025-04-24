@@ -77,24 +77,6 @@
                         }
                         ?>
                     </select>
-                    <label for="pergunta">Selecionar Pergunta:</label>
-                    <select name="pergunta" id="pergunta" onchange="this.form.submit()">
-                        <option value="">Nenhuma</option>
-                        <?php
-                        if ($formulario_id) {
-                            $query = "SELECT pergunta_texto FROM perguntas_formulario WHERE formulario_id = '$formulario_id' ORDER BY pergunta_texto";
-                            $result = $conn->query($query);
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $selected = (isset($_GET['pergunta']) && $_GET['pergunta'] === $row['pergunta_texto']) ? 'selected' : '';
-                                    echo "<option value='" . htmlspecialchars($row['pergunta_texto']) . "' $selected>" . htmlspecialchars($row['pergunta_texto']) . "</option>";
-                                }
-                            } else {
-                                echo "<option value='' disabled>Nenhuma pergunta encontrada</option>";
-                            }
-                        }
-                        ?>
-                    </select>
                     <button type="submit">Filtrar</button>
                     <button type="button" onclick="exportarCSV()">Exportar como CSV</button>
                 </form>
@@ -282,7 +264,7 @@
                         echo '<div class="paginacao">';
                         for ($i = 1; $i <= $total_paginas; $i++) {
                             $active = $i == $pagina ? 'active' : '';
-                            echo "<a class='$active' href='relatorios_bncc.php?formulario_id=" . urlencode($formulario_id) . "&pergunta=" . urlencode(isset($_GET['pergunta']) ? $_GET['pergunta'] : '') . "&pagina=$i'>$i</a> ";
+                            echo "<a class='$active' href='relatorios_bncc.php?formulario_id=" . urlencode($formulario_id) . "&pagina=$i'>$i</a> ";
                         }
                         echo '</div>';
                     }
