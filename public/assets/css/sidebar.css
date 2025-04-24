@@ -100,7 +100,8 @@
     .sidebar {
         position: fixed; /* Sobrepor ao conteúdo */
         top: 48px; /* Abaixo do header (ajustado para a altura real do header) */
-        bottom: 38px; /* Acima do footer (mantido conforme altura do footer) */
+        /*bottom: 38px; /* Acima do footer (mantido conforme altura do footer) */
+        bottom: auto; /* Acima do footer (mantido conforme altura do footer) */
         z-index: 20; /* Acima do header e do main-content */
         left: -300px; /* Escondida inicialmente */
         width: 300px; /* Reduzir a largura em telas menores */
