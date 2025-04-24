@@ -209,6 +209,25 @@
 
                 <div class="relatorio-section alunos-abaixo-7-container">
                     <h3>Alunos com Pontuação Abaixo de 7.0</h3>
+                    <div class="filter-serie">
+                        <label for="filtro-serie">Filtrar por Série:</label>
+                        <select id="filtro-serie">
+                            <option value="">Todas as Séries</option>
+                            <?php
+                            if ($formulario_id) {
+                                $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
+                                                FROM respostas_formulario
+                                                WHERE formulario_id = '$formulario_id'
+                                                ORDER BY serie";
+                                $result_series = $conn->query($query_series);
+                                while ($row = $result_series->fetch_assoc()) {
+                                    $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                    echo "<option value='" . htmlspecialchars($serie) . "'>$serie</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
                     <div id="alunos-abaixo-7-content" data-formulario-id="<?php echo htmlspecialchars($formulario_id); ?>">
                         <!-- Conteúdo será preenchido via AJAX -->
                     </div>

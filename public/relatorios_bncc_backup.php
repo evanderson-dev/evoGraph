@@ -36,7 +36,6 @@
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="relatorio-google.php"><i class="fa-solid fa-chart-bar"></i>Importar Relatório</a>
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
-            <a href="#" onclick="exportarCSV()"><i class="fa-solid fa-chart-bar"></i>Exportar Relatório (CSV)</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
@@ -77,29 +76,9 @@
                         }
                         ?>
                     </select>
-                    <label for="pergunta">Selecionar Pergunta:</label>
-                    <select name="pergunta" id="pergunta" onchange="this.form.submit()">
-                        <option value="">Nenhuma</option>
-                        <?php
-                        if ($formulario_id) {
-                            $query = "SELECT pergunta_texto FROM perguntas_formulario WHERE formulario_id = '$formulario_id' ORDER BY pergunta_texto";
-                            $result = $conn->query($query);
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $selected = (isset($_GET['pergunta']) && $_GET['pergunta'] === $row['pergunta_texto']) ? 'selected' : '';
-                                    echo "<option value='" . htmlspecialchars($row['pergunta_texto']) . "' $selected>" . htmlspecialchars($row['pergunta_texto']) . "</option>";
-                                }
-                            } else {
-                                echo "<option value='' disabled>Nenhuma pergunta encontrada</option>";
-                            }
-                        }
-                        ?>
-                    </select>
                     <button type="submit">Filtrar</button>
                     <button type="button" onclick="exportarCSV()">Exportar como CSV</button>
-                </form>
-
-                <!-- ################################### -->                
+                </form>               
 
                 <div class="relatorio-section media-por-serie-container">
                     <h3>Média de Pontuação por Série</h3>
@@ -148,8 +127,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- ################################### -->
 
                 <div class="relatorio-section percentual-por-serie-container">
                     <h3>Percentual de Acertos por Série</h3>
@@ -230,93 +207,14 @@
                     </table>
                 </div>
 
-                <?php
-                if (isset($_GET['pergunta']) && $formulario_id) {
-                    $pergunta = $conn->real_escape_string($_GET['pergunta']);
-                    $query = "SELECT JSON_EXTRACT(dados_json, '$.\"$pergunta\"') AS resposta,
-                                     COUNT(*) AS total
-                              FROM respostas_formulario
-                              WHERE formulario_id = '$formulario_id'
-                              GROUP BY resposta";
-                    $result = $conn->query($query);
-                    $respostas = [];
-                    $quantidades = [];
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $resposta = $row['resposta'] ? trim($row['resposta'], '"') : 'Não Respondida';
-                            $respostas[] = $resposta;
-                            $quantidades[] = $row['total'];
-                        }
-                    } else {
-                        $respostas = ['Nenhuma resposta'];
-                        $quantidades = [1];
-                    }
-                ?>
-                <div class="relatorio-section">
-                    <h3>Distribuição de Respostas: <?php echo htmlspecialchars($_GET['pergunta']); ?></h3>
-                    <canvas id="graficoRespostas" data-respostas='<?php echo json_encode($respostas); ?>' data-quantidades='<?php echo json_encode($quantidades); ?>'></canvas>
-                </div>
-                <?php } ?>
-
-                <?php if ($formulario_id) { ?>
                 <div class="relatorio-section alunos-abaixo-7-container">
                     <h3>Alunos com Pontuação Abaixo de 7.0</h3>
-                    <table id="alunos-abaixo-7-table">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Série</th>
-                                <th>Pontuação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $limite = 10;
-                            $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-                            $offset = ($pagina - 1) * $limite;
-                            $query = "SELECT rf.email, rf.pontuacao, JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie,
-                                             CONCAT(a.nome, ' ', a.sobrenome) AS nome_completo
-                                      FROM respostas_formulario rf
-                                      LEFT JOIN alunos a ON rf.aluno_id = a.id
-                                      WHERE rf.pontuacao < 7.0 AND rf.formulario_id = '$formulario_id'
-                                      ORDER BY rf.pontuacao
-                                      LIMIT $limite OFFSET $offset";
-                            $result = $conn->query($query);
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                    echo "<tr>
-                                            <td>" . ($row['nome_completo'] ?: 'N/A') . "</td>
-                                            <td>" . htmlspecialchars($row['email']) . "</td>
-                                            <td>$serie</td>
-                                            <td>" . $row['pontuacao'] . "</td>
-                                          </tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='4'>Nenhum aluno com pontuação abaixo de 7.0.</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <?php
-                    $query_total = "SELECT COUNT(*) AS total
-                                    FROM respostas_formulario rf
-                                    WHERE rf.pontuacao < 7.0 AND rf.formulario_id = '$formulario_id'";
-                    $total_result = $conn->query($query_total);
-                    $total = $total_result->fetch_assoc()['total'];
-                    $total_paginas = ceil($total / $limite);
-                    if ($total_paginas > 1) {
-                        echo '<div class="paginacao">';
-                        for ($i = 1; $i <= $total_paginas; $i++) {
-                            $active = $i == $pagina ? 'active' : '';
-                            echo "<a class='$active' href='relatorios_bncc.php?formulario_id=" . urlencode($formulario_id) . "&pergunta=" . urlencode(isset($_GET['pergunta']) ? $_GET['pergunta'] : '') . "&pagina=$i'>$i</a> ";
-                        }
-                        echo '</div>';
-                    }
-                    ?>
+                    <div id="alunos-abaixo-7-content" data-formulario-id="<?php echo htmlspecialchars($formulario_id); ?>">
+                        <!-- Conteúdo será preenchido via AJAX -->
+                    </div>
                 </div>
-                <?php } else { ?>
+
+                <?php if (!$formulario_id) { ?>
                 <div class="relatorio-section">
                     <div class="placeholder">Selecione um formulário para ver os alunos com baixo desempenho.</div>
                 </div>

@@ -72,57 +72,32 @@
         }
     }
 
-    // Função para renderizar o gráfico de pizza (Distribuição de Respostas)
-    function renderGraficoRespostas() {
-        const canvas = document.getElementById('graficoRespostas');
-        if (!canvas) return;
+    // Função para carregar a tabela "Alunos com Pontuação Abaixo de 7.0" via AJAX
+    function loadAlunosAbaixo7(page = 1) {
+        const container = $('#alunos-abaixo-7-content');
+        const formulario_id = container.data('formulario-id');
 
-        const respostas = JSON.parse(canvas.dataset.respostas || '[]');
-        const quantidades = JSON.parse(canvas.dataset.quantidades || '[]');
-
-        console.log('Dados para Gráfico de Pizza - Respostas:', respostas);
-        console.log('Dados para Gráfico de Pizza - Quantidades:', quantidades);
-
-        if (respostas.length === 0 || quantidades.length === 0) {
-            console.warn('Dados insuficientes para renderizar o Gráfico de Pizza.');
+        if (!formulario_id) {
+            container.html('<table id="alunos-abaixo-7-table"><thead><tr><th>Nome</th><th>Email</th><th>Série</th><th>Pontuação</th></tr></thead><tbody><tr><td colspan="4">Selecione um formulário para ver os alunos com baixo desempenho.</td></tr></tbody></table>');
             return;
         }
 
-        if (checkChartJs()) {
-            try {
-                const ctx = canvas.getContext('2d');
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: respostas,
-                        datasets: [{
-                            data: quantidades,
-                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'top' },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        let value = context.raw || 0;
-                                        let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                        let percentage = ((value / total) * 100).toFixed(2);
-                                        return `${label}: ${value} (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-                console.log('Gráfico de Pizza renderizado.');
-            } catch (e) {
-                console.error('Erro ao renderizar Gráfico de Pizza:', e);
+        $.ajax({
+            url: 'fetch_alunos_abaixo_7.php',
+            method: 'GET',
+            data: {
+                formulario_id: formulario_id,
+                pagina: page
+            },
+            success: function(response) {
+                container.html(response);
+                console.log('Tabela "Alunos com Pontuação Abaixo de 7.0" carregada com sucesso.');
+            },
+            error: function(xhr, status, error) {
+                console.error('Erro ao carregar a tabela "Alunos com Pontuação Abaixo de 7.0":', error);
+                container.html('<p>Erro ao carregar os dados. Tente novamente.</p>');
             }
-        }
+        });
     }
 
     // Função para exportar CSV
@@ -166,9 +141,17 @@
             $toggleIcon.toggleClass('open');
         });
 
-        // Renderizar gráficos
+        // Renderizar gráfico
         renderGraficoMediaSerie();
-        renderGraficoRespostas();
+
+        // Carregar a tabela "Alunos com Pontuação Abaixo de 7.0" inicialmente
+        loadAlunosAbaixo7();
+
+        // Evento para os botões de paginação
+        $(document).on('click', '.pagination-btn', function() {
+            const page = $(this).data('page');
+            loadAlunosAbaixo7(page);
+        });
 
         // Expor exportarCSV globalmente
         window.exportarCSV = exportarCSV;
