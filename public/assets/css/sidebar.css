@@ -102,8 +102,8 @@
         top: 48px; /* Abaixo do header (ajustado para a altura real do header) */
         bottom: 38px; /* Acima do footer (mantido conforme altura do footer) */
         z-index: 20; /* Acima do header e do main-content */
-        left: -300px; /* Escondida inicialmente */
-        width: 300px; /* Reduzir a largura em telas menores */
+        left: -400px; /* Escondida inicialmente */
+        width: 400px; /* Reduzir a largura em telas menores */
         overflow-y: auto; /* Permitir rolagem vertical na sidebar, se necessário */
     }
 
