@@ -95,7 +95,7 @@ footer {
 
 /* Garantir que o margin-left volte a 0 quando a sidebar está recolhida (desktop) */
 .sidebar.collapsed ~ .main-content {
-    margin-left: -250px;
+    margin-left: -300px;
 }
 
 /* Ícone do título */
