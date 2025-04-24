@@ -61,8 +61,7 @@ header .icons i {
 footer {
     background-color: #333; /* Cor de fundo do footer */
     padding: 10px 20px; /* Espaçamento interno */
-    /*position: fixed; /* Fixar o footer na parte inferior */
-    position: auto; /* Manter o footer no fluxo normal do documento */
+    position: fixed; /* Fixar o footer na parte inferior */
     bottom: 0;
     left: 0;
     width: 100%; /* Ocupar toda a largura */

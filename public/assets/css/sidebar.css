@@ -4,7 +4,7 @@
     background-color: #444;
     position: relative;
     top: 48px; /* Abaixo do header */
-    bottom: 38px; /* Acima do footer */
+    bottom: auto; /* Acima do footer */
     color: white;
     padding: 20px; /* Espaçamento interno */
     left: -250px; /* Para esconder inicialmente */
@@ -100,8 +100,7 @@
     .sidebar {
         position: fixed; /* Sobrepor ao conteúdo */
         top: 48px; /* Abaixo do header (ajustado para a altura real do header) */
-        /*bottom: 38px; /* Acima do footer (mantido conforme altura do footer) */
-        bottom: auto; /* Acima do footer (mantido conforme altura do footer) */
+        bottom: 38px; /* Acima do footer (mantido conforme altura do footer) */
         z-index: 20; /* Acima do header e do main-content */
         left: -300px; /* Escondida inicialmente */
         width: 300px; /* Reduzir a largura em telas menores */
