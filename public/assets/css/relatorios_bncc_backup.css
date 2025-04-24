@@ -388,6 +388,30 @@ canvas {
     border-color: #5599e6;
 }
 
+.filter-serie {
+    margin-bottom: 15px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5; /* Fundo leve */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.filter-serie label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.filter-serie select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 200px;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .titulo-secao {
