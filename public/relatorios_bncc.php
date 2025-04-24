@@ -36,7 +36,6 @@
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="relatorio-google.php"><i class="fa-solid fa-chart-bar"></i>Importar Relatório</a>
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
-            <a href="#" onclick="exportarCSV()"><i class="fa-solid fa-chart-bar"></i>Exportar Relatório (CSV)</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
@@ -79,9 +78,7 @@
                     </select>
                     <button type="submit">Filtrar</button>
                     <button type="button" onclick="exportarCSV()">Exportar como CSV</button>
-                </form>
-
-                <!-- ################################### -->                
+                </form>               
 
                 <div class="relatorio-section media-por-serie-container">
                     <h3>Média de Pontuação por Série</h3>
@@ -130,8 +127,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- ################################### -->
 
                 <div class="relatorio-section percentual-por-serie-container">
                     <h3>Percentual de Acertos por Série</h3>
