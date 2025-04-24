@@ -4,7 +4,7 @@
     background-color: #444;
     position: relative;
     top: 48px; /* Abaixo do header */
-    bottom: auto; /* Acima do footer */
+    bottom: 38px; /* Acima do footer */
     color: white;
     padding: 20px; /* Espaçamento interno */
     left: -250px; /* Para esconder inicialmente */
