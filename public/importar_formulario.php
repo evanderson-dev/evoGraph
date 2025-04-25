@@ -49,6 +49,20 @@ if (!$funcionario_id) {
     sendResponse("error", "ID do funcionário não fornecido.");
 }
 
+// Verifica se o funcionario_id existe na tabela funcionarios
+$query = "SELECT id FROM funcionarios WHERE id = ?";
+$stmt = $conn->prepare($query);
+if (!$stmt) {
+    sendResponse("error", "Erro ao verificar funcionário: " . $conn->error);
+}
+$stmt->bind_param("i", $funcionario_id);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($result->num_rows === 0) {
+    sendResponse("error", "Funcionário com ID $funcionario_id não encontrado.");
+}
+$stmt->close();
+
 $importados = 0;
 $atualizados = 0;
 $ignorados = 0;
@@ -71,6 +85,16 @@ if ($result && $result->num_rows > 0) {
     $has_pontuacao = true;
 } else {
     writeLog("Aviso: Campo 'pontuacao' não encontrado na tabela respostas_formulario.");
+}
+
+// Verifica se a tabela tem o campo dados_json
+$has_dados_json = false;
+$result = $conn->query("SHOW COLUMNS FROM respostas_formulario LIKE 'dados_json'");
+if ($result && $result->num_rows > 0) {
+    $has_dados_json = true;
+} else {
+    $erros[] = "Campo 'dados_json' não encontrado na tabela respostas_formulario.";
+    writeLog("Erro: Campo 'dados_json' não encontrado na tabela respostas_formulario.");
 }
 
 // Salvar perguntas e respostas corretas na tabela perguntas_formulario
@@ -102,6 +126,10 @@ if (!empty($perguntas) && !empty($respostasCorretas) && count($perguntas) === co
 }
 
 // Processar respostas dos alunos
+if (!$has_dados_json) {
+    sendResponse("error", "Tabela respostas_formulario não possui a coluna 'dados_json', necessária para salvar as respostas.");
+}
+
 foreach ($dados_alunos as $index => $linha) {
     // Tenta diferentes variações do campo Email
     $email = null;
@@ -182,15 +210,22 @@ foreach ($dados_alunos as $index => $linha) {
 
     // Busca aluno pelo email
     $email_escaped = $conn->real_escape_string($email);
-    $query = "SELECT id FROM alunos WHERE email = '$email_escaped'";
-    $result = $conn->query($query);
-    
-    if ($result === false) {
-        $erros[] = "Erro ao buscar aluno com email '$email': " . $conn->error;
-        writeLog("Erro ao buscar aluno com email '$email': " . $conn->error);
+    $query = "SELECT id FROM alunos WHERE email = ?";
+    $stmt = $conn->prepare($query);
+    if (!$stmt) {
+        $erros[] = "Erro ao preparar query para buscar aluno com email '$email': " . $conn->error;
+        writeLog("Erro ao preparar query para buscar aluno com email '$email': " . $conn->error);
         continue;
     }
-
+    $stmt->bind_param("s", $email_escaped);
+    if (!$stmt->execute()) {
+        $erros[] = "Erro ao executar query para buscar aluno com email '$email': " . $stmt->error;
+        writeLog("Erro ao executar query para buscar aluno com email '$email': " . $stmt->error);
+        $stmt->close();
+        continue;
+    }
+    $result = $stmt->get_result();
+    
     $aluno_id = null;
     if ($result->num_rows > 0) {
         $aluno = $result->fetch_assoc();
@@ -199,6 +234,7 @@ foreach ($dados_alunos as $index => $linha) {
     } else {
         writeLog("Linha $index: Nenhum aluno encontrado para email '$email'.");
     }
+    $stmt->close();
 
     // Verifica se já existe uma resposta para o mesmo email, formulario_id e funcionario_id
     $formulario_id_escaped = $conn->real_escape_string($formulario_id);
@@ -228,10 +264,10 @@ foreach ($dados_alunos as $index => $linha) {
             // Nova resposta é mais recente, atualiza o registro
             $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
             $query = "UPDATE respostas_formulario SET 
-                      aluno_id = " . ($aluno_id ? $aluno_id : "NULL") . ",
+                      aluno_id = ?,
                       data_envio = ?,
                       dados_json = ?,
-                      pontuacao = " . ($pontuacao !== null ? $pontuacao : "NULL") . "
+                      pontuacao = " . ($has_pontuacao ? "?" : "NULL") . "
                       WHERE id = ?";
             
             $stmt = $conn->prepare($query);
@@ -240,7 +276,11 @@ foreach ($dados_alunos as $index => $linha) {
                 writeLog("Erro ao preparar query para atualização: " . $conn->error);
                 continue;
             }
-            $stmt->bind_param("ssi", $data_envio, $json_resposta, $existing['id']);
+            if ($has_pontuacao) {
+                $stmt->bind_param("isssd", $aluno_id, $data_envio, $json_resposta, $pontuacao, $existing['id']);
+            } else {
+                $stmt->bind_param("issi", $aluno_id, $data_envio, $json_resposta, $existing['id']);
+            }
             
             writeLog("Linha $index: Atualizando resposta existente com query: $query");
             
@@ -253,7 +293,6 @@ foreach ($dados_alunos as $index => $linha) {
             }
             $stmt->close();
         } else {
-            // Nova resposta é mais antiga, ignora
             $ignorados++;
             writeLog("Linha $index: Resposta ignorada (data_envio '$data_envio' é mais antiga que '$existing_data_envio').");
             continue;
@@ -262,9 +301,9 @@ foreach ($dados_alunos as $index => $linha) {
         // Nenhuma resposta existente, insere nova
         $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
         $columns = "aluno_id, email, data_envio, dados_json, funcionario_id" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "");
-        $values = ($aluno_id ? $aluno_id : "NULL") . ", ?, ?, ?, ?" . ($has_pontuacao ? ", " . ($pontuacao !== null ? $pontuacao : "NULL") : "") . ($has_formulario_id ? ", ?" : "");
+        $placeholders = "?, ?, ?, ?, ?" . ($has_pontuacao ? ", ?" : "") . ($has_formulario_id ? ", ?" : "");
         
-        $query = "INSERT INTO respostas_formulario ($columns) VALUES ($values)";
+        $query = "INSERT INTO respostas_formulario ($columns) VALUES ($placeholders)";
         $stmt = $conn->prepare($query);
         if (!$stmt) {
             $erros[] = "Erro ao preparar query para inserção: " . $conn->error;
@@ -273,13 +312,13 @@ foreach ($dados_alunos as $index => $linha) {
         }
         
         if ($has_formulario_id && $has_pontuacao) {
-            $stmt->bind_param("sssisid", $email_escaped, $data_envio, $json_resposta, $funcionario_id, $pontuacao, $formulario_id_escaped);
+            $stmt->bind_param("isssisd", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id, $pontuacao, $formulario_id_escaped);
         } elseif ($has_formulario_id) {
-            $stmt->bind_param("sssis", $email_escaped, $data_envio, $json_resposta, $funcionario_id, $formulario_id_escaped);
+            $stmt->bind_param("isssis", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id, $formulario_id_escaped);
         } elseif ($has_pontuacao) {
-            $stmt->bind_param("sssdi", $email_escaped, $data_envio, $json_resposta, $funcionario_id, $pontuacao);
+            $stmt->bind_param("isssid", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id, $pontuacao);
         } else {
-            $stmt->bind_param("sssi", $email_escaped, $data_envio, $json_resposta, $funcionario_id);
+            $stmt->bind_param("isssi", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id);
         }
         
         writeLog("Linha $index: Executando query: $query");
