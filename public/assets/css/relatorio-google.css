@@ -1,97 +1,139 @@
-/* css/my-profile.css */
-.profile-form {
-    background-color: white;
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilização do body */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
+    margin: 0; /* Remover qualquer margem do body */
+    padding: 0; /* Remover qualquer padding do body */
+    width: 100%; /* Garantir que o body ocupe toda a largura */
+    overflow-x: hidden; /* Evitar barras de rolagem horizontais */
+}
+
+/* Estilização do header */
+header {
+    position: fixed; /* Fixar o header no topo */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ocupar toda a largura */
+    max-width: 100%; /* Garantir que não exceda a largura da viewport */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333; /* Cor de fundo do header */
+    padding: 10px 20px; /* Espaçamento interno */
+    z-index: 10; /* Garante que o header fique acima da sidebar */
+    color: white; /* Cor do texto */
+    overflow-x: hidden; /* Evitar overflow horizontal dentro do header */
+}
+
+header h1 {
+    font-size: 24px;
+    white-space: nowrap; /* Impede quebra de linha no título */
+}
+
+header .icons {
+    display: flex;
+    gap: 15px;
+    flex-shrink: 0; /* Impede que os ícones sejam comprimidos */
+}
+
+header .icons i {
+    cursor: pointer;
+}
+
+/* Botão para abrir/fechar a sidebar */
+.menu-toggle {
+    left: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Estilização do footer */
+footer {
+    background-color: #333; /* Cor de fundo do footer */
+    padding: 10px 20px; /* Espaçamento interno */
+    position: fixed; /* Fixar o footer na parte inferior */
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Ocupar toda a largura */
+    max-width: 100%; /* Garantir que não exceda a largura da viewport */
+    z-index: 10; /* Garante que o footer fique acima da sidebar */
+    text-align: center; /* Centraliza o texto */
+    color: white; /* Cor do texto */
+    overflow-x: hidden; /* Evitar overflow horizontal dentro do footer */
+}
+
+/* Container principal */
+.container {
+    display: flex;
+    flex: 1;
+}
+
+/* Conteúdo principal */
+.main-content {
     padding: 20px;
-    margin-top: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 1320px;
-    margin: 1 auto;
-    display: auto; 
+    margin-left: 0; /* Remover o margin-left negativo */
+    flex: 1;
+    transition: margin-left 0.3s ease;
+    padding-top: 60px; /* Espaço para o header fixo */
+    padding-bottom: 40px; /* Espaço para o footer fixo */
 }
 
-table {   
-    border-collapse: collapse; /*  Colapsa as bordas da tabela */
-    width: 100%; /*  Largura total da tabela */
-    overflow-x: auto; /*  Adiciona rolagem horizontal se necessário */
-    display: block; /*  Para permitir a rolagem */
+/* Ajustar o margin-left do main-content quando a sidebar está ativa (desktop) */
+.sidebar.active ~ .main-content {
+    margin-left: 250px; /* Igual à largura da sidebar no desktop */
 }
 
-th, td {
-    border: 1px solid #aaa; /*  Borda das células */
-    padding: px; /*  Espaçamento interno das células */
-    text-align: left; /*  Alinhamento do texto */
-    font-size: 14px; /*  Tamanho da fonte */
+/* Garantir que o margin-left volte a 0 quando a sidebar está recolhida (desktop) */
+.sidebar.collapsed ~ .main-content {
+    margin-left: 0;
 }
 
-th {
-    background-color: #eee; /*  Cor de fundo dos cabeçalhos */
+/* Ícone do título */
+.titulo-secao i {
+    color: #73b4ff;
+    margin-right: 8px;
 }
 
-.form-row {
-    display: flex; /* Ativa o Flexbox */
-    flex-wrap: nowrap; /* Impede que os elementos quebrem para a próxima linha */
-    gap: 10px; /* Espaçamento entre os elementos */
-    margin-bottom: 10px; /* Espaçamento entre as linhas */
+/* Container do título da seção */
+.titulo-secao {
+    border-radius: 8px;
+    background-color: white;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    border-top: 3px solid #73b4ff;
+    margin-bottom: 20px;
 }
 
-.form-group {
-    flex: 1; /* Cada grupo ocupa o mesmo espaço */
-}
-
-.form-group.full-width {
-    flex: 100%; /* O grupo ocupa toda a largura */
-}
-
-.profile-form label {
-    font-weight: bold;
+/* Texto dentro do título */
+.titulo-secao p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
     color: #333;
-    display: block;
-    margin-bottom: 5px; /* Espaçamento abaixo do rótulo */
 }
 
-.profile-form input,
-.profile-form select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.form-buttons {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.success-message {
-    color: #28a745;
+/* Link para home */
+.titulo-secao .home-link i {
+    color: #333;
+    text-decoration: none;
     font-size: 16px;
-    margin-bottom: 15px;
-    text-align: center;
-    padding: 10px;
-    background-color: #d4edda;
-    border-radius: 5px;
+    transition: color 0.3s ease;
 }
 
-.error-message {
-    color: #dc3545;
-    font-size: 16px;
-    margin-bottom: 15px;
-    text-align: center;
-    padding: 10px;
-    background-color: #f8d7da;
-    border-radius: 5px;
-}
-
-.input-google-link {
-    margin-bottom: 1rem; /* Espaçamento abaixo do campo */
-}
-.input-google-link input {
-    margin-right: 8px; /* Espaçamento à direita do campo de entrada */
-    padding: 4px; /* Espaçamento interno */
-}
-.input-google-link button {
-    padding: 6px 12px; /* Espaçamento interno do botão */
+.titulo-secao .home-link:hover i {
+    color: #5599e6;
 }
