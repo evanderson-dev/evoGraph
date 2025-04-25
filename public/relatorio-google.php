@@ -4,17 +4,17 @@ session_start();
 // Verifica se o usuário está logado e tem um cargo válido
 $allowed_cargos = ['Professor', 'Diretor', 'Coordenador'];
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
-    header('Location: login.php');
+    header('Location: index.php');
     exit;
 }
 
-if (!isset($_SESSION["id"])) {
-    header('Location: login.php');
+if (!isset($_SESSION["funcionario_id"])) {
+    header('Location: index.php');
     exit;
 }
 
 $cargo = $_SESSION["cargo"];
-$funcionario_id = (int)$_SESSION["id"];
+$funcionario_id = (int)$_SESSION["funcionario_id"];
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -235,7 +235,7 @@ $funcionario_id = (int)$_SESSION["id"];
                             </div>
                             <div>
                                 <label> </label>
-                                <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                                <button type="button" class="btn-carregar" onclick FUCK="carregarPlanilha()">Carregar</button>
                             </div>
                             <div>
                                 <label> </label>
@@ -568,6 +568,9 @@ $funcionario_id = (int)$_SESSION["id"];
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
+    
+    <script src="./assets/js/my-profile.js"></script>
+    <script src="./assets/js/dashboard.js"></script>
     <script src="./assets/js/ajax.js"></script>
 
     <script>
