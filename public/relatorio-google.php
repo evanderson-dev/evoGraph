@@ -1,21 +1,3 @@
-<?php
-session_start();
-
-// Verifica se o usuário está logado e tem um cargo válido
-$allowed_cargos = ['Professor', 'Diretor', 'Coordenador'];
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
-    header('Location: index.php');
-    exit;
-}
-
-if (!isset($_SESSION["funcionario_id"])) {
-    header('Location: index.php');
-    exit;
-}
-
-$cargo = $_SESSION["cargo"];
-$funcionario_id = (int)$_SESSION["funcionario_id"];
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -190,12 +172,14 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
-            <?php if (in_array($cargo, ['Coordenador', 'Diretor'])): ?>
+            <?php 
+            $cargo = isset($_SESSION["cargo"]) ? $_SESSION["cargo"] : "";
+            if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <?php if (in_array($cargo, ['Coordenador', 'Diretor'])): ?>
+                    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
@@ -218,7 +202,6 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
-                        <input type="hidden" id="funcionarioId" value="<?php echo htmlspecialchars($funcionario_id); ?>">
                         
                         <div class="form-group">
                             <div>
@@ -234,11 +217,11 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
                                 <input type="text" id="formularioId" placeholder="Identificador do formulário" required>
                             </div>
                             <div>
-                                <label> </label>
-                                <button type="button" class="btn-carregar" onclick FUCK="carregarPlanilha()">Carregar</button>
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                             </div>
                             <div>
-                                <label> </label>
+                                <label>&nbsp;</label>
                                 <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar para o banco</button>
                             </div>
                         </div>
@@ -249,29 +232,20 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
                                     <option value="">Selecione um formulário</option>
                                     <?php
                                     require_once "db_connection.php";
-                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE 1=1";
-                                    if ($cargo === 'Professor') {
-                                        $query .= " AND funcionario_id = ?";
-                                        $stmt = $conn->prepare($query);
-                                        $stmt->bind_param("i", $funcionario_id);
-                                    } else {
-                                        $stmt = $conn->prepare($query);
-                                    }
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
+                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
+                                    $result = $conn->query($query);
                                     if ($result && $result->num_rows > 0) {
                                         while ($row = $result->fetch_assoc()) {
                                             $form_id = htmlspecialchars($row['formulario_id']);
                                             echo "<option value=\"$form_id\">$form_id</option>";
                                         }
                                     }
-                                    $stmt->close();
                                     $conn->close();
                                     ?>
                                 </select>
                             </div>
                             <div>
-                                <label> </label>
+                                <label>&nbsp;</label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>
@@ -440,7 +414,6 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
                                     body: JSON.stringify({
                                         dados: dadosFiltrados,
                                         formularioId: document.getElementById('formularioId').value,
-                                        funcionarioId: document.getElementById('funcionarioId').value,
                                         perguntas: perguntas,
                                         respostasCorretas: respostasCorretas,
                                         bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
@@ -479,7 +452,7 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
                                     return;
                                 }
 
-                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode be desfeita.`)) {
+                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode ser desfeita.`)) {
                                     return;
                                 }
 
@@ -545,7 +518,7 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
         </div>
     </div>
 
-    <?php if (in_array($cargo, ['Coordenador', 'Diretor'])): ?>
+    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
@@ -568,9 +541,6 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
-    
-    <script src="./assets/js/my-profile.js"></script>
-    <script src="./assets/js/dashboard.js"></script>
     <script src="./assets/js/ajax.js"></script>
 
     <script>
