@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/dashboard.css" />
     <link rel="stylesheet" href="./assets/css/sidebar.css" />
     <link rel="stylesheet" href="./assets/css/relatorio-google.css" />
     <link rel="stylesheet" href="./assets/css/modal-add-funcionario.css" />
@@ -15,136 +17,16 @@
         .mensagem-sucesso {
             background-color: #d4edda;
             color: #155724;
-            padding: 10px 15px;
-            border: 1px solid #c3e6cb;
+            padding: 10px;
             border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            margin-bottom: 10px;
         }
         .mensagem-erro {
             background-color: #f8d7da;
             color: #721c24;
-            padding: 10px 15px;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .relatorio-section {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
-        }
-        .form-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 5px;
-            color: #333;
-            font-size: 14px;
-        }
-        .form-group input,
-        .form-group select {
             padding: 10px;
-            border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 14px;
-            min-width: 200px;
-            max-width: 100%;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-        .form-group button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .form-group button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        .form-group .btn-carregar {
-            background-color: #28a745;
-            color: #fff;
-        }
-        .form-group .btn-carregar:hover:not(:disabled) {
-            background-color: #218838;
-        }
-        .form-group .btn-importar {
-            background-color: #007bff;
-            color: #fff;
-        }
-        .form-group .btn-importar:hover:not(:disabled) {
-            background-color: #0056b3;
-        }
-        .form-group .btn-excluir {
-            background-color: #dc3545;
-            color: #fff;
-        }
-        .form-group .btn-excluir:hover:not(:disabled) {
-            background-color: #c82333;
-        }
-        .table-container {
-            margin-top: 30px;
-        }
-        .table-container h4 {
-            margin-bottom: 15px;
-            font-size: 18px;
-            color: #333;
-        }
-        .table-container table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 5px;
-            overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-        }
-        .table-container th,
-        .table-container td {
-            padding: 12px 15px;
-            text-align: left;
-            font-size: 14px;
-            border-bottom: 1px solid #eee;
-        }
-        .table-container th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #555;
-        }
-        .table-container tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .table-container tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-        @media (max-width: 768px) {
-            .form-group {
-                flex-direction: column;
-            }
-            .form-group input,
-            .form-group select {
-                width: 100%;
-                min-width: unset;
-            }
-            .form-group button {
-                width: 100%;
-            }
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -197,67 +79,28 @@
                 <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Formulário do Google Forms</span>
             </div>
 
-            <section class="relatorio-section">
+            <section class="meu-perfil">
                 <div id="message-box"></div>
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
                         
-                        <div class="form-group">
-                            <div>
-                                <label for="googleSheetLink">Link da planilha do Google:</label>
-                                <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
-                            </div>
-                            <div>
-                                <label for="bnccHabilidade">Habilidade BNCC (Opcional):</label>
-                                <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
-                            </div>
-                            <div>
-                                <label for="formularioId">Identificador do formulário:</label>
-                                <input type="text" id="formularioId" placeholder="Identificador do formulário" required>
-                            </div>
-                            <div>
-                                <label>&nbsp;</label>
-                                <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
-                            </div>
-                            <div>
-                                <label>&nbsp;</label>
-                                <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar para o banco</button>
-                            </div>
+                        <h3>Relatório - Respostas do Google Forms</h3>
+                        <div class="input-google-link">
+                            <label for="googleSheetLink">Cole o link da planilha do Google:</label>
+                            <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                            <label for="bnccHabilidade">Habilidade BNCC (Opcional):</label>
+                            <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
+                            <label for="formularioId">Identificador do formulário:</label>
+                            <input type="text" id="formularioId" placeholder="Identificador do formulário" required><br>
+                            <button type="button" onclick="carregarPlanilha()">Carregar</button><br>
+                            <button type="button" onclick="importarParaBanco()">Importar para o banco</button>
                         </div>
-                        <div class="form-group">
-                            <div>
-                                <label for="formularioIdDelete">Excluir formulário:</label>
-                                <select id="formularioIdDelete">
-                                    <option value="">Selecione um formulário</option>
-                                    <?php
-                                    require_once "db_connection.php";
-                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
-                                    $result = $conn->query($query);
-                                    if ($result && $result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
-                                            $form_id = htmlspecialchars($row['formulario_id']);
-                                            echo "<option value=\"$form_id\">$form_id</option>";
-                                        }
-                                    }
-                                    $conn->close();
-                                    ?>
-                                </select>
-                            </div>
-                            <div>
-                                <label>&nbsp;</label>
-                                <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
-                            </div>
-                        </div>
-
-                        <div class="table-container">
-                            <h4>Dados Carregados da Planilha</h4>
-                            <div style="overflow-x: auto;">
-                                <table id="tabela-dados">
-                                    <thead></thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
+                        <div style="overflow-x: auto;">
+                            <table id="tabela-dados">
+                                <thead></thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
 
                         <script>
@@ -430,8 +273,6 @@
                                         box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
                                     } else {
                                         box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
-                                        // Atualizar o dropdown após importação
-                                        atualizarDropdownFormularios();
                                     }
                                     button.disabled = false;
                                     button.textContent = "Importar para o banco";
@@ -444,73 +285,6 @@
                                     button.textContent = "Importar para o banco";
                                 });
                             }
-
-                            function excluirFormulario() {
-                                const formularioId = document.getElementById('formularioIdDelete').value;
-                                if (!formularioId) {
-                                    alert("Selecione um formulário para excluir.");
-                                    return;
-                                }
-
-                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode ser desfeita.`)) {
-                                    return;
-                                }
-
-                                const button = document.querySelector('button[onclick="excluirFormulario()"]');
-                                button.disabled = true;
-                                button.textContent = "Excluindo...";
-
-                                fetch('delete_formulario.php', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        formularioId: formularioId
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    const box = document.getElementById("message-box");
-                                    if (data.status === "success") {
-                                        box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
-                                        // Atualizar o dropdown após exclusão
-                                        atualizarDropdownFormularios();
-                                    } else {
-                                        box.innerHTML = `<div class="mensagem-erro">${data.mensagem}</div>`;
-                                    }
-                                    button.disabled = false;
-                                    button.textContent = "Excluir";
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                    const box = document.getElementById("message-box");
-                                    box.innerHTML = `<div class="mensagem-erro">Erro ao excluir o formulário: ${err}</div>`;
-                                    button.disabled = false;
-                                    button.textContent = "Excluir";
-                                });
-                            }
-
-                            function atualizarDropdownFormularios() {
-                                fetch('fetch_formularios.php')
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        const select = document.getElementById('formularioIdDelete');
-                                        select.innerHTML = '<option value="">Selecione um formulário</option>';
-                                        data.forEach(formId => {
-                                            const option = document.createElement('option');
-                                            option.value = formId;
-                                            option.textContent = formId;
-                                            select.appendChild(option);
-                                        });
-                                    })
-                                    .catch(err => {
-                                        console.error("Erro ao atualizar dropdown de formulários:", err);
-                                    });
-                            }
-
-                            // Atualizar o dropdown ao carregar a página
-                            document.addEventListener('DOMContentLoaded', atualizarDropdownFormularios);
                         </script>
                     </form>
                 </div>
@@ -541,6 +315,9 @@
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
+    
+    <script src="./assets/js/my-profile.js"></script>
+    <script src="./assets/js/dashboard.js"></script>
     <script src="./assets/js/ajax.js"></script>
 
     <script>
