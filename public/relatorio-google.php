@@ -28,6 +28,14 @@
             border-radius: 5px;
             margin-bottom: 10px;
         }
+        .input-google-link select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            min-width: 200px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -92,9 +100,27 @@
                             <label for="bnccHabilidade">Habilidade BNCC (Opcional):</label>
                             <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
                             <label for="formularioId">Identificador do formulário:</label>
-                            <input type="text" id="formularioId" placeholder="Identificador do formulário" required><br>
-                            <button type="button" onclick="carregarPlanilha()">Carregar</button><br>
+                            <input type="text" id="formularioId" placeholder="Identificador do formulário" required>
+                            <br>
+                            <button type="button" onclick="carregarPlanilha()">Carregar</button>
                             <button type="button" onclick="importarParaBanco()">Importar para o banco</button>
+                            <label for="formularioIdDelete">Excluir formulário:</label>
+                            <select id="formularioIdDelete">
+                                <option value="">Selecione um formulário</option>
+                                <?php
+                                require_once "db_connection.php";
+                                $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
+                                $result = $conn->query($query);
+                                if ($result && $result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $form_id = htmlspecialchars($row['formulario_id']);
+                                        echo "<option value=\"$form_id\">$form_id</option>";
+                                    }
+                                }
+                                $conn->close();
+                                ?>
+                            </select>
+                            <button type="button" onclick="excluirFormulario()">Excluir</button>
                         </div>
                         <div style="overflow-x: auto;">
                             <table id="tabela-dados">
@@ -273,6 +299,8 @@
                                         box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
                                     } else {
                                         box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
+                                        // Atualizar o dropdown após importação
+                                        atualizarDropdownFormularios();
                                     }
                                     button.disabled = false;
                                     button.textContent = "Importar para o banco";
@@ -285,6 +313,73 @@
                                     button.textContent = "Importar para o banco";
                                 });
                             }
+
+                            function excluirFormulario() {
+                                const formularioId = document.getElementById('formularioIdDelete').value;
+                                if (!formularioId) {
+                                    alert("Selecione um formulário para excluir.");
+                                    return;
+                                }
+
+                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode ser desfeita.`)) {
+                                    return;
+                                }
+
+                                const button = document.querySelector('button[onclick="excluirFormulario()"]');
+                                button.disabled = true;
+                                button.textContent = "Excluindo...";
+
+                                fetch('excluir_formulario.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        formularioId: formularioId
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    const box = document.getElementById("message-box");
+                                    if (data.status === "success") {
+                                        box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
+                                        // Atualizar o dropdown após exclusão
+                                        atualizarDropdownFormularios();
+                                    } else {
+                                        box.innerHTML = `<div class="mensagem-erro">${data.mensagem}</div>`;
+                                    }
+                                    button.disabled = false;
+                                    button.textContent = "Excluir";
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    const box = document.getElementById("message-box");
+                                    box.innerHTML = `<div class="mensagem-erro">Erro ao excluir o formulário: ${err}</div>`;
+                                    button.disabled = false;
+                                    button.textContent = "Excluir";
+                                });
+                            }
+
+                            function atualizarDropdownFormularios() {
+                                fetch('listar_formularios.php')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        const select = document.getElementById('formularioIdDelete');
+                                        select.innerHTML = '<option value="">Selecione um formulário</option>';
+                                        data.forEach(formId => {
+                                            const option = document.createElement('option');
+                                            option.value = formId;
+                                            option.textContent = formId;
+                                            select.appendChild(option);
+                                        });
+                                    })
+                                    .catch(err => {
+                                        console.error("Erro ao atualizar dropdown de formulários:", err);
+                                    });
+                            }
+
+                            // Atualizar o dropdown ao carregar a página
+                            document.addEventListener('DOMContentLoaded', atualizarDropdownFormularios);
                         </script>
                     </form>
                 </div>
