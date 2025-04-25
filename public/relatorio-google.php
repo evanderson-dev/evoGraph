@@ -329,7 +329,7 @@
                                 button.disabled = true;
                                 button.textContent = "Excluindo...";
 
-                                fetch('excluir_formulario.php', {
+                                fetch('delete_formulario.php', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -361,7 +361,7 @@
                             }
 
                             function atualizarDropdownFormularios() {
-                                fetch('listar_formularios.php')
+                                fetch('fetch_formularios.php')
                                     .then(response => response.json())
                                     .then(data => {
                                         const select = document.getElementById('formularioIdDelete');
