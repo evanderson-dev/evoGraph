@@ -1,3 +1,21 @@
+<?php
+session_start();
+
+// Verifica se o usuário está logado e tem um cargo válido
+$allowed_cargos = ['Professor', 'Diretor', 'Coordenador'];
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
+    header('Location: login.php');
+    exit;
+}
+
+if (!isset($_SESSION["id"])) {
+    header('Location: login.php');
+    exit;
+}
+
+$cargo = $_SESSION["cargo"];
+$funcionario_id = (int)$_SESSION["id"];
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -172,14 +190,12 @@
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
-            <?php 
-            $cargo = isset($_SESSION["cargo"]) ? $_SESSION["cargo"] : "";
-            if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+            <?php if (in_array($cargo, ['Coordenador', 'Diretor'])): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+                    <?php if (in_array($cargo, ['Coordenador', 'Diretor'])): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
@@ -202,6 +218,7 @@
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
+                        <input type="hidden" id="funcionarioId" value="<?php echo htmlspecialchars($funcionario_id); ?>">
                         
                         <div class="form-group">
                             <div>
@@ -217,11 +234,11 @@
                                 <input type="text" id="formularioId" placeholder="Identificador do formulário" required>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar para o banco</button>
                             </div>
                         </div>
@@ -232,20 +249,29 @@
                                     <option value="">Selecione um formulário</option>
                                     <?php
                                     require_once "db_connection.php";
-                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
-                                    $result = $conn->query($query);
+                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE 1=1";
+                                    if ($cargo === 'Professor') {
+                                        $query .= " AND funcionario_id = ?";
+                                        $stmt = $conn->prepare($query);
+                                        $stmt->bind_param("i", $funcionario_id);
+                                    } else {
+                                        $stmt = $conn->prepare($query);
+                                    }
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
                                     if ($result && $result->num_rows > 0) {
                                         while ($row = $result->fetch_assoc()) {
                                             $form_id = htmlspecialchars($row['formulario_id']);
                                             echo "<option value=\"$form_id\">$form_id</option>";
                                         }
                                     }
+                                    $stmt->close();
                                     $conn->close();
                                     ?>
                                 </select>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>
@@ -414,6 +440,7 @@
                                     body: JSON.stringify({
                                         dados: dadosFiltrados,
                                         formularioId: document.getElementById('formularioId').value,
+                                        funcionarioId: document.getElementById('funcionarioId').value,
                                         perguntas: perguntas,
                                         respostasCorretas: respostasCorretas,
                                         bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
@@ -452,7 +479,7 @@
                                     return;
                                 }
 
-                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode ser desfeita.`)) {
+                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode be desfeita.`)) {
                                     return;
                                 }
 
@@ -518,7 +545,7 @@
         </div>
     </div>
 
-    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+    <?php if (in_array($cargo, ['Coordenador', 'Diretor'])): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
