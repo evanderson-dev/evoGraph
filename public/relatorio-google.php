@@ -1,3 +1,21 @@
+<?php
+session_start();
+
+// Verifica se o usuário está logado e tem um cargo válido
+$allowed_cargos = ['Professor', 'Diretor', 'Coordenador'];
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
+    header('Location: index.php');
+    exit;
+}
+
+if (!isset($_SESSION["funcionario_id"])) {
+    header('Location: index.php');
+    exit;
+}
+
+$cargo = $_SESSION["cargo"];
+$funcionario_id = (int)$_SESSION["funcionario_id"];
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,142 +29,6 @@
     <link rel="stylesheet" href="./assets/css/modal-add-aluno.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Relatório Google</title>
-    <style>
-        .mensagem-sucesso {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px 15px;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .mensagem-erro {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 15px;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .relatorio-section {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
-        }
-        .form-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 5px;
-            color: #333;
-            font-size: 14px;
-        }
-        .form-group input,
-        .form-group select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            min-width: 200px;
-            max-width: 100%;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-        .form-group button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .form-group button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        .form-group .btn-carregar {
-            background-color: #28a745;
-            color: #fff;
-        }
-        .form-group .btn-carregar:hover:not(:disabled) {
-            background-color: #218838;
-        }
-        .form-group .btn-importar {
-            background-color: #007bff;
-            color: #fff;
-        }
-        .form-group .btn-importar:hover:not(:disabled) {
-            background-color: #0056b3;
-        }
-        .form-group .btn-excluir {
-            background-color: #dc3545;
-            color: #fff;
-        }
-        .form-group .btn-excluir:hover:not(:disabled) {
-            background-color: #c82333;
-        }
-        .table-container {
-            margin-top: 30px;
-        }
-        .table-container h4 {
-            margin-bottom: 15px;
-            font-size: 18px;
-            color: #333;
-        }
-        .table-container table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 5px;
-            overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-        }
-        .table-container th,
-        .table-container td {
-            padding: 12px 15px;
-            text-align: left;
-            font-size: 14px;
-            border-bottom: 1px solid #eee;
-        }
-        .table-container th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #555;
-        }
-        .table-container tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .table-container tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-        @media (max-width: 768px) {
-            .form-group {
-                flex-direction: column;
-            }
-            .form-group input,
-            .form-group select {
-                width: 100%;
-                min-width: unset;
-            }
-            .form-group button {
-                width: 100%;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
@@ -172,14 +54,12 @@
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
-            <?php 
-            $cargo = isset($_SESSION["cargo"]) ? $_SESSION["cargo"] : "";
-            if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+            <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+                    <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
@@ -202,6 +82,7 @@
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
+                        <input type="hidden" id="funcionarioId" value="<?php echo htmlspecialchars($funcionario_id); ?>">
                         
                         <div class="form-group">
                             <div>
@@ -232,14 +113,24 @@
                                     <option value="">Selecione um formulário</option>
                                     <?php
                                     require_once "db_connection.php";
-                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
-                                    $result = $conn->query($query);
+                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE 1=1";
+                                    if ($cargo === 'Professor') {
+                                        $query .= " AND funcionario_id = ?";
+                                        $stmt = $conn->prepare($query);
+                                        $stmt->bind_param("i", $funcionario_id);
+                                    } else {
+                                        $query .= " ORDER BY formulario_id";
+                                        $stmt = $conn->prepare($query);
+                                    }
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
                                     if ($result && $result->num_rows > 0) {
                                         while ($row = $result->fetch_assoc()) {
                                             $form_id = htmlspecialchars($row['formulario_id']);
                                             echo "<option value=\"$form_id\">$form_id</option>";
                                         }
                                     }
+                                    $stmt->close();
                                     $conn->close();
                                     ?>
                                 </select>
@@ -414,6 +305,7 @@
                                     body: JSON.stringify({
                                         dados: dadosFiltrados,
                                         formularioId: document.getElementById('formularioId').value,
+                                        funcionarioId: document.getElementById('funcionarioId').value,
                                         perguntas: perguntas,
                                         respostasCorretas: respostasCorretas,
                                         bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
@@ -518,7 +410,7 @@
         </div>
     </div>
 
-    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+    <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
