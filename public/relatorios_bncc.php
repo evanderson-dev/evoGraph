@@ -32,11 +32,15 @@
     </header>
 
     <div class="container">
+    
+        <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="relatorio-google.php"><i class="fa-solid fa-chart-bar"></i>Importar Relatório</a>
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+
+            <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
@@ -46,8 +50,11 @@
                 </div>
             </div>
             <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
+            <?php endif; ?>
+            
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
         </div>
+        <!-- FIM SIDEBAR -->
 
         <div class="main-content" id="main-content">
             <div class="titulo-secao">

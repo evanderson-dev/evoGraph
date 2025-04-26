@@ -45,6 +45,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <!-- Fim do Header -->
 
     <div class="container">
+        
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
