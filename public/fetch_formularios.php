@@ -11,8 +11,8 @@ require_once "db_connection.php";
 
 $funcionario_id = (int)$_SESSION["funcionario_id"];
 
-// Buscar os formulários associados ao funcionário logado
-$query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
+// Buscar os formulários associados ao funcionário logado a partir de perguntas_formulario
+$query = "SELECT DISTINCT formulario_id FROM perguntas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
 $stmt = $conn->prepare($query);
 if (!$stmt) {
     echo json_encode([]);
@@ -31,6 +31,7 @@ if ($result && $result->num_rows > 0) {
     }
 }
 
+$result->close();
 $stmt->close();
 $conn->close();
 

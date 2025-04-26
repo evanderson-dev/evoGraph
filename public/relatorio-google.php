@@ -113,28 +113,29 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
                         <div class="form-group">
                             <div>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
-                            <select id="formularioIdDelete">
-                                <option value="">Selecione um formulário</option>
-                                <?php
-                                require_once "db_connection.php";
-                                $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
-                                $stmt = $conn->prepare($query);
-                                $stmt->bind_param("i", $funcionario_id);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                if ($result && $result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        $form_id = htmlspecialchars($row['formulario_id']);
-                                        echo "<option value=\"$form_id\">$form_id</option>";
+                                <select id="formularioIdDelete">
+                                    <option value="">Selecione um formulário</option>
+                                    <?php
+                                    require_once "db_connection.php";
+                                    $query = "SELECT DISTINCT formulario_id FROM perguntas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
+                                    $stmt = $conn->prepare($query);
+                                    $stmt->bind_param("i", $funcionario_id);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    if ($result && $result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            $form_id = htmlspecialchars($row['formulario_id']);
+                                            echo "<option value=\"$form_id\">$form_id</option>";
+                                        }
                                     }
-                                }
-                                $stmt->close();
-                                $conn->close();
-                                ?>
-                            </select>
+                                    $result->close();
+                                    $stmt->close();
+                                    $conn->close();
+                                    ?>
+                                </select>
                             </div>
                             <div>
-                                <label> </label>
+                                <label> </label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>

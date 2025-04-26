@@ -25,8 +25,8 @@ if (!$dados || !isset($dados['formularioId']) || empty($dados['formularioId'])) 
 
 $formulario_id = $conn->real_escape_string($dados['formularioId']);
 
-// Verificar se o formulário pertence ao funcionário logado
-$query = "SELECT COUNT(*) as total FROM respostas_formulario WHERE formulario_id = ? AND funcionario_id = ?";
+// Verificar se o formulário pertence ao funcionário logado (usando perguntas_formulario)
+$query = "SELECT COUNT(*) as total FROM perguntas_formulario WHERE formulario_id = ? AND funcionario_id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("si", $formulario_id, $funcionario_id);
 $stmt->execute();
@@ -35,11 +35,13 @@ $row = $result->fetch_assoc();
 
 if ($row['total'] == 0) {
     echo json_encode(["status" => "error", "mensagem" => "Você não tem permissão para excluir este formulário."]);
+    $result->close();
     $stmt->close();
     $conn->close();
     exit;
 }
 
+$result->close();
 $stmt->close();
 
 // Excluir perguntas relacionadas ao formulário
@@ -55,9 +57,9 @@ if (!$stmt->execute()) {
 $stmt->close();
 
 // Excluir respostas relacionadas ao formulário
-$query = "DELETE FROM respostas_formulario WHERE formulario_id = ? AND funcionario_id = ?";
+$query = "DELETE FROM respostas_formulario WHERE formulario_id = ?";
 $stmt = $conn->prepare($query);
-$stmt->bind_param("si", $formulario_id, $funcionario_id);
+$stmt->bind_param("s", $formulario_id);
 if (!$stmt->execute()) {
     echo json_encode(["status" => "error", "mensagem" => "Erro ao excluir respostas do formulário: " . $stmt->error]);
     $stmt->close();

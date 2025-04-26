@@ -1,7 +1,10 @@
 <?php
+// Evitar qualquer saída antes do JSON
+ob_start();
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL & ~E_NOTICE); // Desabilitar exibição de erros
+error_reporting(E_ALL & ~E_NOTICE); // Reporta todos os erros, exceto notices
 
 require_once "db_connection.php";
 
@@ -16,9 +19,13 @@ function writeLog($message) {
 
 // Função para enviar resposta JSON e encerrar o script
 function sendResponse($status, $message, $additionalData = []) {
+    // Limpar qualquer saída anterior
+    ob_clean();
+    
     $response = array_merge(["status" => $status, "mensagem" => $message], $additionalData);
     writeLog("Resposta enviada: " . json_encode($response, JSON_UNESCAPED_UNICODE));
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
+    ob_end_flush();
     exit;
 }
 
@@ -214,16 +221,16 @@ foreach ($dados_alunos as $index => $linha) {
     $result->close();
     $stmt->close();
 
-    // Verifica se já existe uma resposta para o mesmo email, formulario_id e funcionario_id
+    // Verifica se já existe uma resposta para o mesmo email e formulario_id
     $formulario_id_escaped = $conn->real_escape_string($formulario_id);
-    $query = "SELECT id, data_envio FROM respostas_formulario WHERE email = ? AND formulario_id = ? AND funcionario_id = ?";
+    $query = "SELECT id, data_envio FROM respostas_formulario WHERE email = ? AND formulario_id = ?";
     $stmt = $conn->prepare($query);
     if (!$stmt) {
         $erros[] = "Erro ao preparar query para verificar resposta existente: " . $conn->error;
         writeLog("Erro ao preparar query para verificar resposta existente: " . $conn->error);
         continue;
     }
-    $stmt->bind_param("ssi", $email_escaped, $formulario_id_escaped, $funcionario_id);
+    $stmt->bind_param("ss", $email_escaped, $formulario_id_escaped);
     if (!$stmt->execute()) {
         $erros[] = "Erro ao executar query para verificar resposta existente: " . $stmt->error;
         writeLog("Erro ao executar query para verificar resposta existente: " . $stmt->error);
@@ -234,7 +241,7 @@ foreach ($dados_alunos as $index => $linha) {
     if ($result && $result->num_rows > 0) {
         $existing = $result->fetch_assoc();
         $existing_data_envio = $existing['data_envio'];
-        writeLog("Linha $index: Resposta existente encontrada para email '$email', formulario_id '$formulario_id' e funcionario_id '$funcionario_id' com data_envio '$existing_data_envio'.");
+        writeLog("Linha $index: Resposta existente encontrada para email '$email' e formulario_id '$formulario_id' com data_envio '$existing_data_envio'.");
         $result->close();
         $stmt->close();
 
@@ -281,8 +288,8 @@ foreach ($dados_alunos as $index => $linha) {
         $stmt->close();
         // Nenhuma resposta existente, insere nova
         $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
-        $columns = "aluno_id, email, data_envio, dados_json, funcionario_id" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "");
-        $values = "?, ?, ?, ?, ?" . ($has_pontuacao ? ", " . ($pontuacao !== null ? "?" : "NULL") : "") . ($has_formulario_id ? ", ?" : "");
+        $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "");
+        $values = "?, ?, ?, ?" . ($has_pontuacao ? ", " . ($pontuacao !== null ? "?" : "NULL") : "") . ($has_formulario_id ? ", ?" : "");
         
         $query = "INSERT INTO respostas_formulario ($columns) VALUES ($values)";
         $stmt = $conn->prepare($query);
@@ -294,20 +301,20 @@ foreach ($dados_alunos as $index => $linha) {
         
         if ($has_formulario_id && $has_pontuacao) {
             if ($pontuacao !== null) {
-                $stmt->bind_param("isssis", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id, $pontuacao, $formulario_id_escaped);
+                $stmt->bind_param("isssd", $aluno_id, $email_escaped, $data_envio, $json_resposta, $pontuacao, $formulario_id_escaped);
             } else {
-                $stmt->bind_param("isssis", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id, $formulario_id_escaped);
+                $stmt->bind_param("isss", $aluno_id, $email_escaped, $data_envio, $json_resposta, $formulario_id_escaped);
             }
         } elseif ($has_formulario_id) {
-            $stmt->bind_param("isssis", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id, $formulario_id_escaped);
+            $stmt->bind_param("isss", $aluno_id, $email_escaped, $data_envio, $json_resposta, $formulario_id_escaped);
         } elseif ($has_pontuacao) {
             if ($pontuacao !== null) {
-                $stmt->bind_param("isssdi", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id, $pontuacao);
+                $stmt->bind_param("issd", $aluno_id, $email_escaped, $data_envio, $json_resposta, $pontuacao);
             } else {
-                $stmt->bind_param("isssi", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id);
+                $stmt->bind_param("iss", $aluno_id, $email_escaped, $data_envio, $json_resposta);
             }
         } else {
-            $stmt->bind_param("isssi", $aluno_id, $email_escaped, $data_envio, $json_resposta, $funcionario_id);
+            $stmt->bind_param("iss", $aluno_id, $email_escaped, $data_envio, $json_resposta);
         }
         
         writeLog("Linha $index: Executando query: $query");
