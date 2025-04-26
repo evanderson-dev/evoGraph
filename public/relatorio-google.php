@@ -138,9 +138,10 @@ $cargo = $_SESSION["cargo"];
                         </div>
 
                         <script>
-                            let dadosPlanilha = []; // Variável global para armazenar os dados
-                            let perguntas = []; // Armazenar os cabeçalhos das perguntas
-                            let respostasCorretas = []; // Armazenar as respostas corretas
+                            let dadosPlanilha = [];
+                            let perguntas = [];
+                            let respostasCorretas = [];
+                            const funcionarioId = <?php echo json_encode($_SESSION['funcionario_id'] ?? null); ?>; // Passa o funcionario_id da sessão
 
                             function formatGoogleSheetUrl(userInputUrl) {
                                 const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
@@ -152,116 +153,6 @@ $cargo = $_SESSION["cargo"];
                                 const sheetId = idMatch[1];
                                 let url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
                                 return url;
-                            }
-
-                            function carregarPlanilha() {
-                                const urlInput = document.getElementById('googleSheetLink').value;
-                                const formattedUrl = formatGoogleSheetUrl(urlInput);
-
-                                if (!formattedUrl) return;
-
-                                const button = document.querySelector('button[onclick="carregarPlanilha()"]');
-                                button.disabled = true;
-                                button.textContent = "Carregando...";
-
-                                fetch(formattedUrl)
-                                    .then(res => res.text())
-                                    .then(csv => {
-                                        Papa.parse(csv, {
-                                            header: true,
-                                            skipEmptyLines: true,
-                                            complete: function(results) {
-                                                dadosPlanilha = results.data;
-                                                const thead = document.querySelector("#tabela-dados thead");
-                                                const tbody = document.querySelector("#tabela-dados tbody");
-
-                                                // Limpa tabela
-                                                thead.innerHTML = '';
-                                                tbody.innerHTML = '';
-
-                                                if (dadosPlanilha.length === 0) {
-                                                    alert("Nenhum dado encontrado na planilha.");
-                                                    button.disabled = false;
-                                                    button.textContent = "Carregar";
-                                                    return;
-                                                }
-
-                                                // Identificar cabeçalhos
-                                                const headers = Object.keys(dadosPlanilha[0]);
-                                                console.log("Cabeçalhos da planilha:", headers);
-
-                                                // Colunas fixas que não são perguntas
-                                                const fixedColumns = [
-                                                    'Carimbo de data/hora', 'Pontuação', 'Nome:', 'Série:', 'Endereço de e-mail',
-                                                    'Timestamp', 'Data', 'Date', 'Email', 'E-mail', 'EMAIL', 'E-Mail', 'Endereço de Email'
-                                                ];
-
-                                                // Filtrar cabeçalhos que são perguntas
-                                                perguntas = headers.filter(header => !fixedColumns.includes(header));
-                                                console.log("Perguntas identificadas:", perguntas);
-
-                                                // Identificar a linha GABARITO ou com pontuação 10/10
-                                                let gabaritoRow = null;
-                                                for (let row of dadosPlanilha) {
-                                                    if (row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO') {
-                                                        gabaritoRow = row;
-                                                        break;
-                                                    }
-                                                }
-
-                                                if (!gabaritoRow) {
-                                                    // Procurar uma linha com pontuação 10/10
-                                                    gabaritoRow = dadosPlanilha.find(row => row['Pontuação'] === '10 / 10');
-                                                }
-
-                                                if (!gabaritoRow) {
-                                                    alert("Nenhuma linha 'GABARITO' ou com pontuação 10/10 encontrada.");
-                                                    button.disabled = false;
-                                                    button.textContent = "Carregar";
-                                                    return;
-                                                }
-
-                                                // Extrair respostas corretas
-                                                respostasCorretas = perguntas.map(pergunta => gabaritoRow[pergunta] || '');
-                                                console.log("Respostas corretas:", respostasCorretas);
-
-                                                // Exibir tabela (excluindo a linha GABARITO)
-                                                const headerRow = document.createElement("tr");
-                                                headers.forEach(h => {
-                                                    const th = document.createElement("th");
-                                                    th.textContent = h;
-                                                    headerRow.appendChild(th);
-                                                });
-                                                thead.appendChild(headerRow);
-
-                                                dadosPlanilha.forEach(row => {
-                                                    if (row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO') {
-                                                        return; // Ignora a linha GABARITO na tabela visual
-                                                    }
-                                                    const tr = document.createElement("tr");
-                                                    headers.forEach(h => {
-                                                        const td = document.createElement("td");
-                                                        td.textContent = row[h] || '';
-                                                        tr.appendChild(td);
-                                                    });
-                                                    tbody.appendChild(tr);
-                                                });
-
-                                                button.disabled = false;
-                                                button.textContent = "Carregar";
-                                            },
-                                            error: function(error) {
-                                                alert("Erro ao parsear o CSV: " + error);
-                                                button.disabled = false;
-                                                button.textContent = "Carregar";
-                                            }
-                                        });
-                                    })
-                                    .catch(err => {
-                                        alert("Erro ao carregar a planilha: " + err);
-                                        button.disabled = false;
-                                        button.textContent = "Carregar";
-                                    });
                             }
 
                             function importarParaBanco() {
@@ -276,11 +167,15 @@ $cargo = $_SESSION["cargo"];
                                     return;
                                 }
 
+                                if (!funcionarioId) {
+                                    alert("Erro: Usuário não autenticado.");
+                                    return;
+                                }
+
                                 const button = document.querySelector('button[onclick="importarParaBanco()"]');
                                 button.disabled = true;
                                 button.textContent = "Importando...";
 
-                                // Preparar dados para enviar (excluindo a linha GABARITO)
                                 const dadosFiltrados = dadosPlanilha.filter(row => !(row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO'));
 
                                 fetch('importar_formulario.php', {
@@ -293,7 +188,8 @@ $cargo = $_SESSION["cargo"];
                                         formularioId: document.getElementById('formularioId').value,
                                         perguntas: perguntas,
                                         respostasCorretas: respostasCorretas,
-                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
+                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim(),
+                                        funcionarioId: funcionarioId // Inclui o funcionario_id
                                     })
                                 })
                                 .then(response => response.json())
@@ -307,7 +203,6 @@ $cargo = $_SESSION["cargo"];
                                         box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
                                     } else {
                                         box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
-                                        // Atualizar o dropdown após importação
                                         atualizarDropdownFormularios();
                                     }
                                     button.disabled = false;

@@ -1,4 +1,5 @@
 <?php
+session_start(); // Iniciar a sessão
 require_once "db_connection.php";
 
 header("Content-Type: application/json");
@@ -12,6 +13,15 @@ function writeLog($message) {
 
 // Recebe os dados
 $dados = json_decode(file_get_contents("php://input"), true);
+
+// Verifica se o usuário está logado e captura o funcionario_id
+$funcionario_id = isset($_SESSION['funcionario_id']) ? $_SESSION['funcionario_id'] : null;
+if (!$funcionario_id) {
+    writeLog("Erro: Usuário não logado ou funcionario_id não encontrado.");
+    http_response_code(403);
+    echo json_encode(["mensagem" => "Usuário não logado.", "status" => "error"]);
+    exit;
+}
 
 if (!$dados || !is_array($dados['dados'])) {
     writeLog("Erro: Dados inválidos ou nenhum dado recebido.");
@@ -92,12 +102,10 @@ foreach ($dados_alunos as $index => $linha) {
     foreach (['Carimbo de data/hora', 'Timestamp', 'Data', 'Date'] as $key) {
         if (isset($linha[$key]) && !empty($linha[$key])) {
             $data_raw = trim($linha[$key]);
-            // Tenta converter do formato DD/MM/YYYY HH:MM:SS para YYYY-MM-DD HH:MM:SS
             $dateTime = DateTime::createFromFormat('d/m/Y H:i:s', $data_raw);
             if ($dateTime !== false) {
                 $data_envio = $dateTime->format('Y-m-d H:i:s');
             } else {
-                // Tenta outros formatos
                 $dateTime = DateTime::createFromFormat('m/d/Y H:i:s', $data_raw);
                 if ($dateTime !== false) {
                     $data_envio = $dateTime->format('Y-m-d H:i:s');
@@ -108,7 +116,7 @@ foreach ($dados_alunos as $index => $linha) {
     }
 
     if (!$data_envio) {
-        $data_envio = date('Y-m-d H:i:s'); // Fallback para CURRENT_TIMESTAMP
+        $data_envio = date('Y-m-d H:i:s');
         writeLog("Linha $index: 'Carimbo de data/hora' não encontrado ou inválido. Usando CURRENT_TIMESTAMP.");
     } else {
         writeLog("Linha $index: Data extraída: $data_envio");
@@ -118,22 +126,20 @@ foreach ($dados_alunos as $index => $linha) {
     $pontuacao = null;
     if ($has_pontuacao && isset($linha['Pontuação']) && !empty($linha['Pontuação'])) {
         $pontuacao_raw = trim($linha['Pontuação']);
-        // Trata o formato "X / Y" (exemplo: "4 / 10")
         if (preg_match('/^(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)$/', $pontuacao_raw, $matches)) {
             $numerador = floatval($matches[1]);
             $denominador = floatval($matches[2]);
             if ($denominador > 0 && $numerador >= 0 && $numerador <= $denominador) {
-                $pontuacao = $numerador; // Usa o numerador diretamente (exemplo: 4.00)
+                $pontuacao = $numerador;
                 writeLog("Linha $index: Pontuação extraída: $pontuacao (de $pontuacao_raw)");
             } else {
                 $erros[] = "Linha $index: Pontuação '$pontuacao_raw' inválida (numerador ou denominador fora do intervalo).";
                 writeLog("Linha $index: Pontuação inválida: $pontuacao_raw");
             }
         } else {
-            // Tenta tratar como número puro (exemplo: "4" ou "4.5")
             if (is_numeric($pontuacao_raw)) {
                 $pontuacao = floatval($pontuacao_raw);
-                if ($pontuacao >= 0 && $pontuacao <= 10) { // Supondo pontuação entre 0 e 10
+                if ($pontuacao >= 0 && $pontuacao <= 10) {
                     writeLog("Linha $index: Pontuação numérica extraída: $pontuacao");
                 } else {
                     $pontuacao = null;
@@ -173,15 +179,15 @@ foreach ($dados_alunos as $index => $linha) {
         $existing_data_envio = $existing['data_envio'];
         writeLog("Linha $index: Resposta existente encontrada para email '$email' e formulario_id '$formulario_id' com data_envio '$existing_data_envio'.");
 
-        // Compara data_envio
         if ($data_envio > $existing_data_envio) {
-            // Nova resposta é mais recente, atualiza o registro
+            // Atualiza o registro existente
             $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
             $query = "UPDATE respostas_formulario SET 
                       aluno_id = " . ($aluno_id ? $aluno_id : "NULL") . ",
                       data_envio = '$data_envio',
                       dados_json = '$json_resposta',
-                      pontuacao = " . ($pontuacao !== null ? $pontuacao : "NULL") . "
+                      pontuacao = " . ($pontuacao !== null ? $pontuacao : "NULL") . ",
+                      funcionario_id = " . ($funcionario_id ? $funcionario_id : "NULL") . "
                       WHERE id = " . $existing['id'];
             
             writeLog("Linha $index: Atualizando resposta existente com query: $query");
@@ -194,16 +200,15 @@ foreach ($dados_alunos as $index => $linha) {
                 writeLog("Linha $index: Erro na atualização: " . $conn->error);
             }
         } else {
-            // Nova resposta é mais antiga, ignora
             $ignorados++;
             writeLog("Linha $index: Resposta ignorada (data_envio '$data_envio' é mais antiga que '$existing_data_envio').");
             continue;
         }
     } else {
-        // Nenhuma resposta existente, insere nova
+        // Insere nova resposta
         $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
-        $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "");
-        $values = ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta'" . ($has_pontuacao ? ", " . ($pontuacao !== null ? $pontuacao : "NULL") : "") . ($has_formulario_id ? ", '$formulario_id_escaped'" : "");
+        $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "") . ", funcionario_id";
+        $values = ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta'" . ($has_pontuacao ? ", " . ($pontuacao !== null ? $pontuacao : "NULL") : "") . ($has_formulario_id ? ", '$formulario_id_escaped'" : "") . ", " . ($funcionario_id ? $funcionario_id : "NULL");
         
         $query = "INSERT INTO respostas_formulario ($columns) VALUES ($values)";
         
