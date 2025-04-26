@@ -155,6 +155,116 @@ $cargo = $_SESSION["cargo"];
                                 return url;
                             }
 
+                            function carregarPlanilha() {
+                                const urlInput = document.getElementById('googleSheetLink').value;
+                                const formattedUrl = formatGoogleSheetUrl(urlInput);
+
+                                if (!formattedUrl) return;
+
+                                const button = document.querySelector('button[onclick="carregarPlanilha()"]');
+                                button.disabled = true;
+                                button.textContent = "Carregando...";
+
+                                fetch(formattedUrl)
+                                    .then(res => res.text())
+                                    .then(csv => {
+                                        Papa.parse(csv, {
+                                            header: true,
+                                            skipEmptyLines: true,
+                                            complete: function(results) {
+                                                dadosPlanilha = results.data;
+                                                const thead = document.querySelector("#tabela-dados thead");
+                                                const tbody = document.querySelector("#tabela-dados tbody");
+
+                                                // Limpa tabela
+                                                thead.innerHTML = '';
+                                                tbody.innerHTML = '';
+
+                                                if (dadosPlanilha.length === 0) {
+                                                    alert("Nenhum dado encontrado na planilha.");
+                                                    button.disabled = false;
+                                                    button.textContent = "Carregar";
+                                                    return;
+                                                }
+
+                                                // Identificar cabeçalhos
+                                                const headers = Object.keys(dadosPlanilha[0]);
+                                                console.log("Cabeçalhos da planilha:", headers);
+
+                                                // Colunas fixas que não são perguntas
+                                                const fixedColumns = [
+                                                    'Carimbo de data/hora', 'Pontuação', 'Nome:', 'Série:', 'Endereço de e-mail',
+                                                    'Timestamp', 'Data', 'Date', 'Email', 'E-mail', 'EMAIL', 'E-Mail', 'Endereço de Email'
+                                                ];
+
+                                                // Filtrar cabeçalhos que são perguntas
+                                                perguntas = headers.filter(header => !fixedColumns.includes(header));
+                                                console.log("Perguntas identificadas:", perguntas);
+
+                                                // Identificar a linha GABARITO ou com pontuação 10/10
+                                                let gabaritoRow = null;
+                                                for (let row of dadosPlanilha) {
+                                                    if (row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO') {
+                                                        gabaritoRow = row;
+                                                        break;
+                                                    }
+                                                }
+
+                                                if (!gabaritoRow) {
+                                                    // Procurar uma linha com pontuação 10/10
+                                                    gabaritoRow = dadosPlanilha.find(row => row['Pontuação'] === '10 / 10');
+                                                }
+
+                                                if (!gabaritoRow) {
+                                                    alert("Nenhuma linha 'GABARITO' ou com pontuação 10/10 encontrada.");
+                                                    button.disabled = false;
+                                                    button.textContent = "Carregar";
+                                                    return;
+                                                }
+
+                                                // Extrair respostas corretas
+                                                respostasCorretas = perguntas.map(pergunta => gabaritoRow[pergunta] || '');
+                                                console.log("Respostas corretas:", respostasCorretas);
+
+                                                // Exibir tabela (excluindo a linha GABARITO)
+                                                const headerRow = document.createElement("tr");
+                                                headers.forEach(h => {
+                                                    const th = document.createElement("th");
+                                                    th.textContent = h;
+                                                    headerRow.appendChild(th);
+                                                });
+                                                thead.appendChild(headerRow);
+
+                                                dadosPlanilha.forEach(row => {
+                                                    if (row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO') {
+                                                        return; // Ignora a linha GABARITO na tabela visual
+                                                    }
+                                                    const tr = document.createElement("tr");
+                                                    headers.forEach(h => {
+                                                        const td = document.createElement("td");
+                                                        td.textContent = row[h] || '';
+                                                        tr.appendChild(td);
+                                                    });
+                                                    tbody.appendChild(tr);
+                                                });
+
+                                                button.disabled = false;
+                                                button.textContent = "Carregar";
+                                            },
+                                            error: function(error) {
+                                                alert("Erro ao parsear o CSV: " + error);
+                                                button.disabled = false;
+                                                button.textContent = "Carregar";
+                                            }
+                                        });
+                                    })
+                                    .catch(err => {
+                                        alert("Erro ao carregar a planilha: " + err);
+                                        button.disabled = false;
+                                        button.textContent = "Carregar";
+                                    });
+                            }
+
                             function importarParaBanco() {
                                 const formularioIdInput = document.getElementById('formularioId');
                                 if (!formularioIdInput.value.trim()) {
