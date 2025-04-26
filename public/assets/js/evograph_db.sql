@@ -45,21 +45,18 @@ CREATE TABLE respostas_formulario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     aluno_id INT,
     formulario_id VARCHAR(50) DEFAULT NULL,
-    funcionario_id INT NOT NULL,
     email VARCHAR(150),
     data_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
     dados_json JSON NOT NULL,
     pontuacao DECIMAL(5,2) DEFAULT NULL,
+    INDEX idx_email (email),
     FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL
-);
-
-ALTER TABLE respostas_formulario ADD INDEX idx_email (email);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Tabela perguntas_formulario
 CREATE TABLE perguntas_formulario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     formulario_id VARCHAR(50),
-    funcionario_id INT NOT NULL,
     bncc_habilidade VARCHAR(50), -- Exemplo: EF06GE10
     pergunta_texto TEXT NOT NULL,
     resposta_correta VARCHAR(255),
