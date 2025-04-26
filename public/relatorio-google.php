@@ -345,7 +345,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 button.disabled = true;
                                 button.textContent = "Excluindo...";
 
-                                fetch('excluir_formulario.php', {
+                                fetch('delete_formulario.php', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
