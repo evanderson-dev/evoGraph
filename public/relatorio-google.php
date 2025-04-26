@@ -1,11 +1,27 @@
+<?php
+session_start();
+
+// Verifica se o usuário está logado e tem um cargo válido
+$allowed_cargos = ['Professor', 'Diretor', 'Coordenador'];
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
+    header('Location: index.php');
+    exit;
+}
+
+if (!isset($_SESSION["funcionario_id"])) {
+    header('Location: index.php');
+    exit;
+}
+
+$cargo = $_SESSION["cargo"];
+$funcionario_id = (int)$_SESSION["funcionario_id"];
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/css/style.css" />
-    <link rel="stylesheet" href="./assets/css/dashboard.css" />
     <link rel="stylesheet" href="./assets/css/sidebar.css" />
     <link rel="stylesheet" href="./assets/css/relatorio-google.css" />
     <link rel="stylesheet" href="./assets/css/modal-add-funcionario.css" />
@@ -13,22 +29,6 @@
     <link rel="stylesheet" href="./assets/css/modal-add-aluno.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Relatório Google</title>
-    <style>
-        .mensagem-sucesso {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .mensagem-erro {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
@@ -54,14 +54,12 @@
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
-            <?php 
-            $cargo = isset($_SESSION["cargo"]) ? $_SESSION["cargo"] : "";
-            if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+            <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+                    <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
@@ -79,28 +77,78 @@
                 <span><a href="dashboard.php" class="home-link"><i class="fa-solid fa-house"></i></a>/ Formulário do Google Forms</span>
             </div>
 
-            <section class="meu-perfil">
+            <section class="relatorio-section">
                 <div id="message-box"></div>
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
+                        <input type="hidden" id="funcionarioId" value="<?php echo htmlspecialchars($funcionario_id); ?>">
                         
-                        <h3>Relatório - Respostas do Google Forms</h3>
-                        <div class="input-google-link">
-                            <label for="googleSheetLink">Cole o link da planilha do Google:</label>
-                            <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
-                            <label for="bnccHabilidade">Habilidade BNCC (Opcional):</label>
-                            <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
-                            <label for="formularioId">Identificador do formulário:</label>
-                            <input type="text" id="formularioId" placeholder="Identificador do formulário" required><br>
-                            <button type="button" onclick="carregarPlanilha()">Carregar</button><br>
-                            <button type="button" onclick="importarParaBanco()">Importar para o banco</button>
+                        <div class="form-group">
+                            <div>
+                                <label for="googleSheetLink">Link da planilha do Google:</label>
+                                <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                            </div>
+                            <div>
+                                <label for="bnccHabilidade">Habilidade BNCC (Opcional):</label>
+                                <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
+                            </div>
+                            <div>
+                                <label for="formularioId">Identificador do formulário:</label>
+                                <input type="text" id="formularioId" placeholder="Identificador do formulário" required>
+                            </div>
+                            <div>
+                                <label> </label>
+                                <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                            </div>
+                            <div>
+                                <label> </label>
+                                <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar para o banco</button>
+                            </div>
                         </div>
-                        <div style="overflow-x: auto;">
-                            <table id="tabela-dados">
-                                <thead></thead>
-                                <tbody></tbody>
-                            </table>
+                        <div class="form-group">
+                            <div>
+                                <label for="formularioIdDelete">Excluir formulário:</label>
+                                <select id="formularioIdDelete">
+                                    <option value="">Selecione um formulário</option>
+                                    <?php
+                                    require_once "db_connection.php";
+                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE 1=1";
+                                    if ($cargo === 'Professor') {
+                                        $query .= " AND funcionario_id = ?";
+                                        $stmt = $conn->prepare($query);
+                                        $stmt->bind_param("i", $funcionario_id);
+                                    } else {
+                                        $query .= " ORDER BY formulario_id";
+                                        $stmt = $conn->prepare($query);
+                                    }
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    if ($result && $result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            $form_id = htmlspecialchars($row['formulario_id']);
+                                            echo "<option value=\"$form_id\">$form_id</option>";
+                                        }
+                                    }
+                                    $stmt->close();
+                                    $conn->close();
+                                    ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label> </label>
+                                <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <h4>Dados Carregados da Planilha</h4>
+                            <div style="overflow-x: auto;">
+                                <table id="tabela-dados">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
                         </div>
 
                         <script>
@@ -108,7 +156,7 @@
                             let perguntas = []; // Armazenar os cabeçalhos das perguntas
                             let respostasCorretas = []; // Armazenar as respostas corretas
 
-                            function formatGoogleSheetUrl(userInputUrl, sheetName = '') {
+                            function formatGoogleSheetUrl(userInputUrl) {
                                 const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
                                 if (!idMatch) {
                                     alert("Link inválido! Verifique o link da planilha.");
@@ -117,18 +165,12 @@
 
                                 const sheetId = idMatch[1];
                                 let url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
-
-                                if (sheetName) {
-                                    url += `&sheet=${encodeURIComponent(sheetName)}`;
-                                }
-
                                 return url;
                             }
 
                             function carregarPlanilha() {
                                 const urlInput = document.getElementById('googleSheetLink').value;
-                                const abaInput = document.getElementById('googleSheetTab').value;
-                                const formattedUrl = formatGoogleSheetUrl(urlInput, abaInput);
+                                const formattedUrl = formatGoogleSheetUrl(urlInput);
 
                                 if (!formattedUrl) return;
 
@@ -237,6 +279,12 @@
                             }
 
                             function importarParaBanco() {
+                                const formularioIdInput = document.getElementById('formularioId');
+                                if (!formularioIdInput.value.trim()) {
+                                    alert("O campo 'Identificador do formulário' é obrigatório.");
+                                    return;
+                                }
+
                                 if (dadosPlanilha.length === 0) {
                                     alert("Nenhum dado carregado.");
                                     return;
@@ -257,41 +305,112 @@
                                     body: JSON.stringify({
                                         dados: dadosFiltrados,
                                         formularioId: document.getElementById('formularioId').value,
+                                        funcionarioId: document.getElementById('funcionarioId').value,
                                         perguntas: perguntas,
-                                        respostasCorretas: respostasCorretas
+                                        respostasCorretas: respostasCorretas,
+                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
                                     })
                                 })
                                 .then(response => response.json())
                                 .then(data => {
                                     const box = document.getElementById("message-box");
-            let mensagem = data.mensagem;
-            if (data.erros && data.erros.length > 0) {
-                mensagem += "<br>Detalhes:<br>" + data.erros.join("<br>");
-            }
-            if (data.mensagem.includes("Erro") || data.erros) {
-                box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
-            } else {
-                box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
-            }
-            button.disabled = false;
-            button.textContent = "Importar para o banco";
-        })
-        .catch(err => {
-            console.error(err);
-            const box = document.getElementById("message-box");
-            box.innerHTML = `<div class="mensagem-erro">Erro ao importar os dados: ${err}</div>`;
-            button.disabled = false;
-            button.textContent = "Importar para o banco";
-        });
-    }
-</script>
+                                    let mensagem = data.mensagem;
+                                    if (data.erros && data.erros.length > 0) {
+                                        mensagem += "<br>Detalhes:<br>" + data.erros.join("<br>");
+                                    }
+                                    if (data.mensagem.includes("Erro") || data.erros) {
+                                        box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
+                                    } else {
+                                        box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
+                                        // Atualizar o dropdown após importação
+                                        atualizarDropdownFormularios();
+                                    }
+                                    button.disabled = false;
+                                    button.textContent = "Importar para o banco";
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    const box = document.getElementById("message-box");
+                                    box.innerHTML = `<div class="mensagem-erro">Erro ao importar os dados: ${err}</div>`;
+                                    button.disabled = false;
+                                    button.textContent = "Importar para o banco";
+                                });
+                            }
+
+                            function excluirFormulario() {
+                                const formularioId = document.getElementById('formularioIdDelete').value;
+                                if (!formularioId) {
+                                    alert("Selecione um formulário para excluir.");
+                                    return;
+                                }
+
+                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode ser desfeita.`)) {
+                                    return;
+                                }
+
+                                const button = document.querySelector('button[onclick="excluirFormulario()"]');
+                                button.disabled = true;
+                                button.textContent = "Excluindo...";
+
+                                fetch('delete_formulario.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        formularioId: formularioId
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    const box = document.getElementById("message-box");
+                                    if (data.status === "success") {
+                                        box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
+                                        // Atualizar o dropdown após exclusão
+                                        atualizarDropdownFormularios();
+                                    } else {
+                                        box.innerHTML = `<div class="mensagem-erro">${data.mensagem}</div>`;
+                                    }
+                                    button.disabled = false;
+                                    button.textContent = "Excluir";
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    const box = document.getElementById("message-box");
+                                    box.innerHTML = `<div class="mensagem-erro">Erro ao excluir o formulário: ${err}</div>`;
+                                    button.disabled = false;
+                                    button.textContent = "Excluir";
+                                });
+                            }
+
+                            function atualizarDropdownFormularios() {
+                                fetch('fetch_formularios.php')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        const select = document.getElementById('formularioIdDelete');
+                                        select.innerHTML = '<option value="">Selecione um formulário</option>';
+                                        data.forEach(formId => {
+                                            const option = document.createElement('option');
+                                            option.value = formId;
+                                            option.textContent = formId;
+                                            select.appendChild(option);
+                                        });
+                                    })
+                                    .catch(err => {
+                                        console.error("Erro ao atualizar dropdown de formulários:", err);
+                                    });
+                            }
+
+                            // Atualizar o dropdown ao carregar a página
+                            document.addEventListener('DOMContentLoaded', atualizarDropdownFormularios);
+                        </script>
                     </form>
                 </div>
             </section>
         </div>
     </div>
 
-    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+    <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
@@ -314,9 +433,6 @@
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
-    
-    <script src="./assets/js/my-profile.js"></script>
-    <script src="./assets/js/dashboard.js"></script>
     <script src="./assets/js/ajax.js"></script>
 
     <script>
