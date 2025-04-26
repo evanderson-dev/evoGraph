@@ -108,7 +108,7 @@
                             let perguntas = []; // Armazenar os cabeçalhos das perguntas
                             let respostasCorretas = []; // Armazenar as respostas corretas
 
-                            function formatGoogleSheetUrl(userInputUrl) {
+                            function formatGoogleSheetUrl(userInputUrl, sheetName = '') {
                                 const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
                                 if (!idMatch) {
                                     alert("Link inválido! Verifique o link da planilha.");
@@ -117,12 +117,18 @@
 
                                 const sheetId = idMatch[1];
                                 let url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+
+                                if (sheetName) {
+                                    url += `&sheet=${encodeURIComponent(sheetName)}`;
+                                }
+
                                 return url;
                             }
 
                             function carregarPlanilha() {
                                 const urlInput = document.getElementById('googleSheetLink').value;
-                                const formattedUrl = formatGoogleSheetUrl(urlInput);
+                                const abaInput = document.getElementById('googleSheetTab').value;
+                                const formattedUrl = formatGoogleSheetUrl(urlInput, abaInput);
 
                                 if (!formattedUrl) return;
 
@@ -231,12 +237,6 @@
                             }
 
                             function importarParaBanco() {
-                                const formularioIdInput = document.getElementById('formularioId');
-                                if (!formularioIdInput.value.trim()) {
-                                    alert("O campo 'Identificador do formulário' é obrigatório.");
-                                    return;
-                                }
-
                                 if (dadosPlanilha.length === 0) {
                                     alert("Nenhum dado carregado.");
                                     return;
@@ -258,34 +258,33 @@
                                         dados: dadosFiltrados,
                                         formularioId: document.getElementById('formularioId').value,
                                         perguntas: perguntas,
-                                        respostasCorretas: respostasCorretas,
-                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
+                                        respostasCorretas: respostasCorretas
                                     })
                                 })
                                 .then(response => response.json())
                                 .then(data => {
                                     const box = document.getElementById("message-box");
-                                    let mensagem = data.mensagem;
-                                    if (data.erros && data.erros.length > 0) {
-                                        mensagem += "<br>Detalhes:<br>" + data.erros.join("<br>");
-                                    }
-                                    if (data.mensagem.includes("Erro") || data.erros) {
-                                        box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
-                                    } else {
-                                        box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
-                                    }
-                                    button.disabled = false;
-                                    button.textContent = "Importar para o banco";
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                    const box = document.getElementById("message-box");
-                                    box.innerHTML = `<div class="mensagem-erro">Erro ao importar os dados: ${err}</div>`;
-                                    button.disabled = false;
-                                    button.textContent = "Importar para o banco";
-                                });
-                            }
-                        </script>
+            let mensagem = data.mensagem;
+            if (data.erros && data.erros.length > 0) {
+                mensagem += "<br>Detalhes:<br>" + data.erros.join("<br>");
+            }
+            if (data.mensagem.includes("Erro") || data.erros) {
+                box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
+            } else {
+                box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
+            }
+            button.disabled = false;
+            button.textContent = "Importar para o banco";
+        })
+        .catch(err => {
+            console.error(err);
+            const box = document.getElementById("message-box");
+            box.innerHTML = `<div class="mensagem-erro">Erro ao importar os dados: ${err}</div>`;
+            button.disabled = false;
+            button.textContent = "Importar para o banco";
+        });
+    }
+</script>
                     </form>
                 </div>
             </section>
