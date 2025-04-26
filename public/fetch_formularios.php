@@ -1,10 +1,28 @@
 <?php
+session_start();
+
+// Verificar se o usuário está logado e tem um cargo permitido
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["funcionario_id"])) {
+    echo json_encode([]);
+    exit;
+}
+
 require_once "db_connection.php";
 
-header("Content-Type: application/json");
+$funcionario_id = (int)$_SESSION["funcionario_id"];
 
-$query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE formulario_id IS NOT NULL ORDER BY formulario_id";
-$result = $conn->query($query);
+// Buscar os formulários associados ao funcionário logado
+$query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
+$stmt = $conn->prepare($query);
+if (!$stmt) {
+    echo json_encode([]);
+    $conn->close();
+    exit;
+}
+
+$stmt->bind_param("i", $funcionario_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $formularios = [];
 if ($result && $result->num_rows > 0) {
@@ -13,6 +31,10 @@ if ($result && $result->num_rows > 0) {
     }
 }
 
-echo json_encode($formularios);
+$stmt->close();
 $conn->close();
+
+// Retornar a lista de formulários como JSON
+header('Content-Type: application/json');
+echo json_encode($formularios);
 ?>

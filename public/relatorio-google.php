@@ -117,14 +117,18 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
                                 <option value="">Selecione um formulário</option>
                                 <?php
                                 require_once "db_connection.php";
-                                $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
-                                $result = $conn->query($query);
+                                $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param("i", $funcionario_id);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
                                 if ($result && $result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                         $form_id = htmlspecialchars($row['formulario_id']);
                                         echo "<option value=\"$form_id\">$form_id</option>";
                                     }
                                 }
+                                $stmt->close();
                                 $conn->close();
                                 ?>
                             </select>
@@ -338,7 +342,7 @@ $funcionario_id = (int)$_SESSION["funcionario_id"];
                                     return;
                                 }
 
-                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode ser desfeita.`)) {
+                                if (!confirm(`Tem certeza que deseja excluir o formulário "${formularioId}"? Essa ação não pode be desfeita.`)) {
                                     return;
                                 }
 
