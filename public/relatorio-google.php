@@ -10,8 +10,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_
     exit;
 }
 
-// Definir a variável $cargo para uso no HTML
+// Verificar se o funcionario_id está na sessão
+if (!isset($_SESSION["funcionario_id"])) {
+    header('Location: index.php');
+    exit;
+}
+
+// Definir variáveis para uso no HTML
 $cargo = $_SESSION["cargo"];
+$funcionario_id = (int)$_SESSION["funcionario_id"];
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -62,9 +69,9 @@ $cargo = $_SESSION["cargo"];
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
                 </div>
             </div>
-            <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <?php endif; ?>
             
+            <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
         </div>
         <!-- FIM SIDEBAR -->
@@ -79,6 +86,7 @@ $cargo = $_SESSION["cargo"];
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
+                        <input type="hidden" id="funcionarioId" value="<?php echo htmlspecialchars($funcionario_id); ?>">
                         
                         <div class="form-group">
                             <div>
@@ -94,35 +102,35 @@ $cargo = $_SESSION["cargo"];
                                 <input type="text" id="formularioId" placeholder="Identificador do formulário" required>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar para o banco</button>
                             </div>
                         </div>
                         <div class="form-group">
                             <div>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
-                                <select id="formularioIdDelete">
-                                    <option value="">Selecione um formulário</option>
-                                    <?php
-                                    require_once "db_connection.php";
-                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
-                                    $result = $conn->query($query);
-                                    if ($result && $result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
-                                            $form_id = htmlspecialchars($row['formulario_id']);
-                                            echo "<option value=\"$form_id\">$form_id</option>";
-                                        }
+                            <select id="formularioIdDelete">
+                                <option value="">Selecione um formulário</option>
+                                <?php
+                                require_once "db_connection.php";
+                                $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
+                                $result = $conn->query($query);
+                                if ($result && $result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $form_id = htmlspecialchars($row['formulario_id']);
+                                        echo "<option value=\"$form_id\">$form_id</option>";
                                     }
-                                    $conn->close();
-                                    ?>
-                                </select>
+                                }
+                                $conn->close();
+                                ?>
+                            </select>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>
@@ -291,6 +299,7 @@ $cargo = $_SESSION["cargo"];
                                     body: JSON.stringify({
                                         dados: dadosFiltrados,
                                         formularioId: document.getElementById('formularioId').value,
+                                        funcionarioId: document.getElementById('funcionarioId').value,
                                         perguntas: perguntas,
                                         respostasCorretas: respostasCorretas,
                                         bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
@@ -418,7 +427,8 @@ $cargo = $_SESSION["cargo"];
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
-    <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/ajax.js"></script>
+    <script src="./assets/js/sidebar.js"></script>
+
 </body>
 </html>

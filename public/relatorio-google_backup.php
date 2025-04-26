@@ -1,3 +1,18 @@
+<?php
+session_start();
+
+// Definir os cargos permitidos para acessar a página
+$allowed_cargos = ['Professor', 'Coordenador', 'Diretor', 'Administrador'];
+
+// Verificar se o usuário está logado e tem um cargo permitido
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
+    header('Location: index.php');
+    exit;
+}
+
+// Definir a variável $cargo para uso no HTML
+$cargo = $_SESSION["cargo"];
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -36,22 +51,20 @@
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
-            <?php 
-            $cargo = isset($_SESSION["cargo"]) ? $_SESSION["cargo"] : "";
-            if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+            <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+                    <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
                 </div>
             </div>
+            <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <?php endif; ?>
             
-            <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
         </div>
         <!-- FIM SIDEBAR -->
@@ -382,7 +395,7 @@
         </div>
     </div>
 
-    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+    <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
@@ -402,10 +415,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="./assets/js/utils.js"></script>
-    <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
+    <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/ajax.js"></script>
 </body>
 </html>
