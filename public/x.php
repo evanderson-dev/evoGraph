@@ -111,7 +111,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     <?php
                                     require_once "db_connection.php";
                                     $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
-                                    $result = $conn->query($query);
+                                    $result = $conn->prepare($query);
                                     $stmt->bind_param("i", $funcionario_id);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
@@ -144,7 +144,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             let dadosPlanilha = [];
                             let perguntas = [];
                             let respostasCorretas = [];
-                            const funcionarioId = <?php echo json_encode($_SESSION['funcionario_id'] ?? null); ?>; // Passa o funcionario_id da sessão
+                            const funcionarioId = <?php echo json_encode($_SESSION['funcionario_id'] ?? null); ?>;
 
                             function formatGoogleSheetUrl(userInputUrl) {
                                 const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
@@ -302,7 +302,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         perguntas: perguntas,
                                         respostasCorretas: respostasCorretas,
                                         bnccHabilidade: document.getElementById('bnccHabilidade').value.trim(),
-                                        funcionarioId: funcionarioId // Inclui o funcionario_id
+                                        funcionarioId: funcionarioId
                                     })
                                 })
                                 .then(response => response.json())
@@ -345,7 +345,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 button.disabled = true;
                                 button.textContent = "Excluindo...";
 
-                                fetch('delete_formulario.php', {
+                                fetch('excluir_formulario.php', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -359,7 +359,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     const box = document.getElementById("message-box");
                                     if (data.status === "success") {
                                         box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
-                                        // Atualizar o dropdown após exclusão
                                         atualizarDropdownFormularios();
                                     } else {
                                         box.innerHTML = `<div class="mensagem-erro">${data.mensagem}</div>`;
@@ -394,7 +393,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     });
                             }
 
-                            // Atualizar o dropdown ao carregar a página
                             document.addEventListener('DOMContentLoaded', atualizarDropdownFormularios);
                         </script>
                     </form>
@@ -415,7 +413,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
     </div>
     <?php endif; ?>
 
-    <!-- Scripts -->
     <footer>
         <p>© 2025 evoGraph. All rights reserved.</p>
     </footer>
