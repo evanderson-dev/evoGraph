@@ -65,23 +65,22 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="relatorio-google.php"><i class="fa-solid fa-chart-bar"></i>Importar Relatório</a>
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
-            <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
-            <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
+            <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $cargo === "Administrador"): ?>
+                    <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <?php endif; ?>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
                 </div>
             </div>
+            <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <?php endif; ?>
             
-            <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
         </div>
         <!-- FIM SIDEBAR -->
