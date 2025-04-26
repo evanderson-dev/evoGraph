@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_NOTICE); // Desabilitar exibição de erros
 
 require_once "db_connection.php";
 
@@ -62,6 +62,7 @@ if ($result && $result->num_rows > 0) {
     $erros[] = "Campo 'formulario_id' não encontrado na tabela respostas_formulario.";
     writeLog("Erro: Campo 'formulario_id' não encontrado na tabela respostas_formulario.");
 }
+$result->close();
 
 // Verifica se a tabela tem o campo pontuacao
 $has_pontuacao = false;
@@ -71,6 +72,7 @@ if ($result && $result->num_rows > 0) {
 } else {
     writeLog("Aviso: Campo 'pontuacao' não encontrado na tabela respostas_formulario.");
 }
+$result->close();
 
 // Salvar perguntas e respostas corretas na tabela perguntas_formulario
 if (!empty($perguntas) && !empty($respostasCorretas) && count($perguntas) === count($respostasCorretas)) {
@@ -201,7 +203,6 @@ foreach ($dados_alunos as $index => $linha) {
         continue;
     }
     $result = $stmt->get_result();
-
     $aluno_id = null;
     if ($result && $result->num_rows > 0) {
         $aluno = $result->fetch_assoc();
@@ -210,6 +211,7 @@ foreach ($dados_alunos as $index => $linha) {
     } else {
         writeLog("Linha $index: Nenhum aluno encontrado para email '$email'.");
     }
+    $result->close();
     $stmt->close();
 
     // Verifica se já existe uma resposta para o mesmo email, formulario_id e funcionario_id
@@ -229,11 +231,12 @@ foreach ($dados_alunos as $index => $linha) {
         continue;
     }
     $result = $stmt->get_result();
-
     if ($result && $result->num_rows > 0) {
         $existing = $result->fetch_assoc();
         $existing_data_envio = $existing['data_envio'];
         writeLog("Linha $index: Resposta existente encontrada para email '$email', formulario_id '$formulario_id' e funcionario_id '$funcionario_id' com data_envio '$existing_data_envio'.");
+        $result->close();
+        $stmt->close();
 
         // Compara data_envio
         if ($data_envio > $existing_data_envio) {
@@ -274,6 +277,8 @@ foreach ($dados_alunos as $index => $linha) {
             continue;
         }
     } else {
+        $result->close();
+        $stmt->close();
         // Nenhuma resposta existente, insere nova
         $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
         $columns = "aluno_id, email, data_envio, dados_json, funcionario_id" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "");
