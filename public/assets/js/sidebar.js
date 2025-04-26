@@ -1,14 +1,3 @@
-// $(document).ready(function() {
-//     // Inicializa o estado da sidebar com base no localStorage
-//     if (localStorage.getItem('sidebarActive') === 'true') {
-//         $('#sidebar').addClass('active');
-//         $('#main-content').addClass('shifted');
-//     }
-
-//     $('#menu-toggle').on('click', function() {
-//         toggleSidebar();
-//     });    
-// });
 /* Responsabilidade: Gerencia o toggle da sidebar, persiste seu estado e controla submenus */
 $(document).ready(function() {
     // Toggle da sidebar
@@ -39,6 +28,7 @@ $(document).ready(function() {
         $toggleIcon.toggleClass('open'); // Gira a seta
     });
 });
+// Função para alternar a sidebar e o conteúdo principal
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
