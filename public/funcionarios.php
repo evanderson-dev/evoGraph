@@ -1,12 +1,10 @@
 <?php
-session_start();
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("Location: index.php");
-    exit;
-}
-require_once 'db_connection.php';
-$funcionario_id = $_SESSION["funcionario_id"];
-$cargo = $_SESSION["cargo"];
+require_once 'restrict_access.php';
+restrict_access(['Coordenador', 'Diretor', 'Administrador']);
+
+require_once 'db_connection.php'; // Conexão com o banco de dados
+$funcionario_id = $_SESSION["funcionario_id"]; // ID do funcionário logado
+$cargo = $_SESSION["cargo"]; // Cargo do funcionário logado
 
 $sql = "SELECT nome, foto FROM funcionarios WHERE id = ?";
 $stmt = $conn->prepare($sql);

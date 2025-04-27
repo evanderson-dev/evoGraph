@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Definir os cargos permitidos para acessar a página
+$allowed_cargos = ['Professor', 'Coordenador', 'Diretor', 'Administrador'];
+
+// Verificar se o usuário está logado e tem um cargo permitido
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
+    header('Location: index.php');
+    exit;
+}
+
+// Definir a variável $cargo para uso no HTML
+$cargo = $_SESSION["cargo"];
+$funcionario_id = $_SESSION["funcionario_id"];
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -32,7 +48,7 @@
     </header>
 
     <div class="container">
-    
+
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
