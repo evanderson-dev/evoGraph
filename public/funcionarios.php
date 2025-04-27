@@ -1,10 +1,18 @@
 <?php
-require_once 'db_connection.php'; // Conexão com o banco de dados
-require_once 'restrict_access.php';
-restrict_access(['Coordenador', 'Diretor', 'Administrador']);
+session_start();
 
-// $funcionario_id = $_SESSION["funcionario_id"]; // ID do funcionário logado
-// $cargo = $_SESSION["cargo"]; // Cargo do funcionário logado
+// Definir os cargos permitidos para acessar a página
+$allowed_cargos = ['Professor', 'Coordenador', 'Diretor', 'Administrador'];
+
+// Verificar se o usuário está logado e tem um cargo permitido
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
+    header('Location: index.php');
+    exit;
+}
+
+require_once 'db_connection.php';
+$funcionario_id = $_SESSION["funcionario_id"];
+$cargo = $_SESSION["cargo"];
 
 $sql = "SELECT nome, foto FROM funcionarios WHERE id = ?";
 $stmt = $conn->prepare($sql);
