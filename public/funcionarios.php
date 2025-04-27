@@ -1,10 +1,10 @@
 <?php
+require_once 'db_connection.php'; // Conexão com o banco de dados
 require_once 'restrict_access.php';
 restrict_access(['Coordenador', 'Diretor', 'Administrador']);
 
-require_once 'db_connection.php'; // Conexão com o banco de dados
-$funcionario_id = $_SESSION["funcionario_id"]; // ID do funcionário logado
-$cargo = $_SESSION["cargo"]; // Cargo do funcionário logado
+// $funcionario_id = $_SESSION["funcionario_id"]; // ID do funcionário logado
+// $cargo = $_SESSION["cargo"]; // Cargo do funcionário logado
 
 $sql = "SELECT nome, foto FROM funcionarios WHERE id = ?";
 $stmt = $conn->prepare($sql);
