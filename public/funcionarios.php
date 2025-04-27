@@ -2,7 +2,7 @@
 session_start();
 
 // Definir os cargos permitidos para acessar a página
-$allowed_cargos = ['Professor', 'Coordenador', 'Diretor', 'Administrador'];
+$allowed_cargos = ['Coordenador', 'Diretor', 'Administrador'];
 
 // Verificar se o usuário está logado e tem um cargo permitido
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["cargo"]) || !in_array($_SESSION["cargo"], $allowed_cargos)) {
