@@ -4,7 +4,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("Location: index.php");
     exit;
 }
-require_once 'db_connection.php';
+require_once './src/Config/db_connection.php';
 $funcionario_id = $_SESSION["funcionario_id"];
 $cargo = $_SESSION["cargo"];
 $sql = "SELECT nome, foto FROM funcionarios WHERE id = ?";
