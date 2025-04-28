@@ -361,6 +361,7 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
 
     <script src="./assets/js/modal-details-aluno.js"></script>
     <script src="./assets/js/dashboard.js"></script>
+    <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/ajax.js"></script>
 </body>
 </html>
