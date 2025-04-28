@@ -65,7 +65,7 @@ $(document).ready(function() {
         const formData = new FormData(this);
 
         $.ajax({
-            url: 'my_profile.php',
+            url: './src/Views/profile/my_profile.php',
             type: 'POST',
             data: formData,
             contentType: false,
