@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <title>Teste</title>
 </head>
 <body>
-    <p>Página carregada com sucesso!</p>
+    <h1>Teste Index</h1>
+    <a href="my_profile.php">Meu Perfil</a>
 </body>
 </html>
