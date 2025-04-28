@@ -69,7 +69,7 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
             <a href="relatorio-google.php"><i class="fa-solid fa-chart-bar"></i>Importar Relatório</a>
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
-            <a href="./src/Views/profile/my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
+            <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
             <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
             <div class="sidebar-item">
