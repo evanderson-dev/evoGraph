@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./assets/css/global.css" rel="stylesheet" />
     <link href="./assets/css/login.css" rel="stylesheet" />
-    <!-- <link href="./assets/css/login.css" rel="stylesheet" /> -->
+    <!-- <link href="./assets/css/global.css" rel="stylesheet" /> -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Login</title>
 </head>
@@ -53,7 +52,7 @@
                     <label for="new-password">Nova Senha</label>
                     <input type="password" id="new-password" name="new-password" placeholder="Digite a nova senha" required>
                 </div>
-                
+
                 <button type="submit" class="login-button">Alterar Senha</button>
             </form>
         </div>
