@@ -56,6 +56,6 @@
             </form>
         </div>
     </div>
-    <script src="./assets//js/script.js"></script>
+    <script src="./assets//js/login.js"></script>
 </body>
 </html>

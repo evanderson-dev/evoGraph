@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('email', email);
             formData.append('password', password);
 
-            fetch('login.php', {
+            fetch('login.php', { // URL do arquivo PHP que processa o login
                 method: 'POST',
                 body: formData
             })
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 message.className = `message ${data.status}`;
                 if (data.status === "success") {
                     setTimeout(() => {
-                        window.location.href = "dashboard.php";
+                        window.location.href = "./src/Views/dashboard.php";
                     }, 2000);
                 }
             })
@@ -105,17 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 message.className = "message error";
                 console.error('Erro:', error);
             });
-        });
-    }
-
-    // Mostrar/esconder a sidebar (somente no dashboard.php)
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.querySelector('.main-content');
-    if (menuToggle && sidebar && mainContent) {
-        menuToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('shifted');
         });
     }
 });
