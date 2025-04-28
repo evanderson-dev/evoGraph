@@ -1,8 +1,13 @@
 <?php
-require_once 'restrict_access.php';
-restrict_access(['Professor', 'Coordenador', 'Diretor', 'Administrador']);
+session_start();
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    header("Location: index.php");
+    exit;
+}
 
 require_once 'db_connection.php';
+$funcionario_id = $_SESSION["funcionario_id"];
+$cargo = $_SESSION["cargo"];
 
 // Buscar dados adicionais do funcionário para o formulário
 $sql = "SELECT nome, sobrenome, email, rf, data_nascimento, cargo, foto FROM funcionarios WHERE id = ?";
@@ -271,7 +276,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
         </div>
     </div>
 
-    <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
+    <?php if ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador"): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
@@ -285,7 +290,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
 
     <!-- Scripts -->
     <footer>
-        <p>© 2025 evoGraph. All rights reserved.</p>
+        <p>&copy; 2025 evoGraph. All rights reserved.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -296,8 +301,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_profile'])) {
     
     <script src="./assets/js/my-profile.js"></script>
     <script src="./assets/js/dashboard.js"></script>
-    <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/ajax.js"></script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('shifted');
+    
+            // Atualiza o estado no localStorage
+            const isActive = sidebar.classList.contains('active');
+            localStorage.setItem('sidebarActive', isActive);
+        }
+    
+        $(document).ready(function() {
+            // Inicializa o estado da sidebar com base no localStorage
+            if (localStorage.getItem('sidebarActive') === 'true') {
+                $('#sidebar').addClass('active');
+                $('#main-content').addClass('shifted');
+            }
+    
+            $('#menu-toggle').on('click', function() {
+                toggleSidebar();
+            });
+    
+            // Toggle do submenu
+            $('.sidebar-toggle').on('click', function(e) {
+                e.preventDefault();
+                const $submenu = $(this).next('.submenu');
+                const $toggleIcon = $(this).find('.submenu-toggle');
+    
+                $submenu.slideToggle(200); // Animação suave
+                $toggleIcon.toggleClass('open'); // Gira a seta
+            });
+        });
+    </script>
 
 </body>
 </html>
