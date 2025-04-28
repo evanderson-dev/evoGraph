@@ -2,7 +2,7 @@
 // Configurações do banco de dados
 $host = "localhost";
 $username = "admEvoGraph";
-$password = "evoGraph123";
+$password = "evoGraph@123";
 $database = "evograph_db";
 
 // Criar a conexão
