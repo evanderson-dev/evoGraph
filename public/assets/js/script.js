@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('email', email);
             formData.append('password', password);
 
-            fetch('login.php', { // URL do arquivo PHP que processa o login
+            fetch('login.php', {
                 method: 'POST',
                 body: formData
             })
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 message.className = `message ${data.status}`;
                 if (data.status === "success") {
                     setTimeout(() => {
-                        window.location.href = "./src/Views/dashboard.php";
+                        window.location.href = "dashboard.php";
                     }, 2000);
                 }
             })

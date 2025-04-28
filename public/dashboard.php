@@ -4,7 +4,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("Location: index.php");
     exit;
 }
-require_once './src/Config/db_connection.php';
+require_once 'db_connection.php';
 $funcionario_id = $_SESSION["funcionario_id"];
 $cargo = $_SESSION["cargo"];
 $sql = "SELECT nome, foto FROM funcionarios WHERE id = ?";
@@ -57,6 +57,7 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
         </div>
     </header>
     <!-- Fim do Header -->
+
     <div class="container">
 
         <!-- SIDEBAR -->
@@ -361,41 +362,6 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     <script src="./assets/js/modal-details-aluno.js"></script>
     <script src="./assets/js/dashboard.js"></script>
     <script src="./assets/js/ajax.js"></script>
-
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('shifted');
-    
-            // Atualiza o estado no localStorage
-            const isActive = sidebar.classList.contains('active');
-            localStorage.setItem('sidebarActive', isActive);
-        }
-    
-        $(document).ready(function() {
-            // Inicializa o estado da sidebar com base no localStorage
-            if (localStorage.getItem('sidebarActive') === 'true') {
-                $('#sidebar').addClass('active');
-                $('#main-content').addClass('shifted');
-            }
-    
-            $('#menu-toggle').on('click', function() {
-                toggleSidebar();
-            });
-    
-            // Toggle do submenu
-            $('.sidebar-toggle').on('click', function(e) {
-                e.preventDefault();
-                const $submenu = $(this).next('.submenu');
-                const $toggleIcon = $(this).find('.submenu-toggle');
-    
-                $submenu.slideToggle(200); // Animação suave
-                $toggleIcon.toggleClass('open'); // Gira a seta
-            });
-        });
-    </script>
 </body>
 </html>
 <?php $conn->close(); ?>
