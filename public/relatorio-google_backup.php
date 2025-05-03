@@ -424,10 +424,5 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <script src="./assets/js/modal-add-aluno.js"></script>
     <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/ajax.js"></script>
-    <script>
-        // Passar o funcionarioId do PHP para o JavaScript
-        const funcionarioId = <?php echo json_encode($_SESSION['funcionario_id'] ?? null); ?>;
-    </script>
-    <script src="./assets/js/relatorio-google.js"></script>
 </body>
 </html>
