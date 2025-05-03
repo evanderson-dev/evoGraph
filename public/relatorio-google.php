@@ -26,7 +26,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <link rel="stylesheet" href="./assets/css/modals/modal-add-turma.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-aluno.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>evoGraph - Relatório Google</title>    
+    <title>evoGraph - Relatório Google</title>
 </head>
 <body>
     <!-- Header -->
@@ -45,6 +45,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <!-- Fim do Header -->
 
     <div class="container">
+
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
@@ -63,7 +64,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
             </div>
             <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <?php endif; ?>
-            
+
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
         </div>
         <!-- FIM SIDEBAR -->
@@ -78,7 +79,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
-                        
+
                         <div class="form-group">
                             <div>
                                 <label for="googleSheetLink">Link da planilha do Google:</label>
@@ -139,9 +140,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         </div>
 
                         <script>
-                            let dadosPlanilha = []; // Variável global para armazenar os dados
-                            let perguntas = []; // Armazenar os cabeçalhos das perguntas
-                            let respostasCorretas = []; // Armazenar as respostas corretas
+                            let dadosPlanilha = [];
+                            let perguntas = [];
+                            let respostasCorretas = [];
                             const funcionarioId = <?php echo json_encode($_SESSION['funcionario_id'] ?? null); ?>;
 
                             function formatGoogleSheetUrl(userInputUrl) {
@@ -278,11 +279,15 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     return;
                                 }
 
+                                if (!funcionarioId) {
+                                    alert("Erro: Usuário não autenticado.");
+                                    return;
+                                }
+
                                 const button = document.querySelector('button[onclick="importarParaBanco()"]');
                                 button.disabled = true;
                                 button.textContent = "Importando...";
 
-                                // Preparar dados para enviar (excluindo a linha GABARITO)
                                 const dadosFiltrados = dadosPlanilha.filter(row => !(row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO'));
 
                                 fetch('importar_formulario.php', {
@@ -295,7 +300,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         formularioId: document.getElementById('formularioId').value,
                                         perguntas: perguntas,
                                         respostasCorretas: respostasCorretas,
-                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
+                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim(),
+                                        funcionarioId: funcionarioId
                                     })
                                 })
                                 .then(response => response.json())
@@ -309,7 +315,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
                                     } else {
                                         box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
-                                        // Atualizar o dropdown após importação
                                         atualizarDropdownFormularios();
                                     }
                                     button.disabled = false;
@@ -353,7 +358,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     const box = document.getElementById("message-box");
                                     if (data.status === "success") {
                                         box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
-                                        // Atualizar o dropdown após exclusão
                                         atualizarDropdownFormularios();
                                     } else {
                                         box.innerHTML = `<div class="mensagem-erro">${data.mensagem}</div>`;
@@ -388,7 +392,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     });
                             }
 
-                            // Atualizar o dropdown ao carregar a página
                             document.addEventListener('DOMContentLoaded', atualizarDropdownFormularios);
                         </script>
                     </form>
@@ -409,7 +412,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
     </div>
     <?php endif; ?>
 
-    <!-- Scripts -->
     <footer>
         <p>© 2025 evoGraph. All rights reserved.</p>
     </footer>
