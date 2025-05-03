@@ -280,16 +280,28 @@ function carregarDisciplinas(anoId) {
     disciplinaSelect.disabled = true;
     habilidadeSelect.disabled = true;
 
-    if (!anoId) return;
+    // Validação do anoId
+    if (!anoId || isNaN(anoId) || parseInt(anoId) <= 0) {
+        console.error("Ano inválido:", anoId);
+        document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">ID do ano inválido: ${anoId}</div>`;
+        return;
+    }
+
+    console.log("Enviando anoId:", anoId);
 
     fetch('fetch_disciplinas.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ ano_id: anoId })
+        body: JSON.stringify({ ano_id: parseInt(anoId) })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.error) {
             document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">${data.error}</div>`;
@@ -305,7 +317,7 @@ function carregarDisciplinas(anoId) {
     })
     .catch(err => {
         console.error("Erro ao carregar disciplinas:", err);
-        document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">Erro ao carregar disciplinas: ${err}</div>`;
+        document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">Erro ao carregar disciplinas: ${err.message}</div>`;
     });
 }
 
@@ -316,16 +328,25 @@ function carregarHabilidades(anoId, disciplinaId) {
     habilidadeSelect.innerHTML = '<option value="">Selecione a habilidade</option>';
     habilidadeSelect.disabled = true;
 
-    if (!anoId || !disciplinaId) return;
+    if (!anoId || !disciplinaId || isNaN(anoId) || isNaN(disciplinaId) || parseInt(anoId) <= 0 || parseInt(disciplinaId) <= 0) {
+        console.error("Ano ou disciplina inválido:", { anoId, disciplinaId });
+        document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">ID do ano ou disciplina inválido</div>`;
+        return;
+    }
 
     fetch('fetch_habilidades.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ ano_id: anoId, disciplina_id: disciplinaId })
+        body: JSON.stringify({ ano_id: parseInt(anoId), disciplina_id: parseInt(disciplinaId) })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.error) {
             document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">${data.error}</div>`;
@@ -335,14 +356,14 @@ function carregarHabilidades(anoId, disciplinaId) {
             const option = document.createElement('option');
             option.value = habilidade.id;
             option.textContent = `${habilidade.codigo} - ${habilidade.descricao.substring(0, 50)}...`;
-            option.title = `${habilidade.codigo} - ${habilidade.descricao}`; // Tooltip com descrição completa
+            option.title = `${habilidade.codigo} - ${habilidade.descricao}`;
             habilidadeSelect.appendChild(option);
         });
         habilidadeSelect.disabled = false;
     })
     .catch(err => {
         console.error("Erro ao carregar habilidades:", err);
-        document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">Erro ao carregar habilidades: ${err}</div>`;
+        document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">Erro ao carregar habilidades: ${err.message}</div>`;
     });
 }
 
@@ -355,10 +376,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const disciplinaSelect = document.getElementById('bnccDisciplina');
 
     anoSelect.addEventListener('change', () => {
-        carregarDisciplinas(anoSelect.value);
+        const anoId = anoSelect.value;
+        console.log("Mudança no ano, valor selecionado:", anoId);
+        carregarDisciplinas(anoId);
     });
 
     disciplinaSelect.addEventListener('change', () => {
-        carregarHabilidades(anoSelect.value, disciplinaSelect.value);
+        const anoId = anoSelect.value;
+        const disciplinaId = disciplinaSelect.value;
+        console.log("Mudança na disciplina, valores:", { anoId, disciplinaId });
+        carregarHabilidades(anoId, disciplinaId);
     });
 });
