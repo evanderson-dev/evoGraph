@@ -36,7 +36,7 @@ $formulario_id = isset($dados['formularioId']) && !empty(trim($dados['formulario
 $dados_alunos = $dados['dados'];
 $perguntas = isset($dados['perguntas']) ? $dados['perguntas'] : [];
 $respostasCorretas = isset($dados['respostasCorretas']) ? $dados['respostasCorretas'] : [];
-$bncc_habilidade_id = isset($dados['bnccHabilidadeId']) && is_numeric($dados['bnccHabilidadeId']) ? (int)$dados['bnccHabilidadeId'] : null;
+$bncc_habilidade = isset($dados['bnccHabilidade']) && !empty(trim($dados['bnccHabilidade'])) ? trim($dados['bnccHabilidade']) : null;
 
 $importados = 0;
 $atualizados = 0;
@@ -57,25 +57,18 @@ if ($result && $result->num_rows > 0) {
     $has_pontuacao = true;
 }
 
-// Verifica se a tabela tem o campo bncc_habilidade_id
-$has_bncc_habilidade_id = false;
-$result = $conn->query("SHOW COLUMNS FROM respostas_formulario LIKE 'bncc_habilidade_id'");
-if ($result && $result->num_rows > 0) {
-    $has_bncc_habilidade_id = true;
-}
-
 // Salvar perguntas e respostas corretas na tabela perguntas_formulario
 if (!empty($perguntas) && !empty($respostasCorretas) && count($perguntas) === count($respostasCorretas)) {
     for ($i = 0; $i < count($perguntas); $i++) {
         $pergunta_texto = $conn->real_escape_string($perguntas[$i]);
         $resposta_correta = $conn->real_escape_string($respostasCorretas[$i]);
 
-        $query = "INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, resposta_correta, bncc_habilidade_id) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, resposta_correta, bncc_habilidade) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("sssi", $formulario_id, $pergunta_texto, $resposta_correta, $bncc_habilidade_id);
+        $stmt->bind_param("ssss", $formulario_id, $pergunta_texto, $resposta_correta, $bncc_habilidade);
         
         if ($stmt->execute()) {
-            writeLog("Pergunta '$pergunta_texto' salva com sucesso para formulario_id '$formulario_id' com bncc_habilidade_id '$bncc_habilidade_id'.");
+            writeLog("Pergunta '$pergunta_texto' salva com sucesso para formulario_id '$formulario_id' com bncc_habilidade '$bncc_habilidade'.");
         } else {
             $erros[] = "Erro ao salvar pergunta '$pergunta_texto': " . $stmt->error;
             writeLog("Erro ao salvar pergunta '$pergunta_texto': " . $stmt->error);
@@ -164,11 +157,8 @@ foreach ($dados_alunos as $index => $linha) {
 
     // Busca aluno pelo email
     $email_escaped = $conn->real_escape_string($email);
-    $query = "SELECT id FROM alunos WHERE email = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $email_escaped);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $query = "SELECT id FROM alunos WHERE email = '$email_escaped'";
+    $result = $conn->query($query);
     
     $aluno_id = null;
     if ($result && $result->num_rows > 0) {
@@ -178,14 +168,11 @@ foreach ($dados_alunos as $index => $linha) {
     } else {
         writeLog("Linha $index: Nenhum aluno encontrado para email '$email'.");
     }
-    $stmt->close();
 
     // Verifica se já existe uma resposta para o mesmo email e formulario_id
-    $query = "SELECT id, data_envio FROM respostas_formulario WHERE email = ? AND formulario_id = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $email_escaped, $formulario_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $formulario_id_escaped = $conn->real_escape_string($formulario_id);
+    $query = "SELECT id, data_envio FROM respostas_formulario WHERE email = '$email_escaped' AND formulario_id = '$formulario_id_escaped'";
+    $result = $conn->query($query);
 
     if ($result && $result->num_rows > 0) {
         $existing = $result->fetch_assoc();
@@ -196,35 +183,22 @@ foreach ($dados_alunos as $index => $linha) {
             // Atualiza o registro existente
             $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
             $query = "UPDATE respostas_formulario SET 
-                      aluno_id = ?,
-                      data_envio = ?,
-                      dados_json = ?,
-                      pontuacao = ?,
-                      funcionario_id = ?,
-                      bncc_habilidade_id = ?
-                      WHERE id = ?";
+                      aluno_id = " . ($aluno_id ? $aluno_id : "NULL") . ",
+                      data_envio = '$data_envio',
+                      dados_json = '$json_resposta',
+                      pontuacao = " . ($pontuacao !== null ? $pontuacao : "NULL") . ",
+                      funcionario_id = " . ($funcionario_id ? $funcionario_id : "NULL") . "
+                      WHERE id = " . $existing['id'];
             
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("isssiii", 
-                $aluno_id, 
-                $data_envio, 
-                $json_resposta, 
-                $pontuacao, 
-                $funcionario_id, 
-                $bncc_habilidade_id, 
-                $existing['id']
-            );
+            writeLog("Linha $index: Atualizando resposta existente com query: $query");
             
-            writeLog("Linha $index: Atualizando resposta existente com bncc_habilidade_id '$bncc_habilidade_id'.");
-            
-            if ($stmt->execute()) {
+            if ($conn->query($query)) {
                 $atualizados++;
                 writeLog("Linha $index: Atualização bem-sucedida.");
             } else {
-                $erros[] = "Erro ao atualizar linha $index com email '$email': " . $stmt->error;
-                writeLog("Linha $index: Erro na atualização: " . $stmt->error);
+                $erros[] = "Erro ao atualizar linha $index com email '$email': " . $conn->error;
+                writeLog("Linha $index: Erro na atualização: " . $conn->error);
             }
-            $stmt->close();
         } else {
             $ignorados++;
             writeLog("Linha $index: Resposta ignorada (data_envio '$data_envio' é mais antiga que '$existing_data_envio').");
@@ -233,30 +207,20 @@ foreach ($dados_alunos as $index => $linha) {
     } else {
         // Insere nova resposta
         $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
-        $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "") . ", funcionario_id" . ($has_bncc_habilidade_id ? ", bncc_habilidade_id" : "");
-        $placeholders = "?, ?, ?, ?" . ($has_pontuacao ? ", ?" : "") . ($has_formulario_id ? ", ?" : "") . ", ?" . ($has_bncc_habilidade_id ? ", ?" : "");
-        $query = "INSERT INTO respostas_formulario ($columns) VALUES ($placeholders)";
+        $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "") . ", funcionario_id";
+        $values = ($aluno_id ? $aluno_id : "NULL") . ", '$email_escaped', '$data_envio', '$json_resposta'" . ($has_pontuacao ? ", " . ($pontuacao !== null ? $pontuacao : "NULL") : "") . ($has_formulario_id ? ", '$formulario_id_escaped'" : "") . ", " . ($funcionario_id ? $funcionario_id : "NULL");
         
-        $stmt = $conn->prepare($query);
-        $types = "isss" . ($has_pontuacao ? "d" : "") . ($has_formulario_id ? "s" : "") . "i" . ($has_bncc_habilidade_id ? "i" : "");
-        $params = [$aluno_id, $email_escaped, $data_envio, $json_resposta];
-        if ($has_pontuacao) $params[] = $pontuacao;
-        if ($has_formulario_id) $params[] = $formulario_id;
-        $params[] = $funcionario_id;
-        if ($has_bncc_habilidade_id) $params[] = $bncc_habilidade_id;
+        $query = "INSERT INTO respostas_formulario ($columns) VALUES ($values)";
         
-        $stmt->bind_param($types, ...$params);
+        writeLog("Linha $index: Executando query: $query");
         
-        writeLog("Linha $index: Inserindo nova resposta com bncc_habilidade_id '$bncc_habilidade_id'.");
-        
-        if ($stmt->execute()) {
+        if ($conn->query($query)) {
             $importados++;
             writeLog("Linha $index: Inserção bem-sucedida.");
         } else {
-            $erros[] = "Erro ao inserir linha $index com email '$email': " . $stmt->error;
-            writeLog("Linha $index: Erro na inserção: " . $stmt->error);
+            $erros[] = "Erro ao inserir linha $index com email '$email': " . $conn->error;
+            writeLog("Linha $index: Erro na inserção: " . $conn->error);
         }
-        $stmt->close();
     }
 }
 

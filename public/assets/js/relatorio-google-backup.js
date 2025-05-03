@@ -157,7 +157,7 @@ function importarParaBanco() {
             formularioId: document.getElementById('formularioId').value,
             perguntas: perguntas,
             respostasCorretas: respostasCorretas,
-            bnccHabilidadeId: document.getElementById('bnccHabilidade').value || null,
+            bnccHabilidade: document.getElementById('bnccHabilidade').value.trim(),
             funcionarioId: funcionarioId
         })
     })
@@ -249,116 +249,4 @@ function atualizarDropdownFormularios() {
         });
 }
 
-// Funções para carregar dropdowns de BNCC
-function carregarAnos() {
-    fetch('fetch_anos.php')
-        .then(response => response.json())
-        .then(data => {
-            const select = document.getElementById('bnccAno');
-            select.innerHTML = '<option value="">Selecione o ano</option>';
-            data.forEach(ano => {
-                const option = document.createElement('option');
-                option.value = ano.id;
-                option.textContent = ano.nome;
-                select.appendChild(option);
-            });
-            select.disabled = false;
-        })
-        .catch(err => {
-            console.error("Erro ao carregar anos:", err);
-            document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">Erro ao carregar anos: ${err}</div>`;
-        });
-}
-
-function carregarDisciplinas(anoId) {
-    const disciplinaSelect = document.getElementById('bnccDisciplina');
-    const habilidadeSelect = document.getElementById('bnccHabilidade');
-    
-    // Resetar e desabilitar dropdowns dependentes
-    disciplinaSelect.innerHTML = '<option value="">Selecione a disciplina</option>';
-    habilidadeSelect.innerHTML = '<option value="">Selecione a habilidade</option>';
-    disciplinaSelect.disabled = true;
-    habilidadeSelect.disabled = true;
-
-    if (!anoId) return;
-
-    fetch('fetch_disciplinas.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ano_id: anoId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">${data.error}</div>`;
-            return;
-        }
-        data.forEach(disciplina => {
-            const option = document.createElement('option');
-            option.value = disciplina.id;
-            option.textContent = disciplina.nome;
-            disciplinaSelect.appendChild(option);
-        });
-        disciplinaSelect.disabled = false;
-    })
-    .catch(err => {
-        console.error("Erro ao carregar disciplinas:", err);
-        document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">Erro ao carregar disciplinas: ${err}</div>`;
-    });
-}
-
-function carregarHabilidades(anoId, disciplinaId) {
-    const habilidadeSelect = document.getElementById('bnccHabilidade');
-    
-    // Resetar e desabilitar dropdown de habilidades
-    habilidadeSelect.innerHTML = '<option value="">Selecione a habilidade</option>';
-    habilidadeSelect.disabled = true;
-
-    if (!anoId || !disciplinaId) return;
-
-    fetch('fetch_habilidades.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ano_id: anoId, disciplina_id: disciplinaId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">${data.error}</div>`;
-            return;
-        }
-        data.forEach(habilidade => {
-            const option = document.createElement('option');
-            option.value = habilidade.id;
-            option.textContent = `${habilidade.codigo} - ${habilidade.descricao.substring(0, 50)}...`;
-            option.title = `${habilidade.codigo} - ${habilidade.descricao}`; // Tooltip com descrição completa
-            habilidadeSelect.appendChild(option);
-        });
-        habilidadeSelect.disabled = false;
-    })
-    .catch(err => {
-        console.error("Erro ao carregar habilidades:", err);
-        document.getElementById('message-box').innerHTML = `<div class="mensagem-erro">Erro ao carregar habilidades: ${err}</div>`;
-    });
-}
-
-// Event listeners para os dropdowns
-document.addEventListener('DOMContentLoaded', () => {
-    atualizarDropdownFormularios();
-    carregarAnos();
-
-    const anoSelect = document.getElementById('bnccAno');
-    const disciplinaSelect = document.getElementById('bnccDisciplina');
-
-    anoSelect.addEventListener('change', () => {
-        carregarDisciplinas(anoSelect.value);
-    });
-
-    disciplinaSelect.addEventListener('change', () => {
-        carregarHabilidades(anoSelect.value, disciplinaSelect.value);
-    });
-});
+document.addEventListener('DOMContentLoaded', atualizarDropdownFormularios);
