@@ -12,6 +12,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_
 
 // Definir a variável $cargo para uso no HTML
 $cargo = $_SESSION["cargo"];
+$funcionario_id = $_SESSION["funcionario_id"];
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -25,7 +26,7 @@ $cargo = $_SESSION["cargo"];
     <link rel="stylesheet" href="./assets/css/modals/modal-add-turma.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-aluno.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>evoGraph - Relatório Google</title>    
+    <title>evoGraph - Relatório Google</title>
 </head>
 <body>
     <!-- Header -->
@@ -44,6 +45,7 @@ $cargo = $_SESSION["cargo"];
     <!-- Fim do Header -->
 
     <div class="container">
+
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
@@ -62,7 +64,7 @@ $cargo = $_SESSION["cargo"];
             </div>
             <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <?php endif; ?>
-            
+
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
         </div>
         <!-- FIM SIDEBAR -->
@@ -77,7 +79,7 @@ $cargo = $_SESSION["cargo"];
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
-                        
+
                         <div class="form-group">
                             <div>
                                 <label for="googleSheetLink">Link da planilha do Google:</label>
@@ -107,14 +109,16 @@ $cargo = $_SESSION["cargo"];
                                     <option value="">Selecione um formulário</option>
                                     <?php
                                     require_once "db_connection.php";
-                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
-                                    $result = $conn->query($query);
-                                    if ($result && $result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
-                                            $form_id = htmlspecialchars($row['formulario_id']);
-                                            echo "<option value=\"$form_id\">$form_id</option>";
-                                        }
+                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
+                                    $stmt = $conn->prepare($query);
+                                    $stmt->bind_param("i", $funcionario_id);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    while ($row = $result->fetch_assoc()) {
+                                        $form_id = htmlspecialchars($row['formulario_id']);
+                                        echo "<option value=\"$form_id\">$form_id</option>";
                                     }
+                                    $stmt->close();
                                     $conn->close();
                                     ?>
                                 </select>
@@ -136,9 +140,10 @@ $cargo = $_SESSION["cargo"];
                         </div>
 
                         <script>
-                            let dadosPlanilha = []; // Variável global para armazenar os dados
-                            let perguntas = []; // Armazenar os cabeçalhos das perguntas
-                            let respostasCorretas = []; // Armazenar as respostas corretas
+                            let dadosPlanilha = [];
+                            let perguntas = [];
+                            let respostasCorretas = [];
+                            const funcionarioId = <?php echo json_encode($_SESSION['funcionario_id'] ?? null); ?>;
 
                             function formatGoogleSheetUrl(userInputUrl) {
                                 const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
@@ -274,11 +279,15 @@ $cargo = $_SESSION["cargo"];
                                     return;
                                 }
 
+                                if (!funcionarioId) {
+                                    alert("Erro: Usuário não autenticado.");
+                                    return;
+                                }
+
                                 const button = document.querySelector('button[onclick="importarParaBanco()"]');
                                 button.disabled = true;
                                 button.textContent = "Importando...";
 
-                                // Preparar dados para enviar (excluindo a linha GABARITO)
                                 const dadosFiltrados = dadosPlanilha.filter(row => !(row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO'));
 
                                 fetch('importar_formulario.php', {
@@ -291,7 +300,8 @@ $cargo = $_SESSION["cargo"];
                                         formularioId: document.getElementById('formularioId').value,
                                         perguntas: perguntas,
                                         respostasCorretas: respostasCorretas,
-                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim()
+                                        bnccHabilidade: document.getElementById('bnccHabilidade').value.trim(),
+                                        funcionarioId: funcionarioId
                                     })
                                 })
                                 .then(response => response.json())
@@ -305,7 +315,6 @@ $cargo = $_SESSION["cargo"];
                                         box.innerHTML = `<div class="mensagem-erro">${mensagem}</div>`;
                                     } else {
                                         box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
-                                        // Atualizar o dropdown após importação
                                         atualizarDropdownFormularios();
                                     }
                                     button.disabled = false;
@@ -349,7 +358,6 @@ $cargo = $_SESSION["cargo"];
                                     const box = document.getElementById("message-box");
                                     if (data.status === "success") {
                                         box.innerHTML = `<div class="mensagem-sucesso">${data.mensagem}</div>`;
-                                        // Atualizar o dropdown após exclusão
                                         atualizarDropdownFormularios();
                                     } else {
                                         box.innerHTML = `<div class="mensagem-erro">${data.mensagem}</div>`;
@@ -384,7 +392,6 @@ $cargo = $_SESSION["cargo"];
                                     });
                             }
 
-                            // Atualizar o dropdown ao carregar a página
                             document.addEventListener('DOMContentLoaded', atualizarDropdownFormularios);
                         </script>
                     </form>
@@ -405,7 +412,6 @@ $cargo = $_SESSION["cargo"];
     </div>
     <?php endif; ?>
 
-    <!-- Scripts -->
     <footer>
         <p>© 2025 evoGraph. All rights reserved.</p>
     </footer>
