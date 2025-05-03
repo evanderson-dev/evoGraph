@@ -57,7 +57,7 @@ CREATE TABLE respostas_formulario (
 CREATE TABLE perguntas_formulario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     formulario_id VARCHAR(50),
-    bncc_habilidade VARCHAR(50), -- Exemplo: EF06GE10
+    bncc_habilidade VARCHAR(50),
     pergunta_texto TEXT NOT NULL,
     resposta_correta VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP

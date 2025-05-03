@@ -26,7 +26,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <link rel="stylesheet" href="./assets/css/modals/modal-add-turma.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-aluno.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>evoGraph - Relatório Google</title>
+    <title>evoGraph - Relatório Google</title>    
 </head>
 <body>
     <!-- Header -->
@@ -45,7 +45,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <!-- Fim do Header -->
 
     <div class="container">
-
+        
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
@@ -64,7 +64,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
             </div>
             <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
             <?php endif; ?>
-
+            
             <a href="logout.php"><i class="fa-solid fa-sign-out"></i>Sair</a>
         </div>
         <!-- FIM SIDEBAR -->
@@ -79,7 +79,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                 <div class="profile-form">
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
-
+                        
                         <div class="form-group">
                             <div>
                                 <label for="googleSheetLink">Link da planilha do Google:</label>
