@@ -49,8 +49,10 @@ CREATE TABLE respostas_formulario (
     data_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
     dados_json JSON NOT NULL,
     pontuacao DECIMAL(5,2) DEFAULT NULL,
+    funcionario_id INT,
     INDEX idx_email (email),
-    FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL
+    FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL,
+    FOREIGN KEY (funcionario_id) REFERENCES funcionarios(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Tabela perguntas_formulario
