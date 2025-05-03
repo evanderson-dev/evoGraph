@@ -3,8 +3,12 @@ require_once "db_connection.php";
 
 header('Content-Type: application/json');
 
+// Ler o corpo da requisição JSON
+$input = json_decode(file_get_contents('php://input'), true);
+
 try {
-    $ano_id = isset($_POST['ano_id']) ? intval($_POST['ano_id']) : 0;
+    // Obter ano_id do corpo JSON
+    $ano_id = isset($input['ano_id']) ? intval($input['ano_id']) : 0;
     if ($ano_id <= 0) {
         http_response_code(400);
         echo json_encode(['error' => 'ID do ano inválido']);
