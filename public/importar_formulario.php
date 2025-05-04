@@ -27,15 +27,13 @@ function ensureUtf8($string) {
     return $string;
 }
 
-// Função para limpar e codificar array para JSON
+// Função para limpar e codificar array para JSON, removendo chaves duplicadas
 function cleanAndEncodeJson($data) {
-    // Limpar valores do array recursivamente
-    $cleaned = array_map(function ($item) {
-        if (is_array($item)) {
-            return cleanAndEncodeJson($item);
-        }
-        return ensureUtf8($item);
-    }, (array)$data);
+    // Remover chaves duplicadas mantendo o último valor
+    $cleaned = array_reduce(array_keys($data), function ($carry, $key) use ($data) {
+        $carry[$key] = ensureUtf8($data[$key]);
+        return $carry;
+    }, []);
 
     $json = json_encode($cleaned, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     if (json_last_error() !== JSON_ERROR_NONE) {
