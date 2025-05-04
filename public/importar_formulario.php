@@ -19,6 +19,31 @@ function sendResponse($data, $statusCode = 200) {
     exit;
 }
 
+// Função para garantir que uma string seja UTF-8
+function ensureUtf8($string) {
+    if (is_string($string)) {
+        return mb_convert_encoding($string, 'UTF-8', mb_detect_encoding($string, 'UTF-8, ISO-8859-1', true));
+    }
+    return $string;
+}
+
+// Função para limpar e codificar array para JSON
+function cleanAndEncodeJson($data) {
+    // Limpar valores do array recursivamente
+    $cleaned = array_map(function ($item) {
+        if (is_array($item)) {
+            return cleanAndEncodeJson($item);
+        }
+        return ensureUtf8($item);
+    }, (array)$data);
+
+    $json = json_encode($cleaned, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception("Erro ao codificar JSON: " . json_last_error_msg());
+    }
+    return $json;
+}
+
 try {
     // Recebe os dados
     $dados = json_decode(file_get_contents("php://input"), true);
@@ -78,8 +103,8 @@ try {
     // Salvar perguntas e respostas corretas na tabela perguntas_formulario
     if (!empty($perguntas) && !empty($respostasCorretas) && count($perguntas) === count($respostasCorretas)) {
         for ($i = 0; $i < count($perguntas); $i++) {
-            $pergunta_texto = $conn->real_escape_string($perguntas[$i]);
-            $resposta_correta = $conn->real_escape_string($respostasCorretas[$i]);
+            $pergunta_texto = $conn->real_escape_string(ensureUtf8($perguntas[$i]));
+            $resposta_correta = $conn->real_escape_string(ensureUtf8($respostasCorretas[$i]));
 
             $query = "INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, resposta_correta, bncc_habilidade_id) VALUES (?, ?, ?, ?)";
             $stmt = $conn->prepare($query);
@@ -177,7 +202,7 @@ try {
         }
 
         // Busca aluno pelo email
-        $email_escaped = $conn->real_escape_string($email);
+        $email_escaped = $conn->real_escape_string(ensureUtf8($email));
         $query = "SELECT id FROM alunos WHERE email = ?";
         $stmt = $conn->prepare($query);
         if (!$stmt) {
@@ -214,7 +239,9 @@ try {
 
             if ($data_envio > $existing_data_envio) {
                 // Atualiza o registro existente
-                $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
+                $json_resposta = cleanAndEncodeJson($linha);
+                writeLog("Linha $index: JSON gerado para atualização: $json_resposta");
+                
                 $query = "UPDATE respostas_formulario SET 
                           aluno_id = ?,
                           data_envio = ?,
@@ -255,7 +282,9 @@ try {
             }
         } else {
             // Insere nova resposta
-            $json_resposta = $conn->real_escape_string(json_encode($linha, JSON_UNESCAPED_UNICODE));
+            $json_resposta = cleanAndEncodeJson($linha);
+            writeLog("Linha $index: JSON gerado para inserção: $json_resposta");
+            
             $columns = "aluno_id, email, data_envio, dados_json" . ($has_pontuacao ? ", pontuacao" : "") . ($has_formulario_id ? ", formulario_id" : "") . ", funcionario_id" . ($has_bncc_habilidade_id ? ", bncc_habilidade_id" : "");
             $placeholders = "?, ?, ?, ?" . ($has_pontuacao ? ", ?" : "") . ($has_formulario_id ? ", ?" : "") . ", ?" . ($has_bncc_habilidade_id ? ", ?" : "");
             $query = "INSERT INTO respostas_formulario ($columns) VALUES ($placeholders)";
