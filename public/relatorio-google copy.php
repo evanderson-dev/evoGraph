@@ -86,19 +86,33 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
                             </div>
                             <div>
+                                <label for="bnccAno">Ano Escolar:</label>
+                                <select id="bnccAno" required>
+                                    <option value="">Selecione o ano</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="bnccDisciplina">Disciplina:</label>
+                                <select id="bnccDisciplina" disabled>
+                                    <option value="">Selecione a disciplina</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label for="bnccHabilidade">Habilidade BNCC (Opcional):</label>
-                                <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
+                                <select id="bnccHabilidade" disabled>
+                                    <option value="">Selecione a habilidade</option>
+                                </select>
                             </div>
                             <div>
                                 <label for="formularioId">Identificador do formulário:</label>
                                 <input type="text" id="formularioId" placeholder="Identificador do formulário" required>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar para o banco</button>
                             </div>
                         </div>
@@ -124,7 +138,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 </select>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>

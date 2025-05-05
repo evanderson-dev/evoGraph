@@ -30,7 +30,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>    
+    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
     <script src="./assets/js/relatorios_bncc.js"></script>
 </head>
 <body>
@@ -91,11 +92,31 @@ $funcionario_id = $_SESSION["funcionario_id"];
                     <select name="formulario_id" id="formulario_id" onchange="this.form.submit()">
                         <option value="">Todos</option>
                         <?php
-                        $query = "SELECT DISTINCT formulario_id FROM respostas_formulario ORDER BY formulario_id";
-                        $result = $conn->query($query);
+                        // Ajustar a consulta com base no cargo
+                        if ($cargo === 'Professor') {
+                            // Professores veem apenas seus próprios formulários
+                            $query = "SELECT DISTINCT formulario_id 
+                                      FROM respostas_formulario 
+                                      WHERE funcionario_id = ? 
+                                      ORDER BY formulario_id";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bind_param("i", $funcionario_id);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                        } else {
+                            // Outros cargos veem todos os formulários
+                            $query = "SELECT DISTINCT formulario_id 
+                                      FROM respostas_formulario 
+                                      ORDER BY formulario_id";
+                            $result = $conn->query($query);
+                        }
+
                         while ($row = $result->fetch_assoc()) {
                             $selected = ($formulario_id === $row['formulario_id']) ? 'selected' : '';
                             echo "<option value='{$row['formulario_id']}' $selected>{$row['formulario_id']}</option>";
+                        }
+                        if ($cargo === 'Professor') {
+                            $stmt->close();
                         }
                         ?>
                     </select>
@@ -114,7 +135,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
                                                 JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao
                                         FROM respostas_formulario
-                                        WHERE formulario_id = '$formulario_id'
+                                        WHERE formulario_id = '$formulario_id'" . ($cargo === 'Professor' ? " AND funcionario_id = $funcionario_id" : "") . "
                                         ORDER BY serie";
                                 $result_medias = $conn->query($query_medias);
                                 $series_medias = [];
@@ -162,7 +183,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 if ($formulario_id) {
                                     $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                     FROM respostas_formulario
-                                                    WHERE formulario_id = '$formulario_id'
+                                                    WHERE formulario_id = '$formulario_id'" . ($cargo === 'Professor' ? " AND funcionario_id = $funcionario_id" : "") . "
                                                     ORDER BY serie";
                                     $result_series = $conn->query($query_series);
                                     $series = [];
@@ -198,7 +219,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                                                 SUM(CASE WHEN LOWER(JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"')) = LOWER('\"$resposta_correta\"') THEN 1 ELSE 0 END) AS acertos
                                                         FROM respostas_formulario
                                                         WHERE formulario_id = '$formulario_id'
-                                                        AND TRIM(JSON_EXTRACT(dados_json, '$.\"Série:\"')) = '\"$serie_escaped\"'";
+                                                        AND TRIM(JSON_EXTRACT(dados_json, '$.\"Série:\"')) = '\"$serie_escaped\"'" . ($cargo === 'Professor' ? " AND funcionario_id = $funcionario_id" : "");
                                                 $result_acertos = $conn->query($query_acertos);
                                                 if ($result_acertos) {
                                                     $acertos_row = $result_acertos->fetch_assoc();
@@ -240,7 +261,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             if ($formulario_id) {
                                 $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                 FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id'
+                                                WHERE formulario_id = '$formulario_id'" . ($cargo === 'Professor' ? " AND funcionario_id = $funcionario_id" : "") . "
                                                 ORDER BY serie";
                                 $result_series = $conn->query($query_series);
                                 while ($row = $result_series->fetch_assoc()) {
@@ -266,7 +287,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             if ($formulario_id) {
                                 $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                 FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id'
+                                                WHERE formulario_id = '$formulario_id'" . ($cargo === 'Professor' ? " AND funcionario_id = $funcionario_id" : "") . "
                                                 ORDER BY serie";
                                 $result_series = $conn->query($query_series);
                                 while ($row = $result_series->fetch_assoc()) {

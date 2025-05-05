@@ -180,6 +180,10 @@
         loadAlunosAbaixo7();
         loadAlunosAcima7();
 
+        // Log para verificar opções do dropdown
+        const dropdown = $('#formulario_id');
+        console.log('Opções do dropdown de formulários:', dropdown.find('option').map(function() { return $(this).val(); }).get());
+
         // Eventos para os botões de paginação
         $(document).on('click', '.pagination-btn', function() {
             const page = $(this).data('page');
