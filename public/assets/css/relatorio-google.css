@@ -1,285 +1,311 @@
-/* Reset básico */
+/* RESET */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+margin: 0;
+padding: 0;
+box-sizing: border-box;
 }
 
-/* Estilização do body */
+/* BASE */
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: rgb(245, 245, 245); /* Cor de fundo do conteúdo */
-    margin: 0; /* Remover qualquer margem do body */
-    padding: 0; /* Remover qualquer padding do body */
-    width: 100%; /* Garantir que o body ocupe toda a largura */
-    overflow-x: hidden; /* Evitar barras de rolagem horizontais */
+font-family: Arial, sans-serif;
+min-height: 100vh;
+background-color: #f5f5f5;
+overflow-x: hidden;
 }
 
-/* Estilização do header */
+header,
+footer {
+background-color: #333;
+color: white;
+padding: 10px 20px;
+width: 100%;
+position: fixed;
+left: 0;
+z-index: 10;
+overflow-x: hidden;
+}
+
 header {
-    position: fixed; /* Fixar o header no topo */
-    top: 0;
-    left: 0;
-    width: 100%; /* Ocupar toda a largura */
-    max-width: 100%; /* Garantir que não exceda a largura da viewport */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333; /* Cor de fundo do header */
-    padding: 10px 20px; /* Espaçamento interno */
-    z-index: 10; /* Garante que o header fique acima da sidebar */
-    color: white; /* Cor do texto */
-    overflow-x: hidden; /* Evitar overflow horizontal dentro do header */
+top: 0;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+footer {
+bottom: 0;
+text-align: center;
 }
 
 header h1 {
-    font-size: 24px;
-    white-space: nowrap; /* Impede quebra de linha no título */
+font-size: 24px;
+white-space: nowrap;
 }
 
 header .icons {
-    display: flex;
-    gap: 15px;
-    flex-shrink: 0; /* Impede que os ícones sejam comprimidos */
+display: flex;
+gap: 15px;
 }
 
-header .icons i {
-    cursor: pointer;
-}
-
-/* Botão para abrir/fechar a sidebar */
 .menu-toggle {
-    left: 10px;
-    cursor: pointer;
-    font-size: 20px;
+font-size: 20px;
+cursor: pointer;
 }
 
-/* Estilização do footer */
-footer {
-    background-color: #333; /* Cor de fundo do footer */
-    padding: 10px 20px; /* Espaçamento interno */
-    position: fixed; /* Fixar o footer na parte inferior */
-    bottom: 0;
-    left: 0;
-    width: 100%; /* Ocupar toda a largura */
-    max-width: 100%; /* Garantir que não exceda a largura da viewport */
-    z-index: 10; /* Garante que o footer fique acima da sidebar */
-    text-align: center; /* Centraliza o texto */
-    color: white; /* Cor do texto */
-    overflow-x: hidden; /* Evitar overflow horizontal dentro do footer */
-}
-
-/* Container principal */
+/* LAYOUT */
 .container {
-    display: flex;
-    flex: 1;
+display: flex;
+flex: 1;
 }
 
-/* Conteúdo principal */
 .main-content {
-    padding: 20px;
-    margin-left: 0; /* Remover o margin-left negativo */
-    flex: 1;
-    transition: margin-left 0.3s ease;
-    padding-top: 60px; /* Espaço para o header fixo */
-    padding-bottom: 40px; /* Espaço para o footer fixo */
+flex: 1;
+padding: 80px 20px 60px; /* espaço para header e footer fixos */
+transition: margin-left 0.3s ease;
 }
 
-/* Ajustar o margin-left do main-content quando a sidebar está ativa (desktop) */
 .sidebar.active ~ .main-content {
-    margin-left: 250px; /* Igual à largura da sidebar no desktop */
+margin-left: 250px;
 }
 
-/* Garantir que o margin-left volte a 0 quando a sidebar está recolhida (desktop) */
 .sidebar.collapsed ~ .main-content {
-    margin-left: 0;
+margin-left: 0;
 }
 
-/* Ícone do título */
-.titulo-secao i {
-    color: #73b4ff;
-    margin-right: 8px;
-}
-
-/* Container do título da seção */
+/* TÍTULO */
 .titulo-secao {
-    border-radius: 8px;
-    background-color: white;
-    padding: 15px 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    font-weight: 600;
-    border-top: 3px solid #73b4ff;
-    margin-bottom: 20px;
+background-color: white;
+padding: 15px 20px;
+margin-bottom: 20px;
+border-radius: 8px;
+border-top: 3px solid #73b4ff;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+font-weight: 600;
 }
 
-/* Texto dentro do título */
 .titulo-secao p {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #333;
+font-size: 16px;
+color: #333;
 }
 
-/* Link para home */
-.titulo-secao .home-link i {
-    color: #333;
-    text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s ease;
+.titulo-secao i {
+color: #73b4ff;
+margin-right: 8px;
 }
 
-.titulo-secao .home-link:hover i {
-    color: #5599e6;
+/* FORMULÁRIOS */
+.form-group,
+.form-group-importar {
+display: flex;
+flex-wrap: wrap;
+gap: 15px;
+margin-bottom: 20px;
 }
 
-.mensagem-sucesso {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px 15px;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    font-size: 14px;
+.form-group > div,
+.form-group-importar > div {
+display: flex;
+flex-direction: column;
 }
-.mensagem-erro {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 10px 15px;
-    border: 1px solid #f5c6cb;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    font-size: 14px;
+
+.form-group label,
+.form-group-importar label {
+font-size: 14px;
+color: #333;
+font-weight: 500;
+margin-bottom: 5px;
 }
-.relatorio-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px 0;
+
+input,
+select {
+border: 1px solid #ddd;
+border-radius: 5px;
+padding: 8px;
+font-size: 14px;
+width: 100%;
+transition: border-color 0.3s ease;
 }
-.form-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 20px;
+
+input:focus,
+select:focus {
+border-color: #007bff;
+outline: none;
 }
-.form-group label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 5px;
-    color: #333;
-    font-size: 14px;
+
+select:disabled {
+background-color: #f5f5f5;
+cursor: not-allowed;
 }
-.form-group input,
-.form-group select {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    min-width: 200px;
-    max-width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-    padding: 8px;
+
+.form-group-link {
+display: flex;
+flex-direction: column;
+margin-bottom: 1rem;
 }
+
+.input-wrapper {
+display: flex;
+gap: 15px;
+width: 100%;
+}
+
 #googleSheetLink {
-    width: 1500px; /* Garantir que o campo ocupe toda a largura disponível */
+flex: 1;
+padding: 0.5rem;
+border: 1px solid #ddd;
+border-radius: 5px;
 }
-#formularioId {
-    width: 250px;
+
+/* BOTÕES */
+.btn-importar,
+.btn-carregar {
+width: 93px; /* largura igual para ambos */
+padding: 10px 20px;
+font-size: 14px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease;
 }
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #007bff;
-    outline: none;
+
+button {
+padding: 10px 20px;
+font-size: 14px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease;
 }
-.form-group select:disabled {
-    background-color: #f5f5f5;
-    cursor: not-allowed;
+
+.btn-importar {
+background-color: #007bff;
+color: white;
+/* width: 100%; */
 }
-.form-group button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 92px; /* Largura fixa para os botões */
+
+.btn-importar:hover:not(:disabled) {
+background-color: #0056b3;
 }
-.form-group button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+
+button:disabled {
+background-color: #ccc;
+cursor: not-allowed;
 }
-.form-group .btn-carregar {
-    background-color: #28a745;
-    color: #fff;
+
+.btn-carregar {
+background-color: #28a745;
+color: white;
 }
-.form-group .btn-carregar:hover:not(:disabled) {
-    background-color: #218838;
+
+.btn-carregar:hover:not(:disabled) {
+background-color: #218838;
 }
-.form-group .btn-importar {
-    background-color: #007bff;
-    color: #fff;
+
+.btn-excluir {
+background-color: #dc3545;
+color: white;
 }
-.form-group .btn-importar:hover:not(:disabled) {
-    background-color: #0056b3;
+
+.btn-excluir:hover:not(:disabled) {
+background-color: #c82333;
 }
-.form-group .btn-excluir {
-    background-color: #dc3545;
-    color: #fff;
+
+/* COLUNAS FLEX */
+[class^="col-"] {
+flex-grow: 0;
+flex-shrink: 0;
 }
-.form-group .btn-excluir:hover:not(:disabled) {
-    background-color: #c82333;
-}
+
+.col-10 { flex-basis: 10%; }
+.col-18 { flex-basis: 18%; }
+.col-20 { flex-basis: 20%; }
+.col-25 { flex-basis: 25%; }
+.col-28 { flex-basis: 28%; }
+.col-30 { flex-basis: 30%; }
+.col-40 { flex-basis: 40%; }
+.col-50 { flex-basis: 50%; }
+.col-100 { flex-basis: 100%; }
+.col-auto { flex: auto; }
+
+/* TABELAS */
 .table-container {
-    margin-top: 30px;
+margin-top: 30px;
 }
+
 .table-container h4 {
-    margin-bottom: 15px;
-    font-size: 18px;
-    color: #333;
+font-size: 18px;
+color: #333;
+margin-bottom: 15px;
 }
+
 .table-container table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+width: 100%;
+border-collapse: collapse;
+background: #fff;
+border-radius: 5px;
+box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+overflow: hidden;
 }
+
 .table-container th,
 .table-container td {
-    padding: 12px 15px;
-    text-align: left;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
+padding: 12px 15px;
+font-size: 14px;
+border-bottom: 1px solid #eee;
+text-align: left;
 }
+
 .table-container th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #555;
+background-color: #f8f9fa;
+color: #555;
+font-weight: 600;
 }
+
 .table-container tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+background-color: #f9f9f9;
 }
+
 .table-container tbody tr:hover {
-    background-color: #f1f1f1;
+background-color: #f1f1f1;
 }
+
+/* MENSAGENS */
+.mensagem-sucesso {
+background-color: #d4edda;
+color: #155724;
+border: 1px solid #c3e6cb;
+border-radius: 5px;
+padding: 10px 15px;
+margin-bottom: 20px;
+font-size: 14px;
+}
+
+.mensagem-erro {
+background-color: #f8d7da;
+color: #721c24;
+border: 1px solid #f5c6cb;
+border-radius: 5px;
+padding: 10px 15px;
+margin-bottom: 20px;
+font-size: 14px;
+}
+
+/* RESPONSIVIDADE */
 @media (max-width: 768px) {
-    .form-group {
-        flex-direction: column;
-    }
-    .form-group input,
-    .form-group select {
-        width: 100%;
-        min-width: unset;
-    }
-    .form-group button {
-        width: 100%;
-    }
+.form-group,
+.form-group-importar {
+    flex-direction: column;
+}
+
+[class^="col-"] {
+    flex-basis: 100% !important;
+}
+
+.header h1 {
+    font-size: 18px;
+}
+
+.btn-importar {
+    width: 100%;
+}
 }
