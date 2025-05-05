@@ -227,15 +227,30 @@ button:disabled {
 .col-auto { flex: auto; }
 
 /* TABELAS */
-.table-container {
-    margin-top: 30px;
+.tabela-scroll {
     overflow-x: auto;
+    width: 100%;
 }
 
-.table-container h4 {
+.tabela-scroll h4 {
     font-size: 18px;
     color: #333;
     margin-bottom: 15px;
+}
+
+#tabela-dados {
+    /* width: max-content; */
+    min-width: 100%;
+    table-layout: auto;
+}
+
+#tabela-dados th,
+#tabela-dados td {
+    white-space: nowrap; /* se quiser manter o texto em uma linha só com reticências */
+    /* white-space: normal; se quiser que o texto quebre em várias linhas */
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .table-container table {

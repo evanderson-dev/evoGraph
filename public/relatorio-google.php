@@ -141,7 +141,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             </div>
                         </div>
 
-                        <div class="table-container">
+                        <div class="tabela-scroll">
                             <h4>Dados Carregados da Planilha</h4>
                             <div style="overflow-x: auto;">
                                 <table id="tabela-dados">
