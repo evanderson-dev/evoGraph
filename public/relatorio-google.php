@@ -140,17 +140,19 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>
-
-                        <div class="tabela-scroll">
-                            <h4>Dados Carregados da Planilha</h4>
-                            <div style="overflow-x: auto;">
-                                <table id="tabela-dados">
-                                    <thead></thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
                     </form>
+                </div>
+            </section>
+            
+            <section class="tabela">
+                <div class="tabela-scroll">
+                    <h4>Dados Carregados da Planilha</h4>
+                    <div style="overflow-x: auto;">
+                        <table id="tabela-dados">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
         </div>
