@@ -72,7 +72,8 @@ header .icons {
     margin-left: 0;
 }
 
-/* TÍTULO */
+/* TÍTULO / TABELA */
+.tabela,
 .titulo-secao {
     background-color: white;
     padding: 15px 20px;
@@ -83,6 +84,7 @@ header .icons {
     font-weight: 600;
 }
 
+.tabela,
 .titulo-secao p {
     font-size: 16px;
     color: #333;
@@ -239,15 +241,15 @@ button:disabled {
 }
 
 #tabela-dados {
-    /* width: max-content; */
+    width: max-content; /* largura máxima para evitar quebra de layout */
     min-width: 100%;
     table-layout: auto;
 }
 
 #tabela-dados th,
 #tabela-dados td {
-    white-space: nowrap; /* se quiser manter o texto em uma linha só com reticências */
-    /* white-space: normal; se quiser que o texto quebre em várias linhas */
+    /* white-space: nowrap; se quiser manter o texto em uma linha só com reticências */
+    white-space: normal; /*se quiser que o texto quebre em várias linhas */
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
