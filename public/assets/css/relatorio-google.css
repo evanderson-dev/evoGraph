@@ -247,15 +247,6 @@ button:disabled {
     color: #202124;
 }
 
-#tabela-dados th, /* cabeçalho da tabela */
-#tabela-dados td { /* células da tabela */
-    /* white-space: nowrap; se quiser manter o texto em uma linha só com reticências */
-    white-space: normal; /*se quiser que o texto quebre em várias linhas */
-    max-width: 150px; /* largura máxima para as células */
-    overflow: hidden; /* para esconder o texto que ultrapassa a largura */
-    text-overflow: ellipsis; /* para adicionar reticências (...) */
-}
-
 #tabela-dados thead th { /* cabeçalho da tabela */
     background-color: #f1f3f4; /* tom claro semelhante ao Google Sheets */
     color: #3c4043; /* cor do texto */
@@ -268,7 +259,7 @@ button:disabled {
 #tabela-dados tbody td { /* células da tabela */
     padding: 10px; /* espaçamento interno */
     border: 1px solid #dadce0; /* borda */
-    white-space: nowrap; /* para manter o texto em uma linha só */
+    white-space: normal; /* quebra de linha */
     max-width: 200px; /* largura máxima para as células */
     overflow: hidden; /* para esconder o texto que ultrapassa a largura */
     text-overflow: ellipsis; /* para adicionar reticências (...) */
