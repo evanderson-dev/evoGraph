@@ -110,6 +110,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <input type="text" id="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                             </div>
                             <div>
+                                <label>&nbsp;</label>
                                 <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
                             </div>                                
                         </div>
