@@ -73,7 +73,6 @@ header .icons {
 }
 
 /* TÍTULO / TABELA */
-.tabela,
 .titulo-secao {
     background-color: white;
     padding: 15px 20px;
@@ -84,7 +83,7 @@ header .icons {
     font-weight: 600;
 }
 
-.tabela,
+.tabela p,
 .titulo-secao p {
     font-size: 16px;
     color: #333;
@@ -235,7 +234,7 @@ button:disabled {
 }
 
 .tabela-scroll h4 {
-    font-size: 18px;
+    font-size: 12px;
     color: #333;
     margin-bottom: 15px;
 }
@@ -253,17 +252,6 @@ button:disabled {
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.table-container table {
-    /* width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    overflow: hidden; */
-    min-width: 800px; /* largura mínima para evitar quebra de layout */
-    width: max-content; /* largura máxima para evitar quebra de layout */
 }
 
 .table-container th,
