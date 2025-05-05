@@ -243,6 +243,7 @@ button:disabled {
     width: max-content; /* largura máxima para evitar quebra de layout */
     min-width: 100%;
     table-layout: auto;
+    font-size: 10px;
 }
 
 #tabela-dados th, /* cabeçalho da tabela */
