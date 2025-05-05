@@ -239,17 +239,17 @@ button:disabled {
     margin-bottom: 15px;
 }
 
-#tabela-dados {
-    width: 100%;
-    table-layout: auto;
-    font-size: 10px;
-    border-collapse: collapse;
-    color: #202124;
+#tabela-dados { /* tabela de dados */
+    width: 100%; /* largura total */
+    table-layout: auto; /* largura automática */
+    font-size: 10px; /* tamanho da fonte */
+    border-collapse: collapse; /* colapsar bordas */
+    color: #202124; /* cor do texto */
 }
 
 #tabela-dados thead th { /* cabeçalho da tabela */
-    background-color: #f1f3f4; /* tom claro semelhante ao Google Sheets */
-    color: #3c4043; /* cor do texto */
+    background-color: #303233; /* tom claro semelhante ao Google Sheets */
+    color: white; /* cor do texto */
     padding: 10px; /* espaçamento interno */
     border: 1px solid #dadce0; /* borda */
     font-weight: 600; /* negrito */
@@ -264,6 +264,14 @@ button:disabled {
     overflow: hidden; /* para esconder o texto que ultrapassa a largura */
     text-overflow: ellipsis; /* para adicionar reticências (...) */
     background-color: #fff; /* fundo branco */
+}
+
+#tabela-dados tbody tr:nth-child(even) { /* linhas pares */
+    background-color: #f8f9fa; /* tom alternado sutil */
+}
+
+#tabela-dados tbody tr:hover { /* destaque na linha ao passar o mouse */
+    background-color: #6d6e70; /* destaque no hover */
 }
 
 /* MENSAGENS */
