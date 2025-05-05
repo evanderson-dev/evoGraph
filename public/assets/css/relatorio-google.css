@@ -239,18 +239,18 @@ button:disabled {
     margin-bottom: 15px;
 }
 
-#tabela-dados { /* tabela de dados */
-    width: max-content; /* largura máxima para evitar quebra de layout */
-    min-width: 100%;
+#tabela-dados {
+    width: 100%;
     table-layout: auto;
     font-size: 10px;
+    border-collapse: collapse;
 }
 
 #tabela-dados th, /* cabeçalho da tabela */
 #tabela-dados td { /* células da tabela */
     /* white-space: nowrap; se quiser manter o texto em uma linha só com reticências */
     white-space: normal; /*se quiser que o texto quebre em várias linhas */
-    max-width: 200px; /* largura máxima para as células */
+    max-width: 150px; /* largura máxima para as células */
     overflow: hidden; /* para esconder o texto que ultrapassa a largura */
     text-overflow: ellipsis; /* para adicionar reticências (...) */
 }
