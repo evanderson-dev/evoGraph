@@ -239,57 +239,24 @@ button:disabled {
     margin-bottom: 15px;
 }
 
-/* #tabela-dados {
+#tabela-dados {
     width: 100%;
     table-layout: auto;
     font-size: 10px;
     border-collapse: collapse;
+    color: #202124;
 }
 
-#tabela-dados th, /* cabeçalho da tabela 
-#tabela-dados td { /* células da tabela 
-    /* white-space: nowrap; se quiser manter o texto em uma linha só com reticências 
-    white-space: normal; /*se quiser que o texto quebre em várias linhas 
-    max-width: 150px; /* largura máxima para as células 
-    overflow: hidden; /* para esconder o texto que ultrapassa a largura 
-    text-overflow: ellipsis; /* para adicionar reticências (...) 
-} */
-
-/* TABELA ESTILO PLANILHA */
-#tabela-dados {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    background-color: white;
-    color: #202124; /* tom usado pelo Google */
+#tabela-dados th, /* cabeçalho da tabela */
+#tabela-dados td { /* células da tabela */
+    /* white-space: nowrap; se quiser manter o texto em uma linha só com reticências */
+    white-space: normal; /*se quiser que o texto quebre em várias linhas */
+    max-width: 150px; /* largura máxima para as células */
+    overflow: hidden; /* para esconder o texto que ultrapassa a largura */
+    text-overflow: ellipsis; /* para adicionar reticências (...) */
 }
 
-#tabela-dados thead th {
-    background-color: #f1f3f4; /* tom claro semelhante ao Google Sheets */
-    color: #3c4043;
-    padding: 10px;
-    border: 1px solid #dadce0;
-    font-weight: 600;
-    text-align: left;
-}
 
-#tabela-dados tbody td {
-    padding: 10px;
-    border: 1px solid #dadce0;
-    white-space: nowrap;
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background-color: #fff;
-}
-
-#tabela-dados tbody tr:nth-child(even) {
-    background-color: #f8f9fa; /* tom alternado sutil */
-}
-
-#tabela-dados tbody tr:hover {
-    background-color: #e8f0fe; /* destaque no hover */
-}
 
 /* MENSAGENS */
 .mensagem-sucesso {
