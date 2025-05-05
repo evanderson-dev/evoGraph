@@ -84,6 +84,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group">
                             <label for="googleSheetLink">Link da planilha do Google:</label>
                             <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                            <div>
+                                <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div>
@@ -105,11 +108,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             <div>
                                 <label for="formularioId">Identificador do formulário:</label>
                                 <input type="text" id="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div>
-                                <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                             </div>
                             <div>
                                 <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>

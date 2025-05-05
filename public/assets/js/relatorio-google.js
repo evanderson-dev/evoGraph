@@ -175,14 +175,14 @@ function importarParaBanco() {
             atualizarDropdownFormularios();
         }
         button.disabled = false;
-        button.textContent = "Importar para o banco";
+        button.textContent = "Importar"; // Restaura o texto do botão
     })
     .catch(err => {
         console.error(err);
         const box = document.getElementById("message-box");
         box.innerHTML = `<div class="mensagem-erro">Erro ao importar os dados: ${err}</div>`;
         button.disabled = false;
-        button.textContent = "Importar para o banco";
+        button.textContent = "Importar"; // Restaura o texto do botão
     });
 }
 
