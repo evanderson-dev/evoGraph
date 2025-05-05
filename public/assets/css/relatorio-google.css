@@ -239,53 +239,56 @@ button:disabled {
     margin-bottom: 15px;
 }
 
-#tabela-dados {
+/* #tabela-dados {
     width: 100%;
     table-layout: auto;
     font-size: 10px;
     border-collapse: collapse;
 }
 
-#tabela-dados th, /* cabeçalho da tabela */
-#tabela-dados td { /* células da tabela */
-    /* white-space: nowrap; se quiser manter o texto em uma linha só com reticências */
-    white-space: normal; /*se quiser que o texto quebre em várias linhas */
-    max-width: 150px; /* largura máxima para as células */
-    overflow: hidden; /* para esconder o texto que ultrapassa a largura */
-    text-overflow: ellipsis; /* para adicionar reticências (...) */
-}
+#tabela-dados th, /* cabeçalho da tabela 
+#tabela-dados td { /* células da tabela 
+    /* white-space: nowrap; se quiser manter o texto em uma linha só com reticências 
+    white-space: normal; /*se quiser que o texto quebre em várias linhas 
+    max-width: 150px; /* largura máxima para as células 
+    overflow: hidden; /* para esconder o texto que ultrapassa a largura 
+    text-overflow: ellipsis; /* para adicionar reticências (...) 
+} */
 
-.table-container table {
-    /* width: 100%;
+/* TABELA ESTILO PLANILHA */
+#tabela-dados {
+    width: 100%;
     border-collapse: collapse;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    overflow: hidden; */
-    min-width: 800px; /* largura mínima para evitar quebra de layout */
-    width: max-content; /* largura máxima para evitar quebra de layout */
+    font-size: 13px;
+    background-color: white;
+    color: #202124; /* tom usado pelo Google */
 }
 
-.table-container th,
-.table-container td {
-    padding: 12px 15px;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
+#tabela-dados thead th {
+    background-color: #f1f3f4; /* tom claro semelhante ao Google Sheets */
+    color: #3c4043;
+    padding: 10px;
+    border: 1px solid #dadce0;
+    font-weight: 600;
     text-align: left;
 }
 
-.table-container th {
-    background-color: #f8f9fa;
-    color: #555;
-    font-weight: 600;
+#tabela-dados tbody td {
+    padding: 10px;
+    border: 1px solid #dadce0;
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: #fff;
 }
 
-.table-container tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+#tabela-dados tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* tom alternado sutil */
 }
 
-.table-container tbody tr:hover {
-    background-color: #f1f1f1;
+#tabela-dados tbody tr:hover {
+    background-color: #e8f0fe; /* destaque no hover */
 }
 
 /* MENSAGENS */
