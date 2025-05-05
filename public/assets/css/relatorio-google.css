@@ -73,6 +73,7 @@ header .icons {
 }
 
 /* TÍTULO / TABELA */
+.tabela,
 .titulo-secao {
     background-color: white;
     padding: 15px 20px;
@@ -80,11 +81,10 @@ header .icons {
     border-radius: 8px;
     border-top: 3px solid #73b4ff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    font-weight: 600;
 }
 
-.tabela p,
 .titulo-secao p {
+    font-weight: 600;
     font-size: 16px;
     color: #333;
 }
@@ -233,25 +233,36 @@ button:disabled {
     width: 100%;
 }
 
-.tabela-scroll h4 {
-    font-size: 12px;
+.tabela-scroll h4 { /* título da tabela */
+    font-size: 18px;
     color: #333;
     margin-bottom: 15px;
 }
 
-#tabela-dados {
+#tabela-dados { /* tabela de dados */
     width: max-content; /* largura máxima para evitar quebra de layout */
     min-width: 100%;
     table-layout: auto;
 }
 
-#tabela-dados th,
-#tabela-dados td {
+#tabela-dados th, /* cabeçalho da tabela */
+#tabela-dados td { /* células da tabela */
     /* white-space: nowrap; se quiser manter o texto em uma linha só com reticências */
     white-space: normal; /*se quiser que o texto quebre em várias linhas */
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 200px; /* largura máxima para as células */
+    overflow: hidden; /* para esconder o texto que ultrapassa a largura */
+    text-overflow: ellipsis; /* para adicionar reticências (...) */
+}
+
+.table-container table {
+    /* width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden; */
+    min-width: 800px; /* largura mínima para evitar quebra de layout */
+    width: max-content; /* largura máxima para evitar quebra de layout */
 }
 
 .table-container th,
