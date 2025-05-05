@@ -143,8 +143,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
                     </form>
                 </div>
             </section>
-            
-            <section class="tabela">
+
+            <div class="titulo-secao">
                 <div class="tabela-scroll">
                     <h4>Dados Carregados da Planilha</h4>
                     <div style="overflow-x: auto;">
@@ -154,7 +154,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         </table>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
     </div>
 
