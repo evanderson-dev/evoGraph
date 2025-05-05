@@ -14,7 +14,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_
 $cargo = $_SESSION["cargo"];
 $funcionario_id = $_SESSION["funcionario_id"];
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
