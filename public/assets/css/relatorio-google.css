@@ -256,7 +256,24 @@ button:disabled {
     text-overflow: ellipsis; /* para adicionar reticências (...) */
 }
 
+#tabela-dados thead th { /* cabeçalho da tabela */
+    background-color: #f1f3f4; /* tom claro semelhante ao Google Sheets */
+    color: #3c4043; /* cor do texto */
+    padding: 10px; /* espaçamento interno */
+    border: 1px solid #dadce0; /* borda */
+    font-weight: 600; /* negrito */
+    text-align: left; /* alinhamento à esquerda */
+}
 
+#tabela-dados tbody td { /* células da tabela */
+    padding: 10px; /* espaçamento interno */
+    border: 1px solid #dadce0; /* borda */
+    white-space: nowrap; /* para manter o texto em uma linha só */
+    max-width: 200px; /* largura máxima para as células */
+    overflow: hidden; /* para esconder o texto que ultrapassa a largura */
+    text-overflow: ellipsis; /* para adicionar reticências (...) */
+    background-color: #fff; /* fundo branco */
+}
 
 /* MENSAGENS */
 .mensagem-sucesso {
