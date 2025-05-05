@@ -235,7 +235,6 @@ button:disabled {
 
 
 #tabela-dados { /* tabela de dados */
-    min-width: max-content; /* largura mínima para evitar que a tabela fique muito estreita */
     width: 100%; /* largura total */
     table-layout: auto; /* largura automática */
     font-size: 10px; /* tamanho da fonte */
