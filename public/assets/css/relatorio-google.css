@@ -233,19 +233,19 @@ button:disabled {
     width: 100%;
 }
 
+.tabela-scroll h4 { /* título da tabela */
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+}
 
 #tabela-dados { /* tabela de dados */
+    min-width: max-content; /* largura mínima */
     width: 100%; /* largura total */
     table-layout: auto; /* largura automática */
     font-size: 10px; /* tamanho da fonte */
     border-collapse: collapse; /* colapsar bordas */
     color: #202124; /* cor do texto */
-}
-
-.tabela-scroll h4 { /* título da tabela */
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 15px;
 }
 
 #tabela-dados thead th { /* cabeçalho da tabela */
@@ -313,12 +313,5 @@ button:disabled {
 
     .btn-importar {
         width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    #tabela-dados th, #tabela-dados td {
-        font-size: 9px;
-        padding: 6px;
     }
 }
