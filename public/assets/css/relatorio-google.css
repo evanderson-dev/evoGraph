@@ -229,23 +229,24 @@ button:disabled {
 
 /* TABELAS */
 .tabela-scroll {
-    width: 100%;
     overflow-x: auto;
+    width: 100%;
+}
+
+
+#tabela-dados { /* tabela de dados */
+    min-width: max-content; /* largura mínima para evitar que a tabela fique muito estreita */
+    width: 100%; /* largura total */
+    table-layout: auto; /* largura automática */
+    font-size: 10px; /* tamanho da fonte */
+    border-collapse: collapse; /* colapsar bordas */
+    color: #202124; /* cor do texto */
 }
 
 .tabela-scroll h4 { /* título da tabela */
     font-size: 18px;
     color: #333;
     margin-bottom: 15px;
-}
-
-#tabela-dados { /* tabela de dados */
-    min-width: max-content; /* largura mínima para evitar que a tabela fique muito estreita */
-    width: max-content; /* largura total */
-    table-layout: auto; /* largura automática */
-    font-size: 10px; /* tamanho da fonte */
-    border-collapse: collapse; /* colapsar bordas */
-    color: #202124; /* cor do texto */
 }
 
 #tabela-dados thead th { /* cabeçalho da tabela */
