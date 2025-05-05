@@ -178,7 +178,6 @@ footer {
 }
 .form-group input,
 .form-group select {
-    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
@@ -186,10 +185,13 @@ footer {
     max-width: 100%;
     box-sizing: border-box;
     transition: border-color 0.3s ease;
-    /* width: 100%;
     padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px; */
+}
+#googleSheetLink {
+    width: 100%; /* Garantir que o campo ocupe toda a largura disponível */
+}
+#formularioId {
+    width: 250px; /* Garantir que o campo ocupe toda a largura disponível */
 }
 .form-group input:focus,
 .form-group select:focus {
@@ -207,6 +209,7 @@ footer {
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 92px; /* Largura fixa para os botões */
 }
 .form-group button:disabled {
     background-color: #ccc;
