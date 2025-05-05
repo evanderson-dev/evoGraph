@@ -188,7 +188,7 @@ footer {
     padding: 8px;
 }
 #googleSheetLink {
-    width: 80%; /* Garantir que o campo ocupe toda a largura disponível */
+    width: 1500px; /* Garantir que o campo ocupe toda a largura disponível */
 }
 #formularioId {
     width: 250px;
