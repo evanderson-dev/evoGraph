@@ -83,43 +83,30 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group-link">
                             <label for="googleSheetLink">Link da planilha do Google:</label>
                             <div class="input-wrapper">
-                                <input type="text" id="googleSheetLink" name="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                                <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
                                 <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                             </div>
                         </div>
                         <div class="form-group-importar">
                             <div class="col-18">
                                 <label for="bnccAno">Ano Escolar:</label>
-                                <select id="bnccAno" name="bnccAno" required>
+                                <select id="bnccAno" required>
                                     <option value="">Selecione o ano</option>
-                                    <?php
-                                    require_once "db_connection.php";
-                                    $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
-                                    $result = $conn->query($query);
-                                    while ($row = $result->fetch_assoc()) {
-                                        $ano_id = htmlspecialchars($row['id']);
-                                        $ano_nome = htmlspecialchars($row['nome']);
-                                        echo "<option value=\"$ano_id\">$ano_nome</option>";
-                                    }
-                                    $conn->close();
-                                    ?>
                                 </select>
                             </div>
                             <div class="col-18">
                                 <label for="bnccDisciplina">Disciplina:</label>
-                                <select id="bnccDisciplina" name="bnccDisciplina" disabled required>
+                                <select id="bnccDisciplina" disabled>
                                     <option value="">Selecione a disciplina</option>
                                 </select>
                             </div>
                             <div class="col-18">
                                 <label for="bnccHabilidade">Habilidade BNCC:</label>
-                                <select id="bnccHabilidade" name="bnccHabilidade" disabled required>
-                                    <option value="">Selecione a habilidade</option>
-                                </select>
+                                <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
                             </div>
                             <div class="col-auto">
                                 <label for="formularioId">Identificador do formulário:</label>
-                                <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
+                                <input type="text" id="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                             </div>
                             <div class="">
                                 <label>&nbsp;</label>
@@ -130,7 +117,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group">
                             <div>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
-                                <select id="formularioIdDelete" name="formularioIdDelete">
+                                <select id="formularioIdDelete">
                                     <option value="">Selecione um formulário</option>
                                     <?php
                                     require_once "db_connection.php";
