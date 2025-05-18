@@ -198,6 +198,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
+    <script src="./assets/js/modal-add-bncc.js"></script>
     <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/ajax.js"></script>
     <script>
