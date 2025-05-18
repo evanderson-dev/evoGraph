@@ -92,6 +92,17 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <label for="bnccAno">Ano Escolar:</label>
                                 <select id="bnccAno" required>
                                     <option value="">Selecione o ano</option>
+                                    <?php
+                                    require_once "db_connection.php";
+                                    $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
+                                    $result = $conn->query($query);
+                                    while ($row = $result->fetch_assoc()) {
+                                        $ano_id = htmlspecialchars($row['id']);
+                                        $ano_nome = htmlspecialchars($row['nome']);
+                                        echo "<option value=\"$ano_id\">$ano_nome</option>";
+                                    }
+                                    $conn->close();
+                                    ?>
                                 </select>
                             </div>
                             <div class="col-18">
