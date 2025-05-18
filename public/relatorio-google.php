@@ -25,7 +25,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <link rel="stylesheet" href="./assets/css/modals/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-turma.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-aluno.css" />
-    <link rel="stylesheet" href="./assets/css/modals/modal-add-bncc.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Relatório Google</title>
 </head>
@@ -78,7 +77,11 @@ $funcionario_id = $_SESSION["funcionario_id"];
 
             <section class="relatorio-section">
                 <div id="message-box"></div>
-                <div class="profile-form">
+                <div class="profile-form">                    
+                    <?php
+                    require_once "db_connection.php"; // Mover a conexão para o início da seção
+                    ?>
+
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
 
@@ -92,48 +95,34 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group-importar">
                             <div class="col-18">
                                 <label for="bnccAno">Ano Escolar:</label>
-                                <select id="bnccAno" required>
+                                <select id="bnccAno" name="bnccAno" required>
                                     <option value="">Selecione o ano</option>
                                     <?php
-                                    require_once "db_connection.php";
-                                    $query = "SELECT id, nome FROM anos_escolares ORDER BY nome";
+                                    $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
                                     $result = $conn->query($query);
                                     while ($row = $result->fetch_assoc()) {
-                                        echo "<option value=\"{$row['id']}\">{$row['nome']}</option>";
+                                        $ano_id = htmlspecialchars($row['id']);
+                                        $ano_nome = htmlspecialchars($row['nome']);
+                                        echo "<option value=\"$ano_id\">$ano_nome</option>";
                                     }
                                     ?>
                                 </select>
                             </div>
                             <div class="col-18">
                                 <label for="bnccDisciplina">Disciplina:</label>
-                                <select id="bnccDisciplina" required>
+                                <select id="bnccDisciplina" name="bnccDisciplina" disabled required>
                                     <option value="">Selecione a disciplina</option>
-                                    <?php
-                                    $query = "SELECT id, nome FROM disciplinas ORDER BY nome";
-                                    $result = $conn->query($query);
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<option value=\"{$row['id']}\">{$row['nome']}</option>";
-                                    }
-                                    ?>
                                 </select>
                             </div>
                             <div class="col-18">
                                 <label for="bnccHabilidade">Habilidade BNCC:</label>
-                                <select id="bnccHabilidade" required>
+                                <select id="bnccHabilidade" name="bnccHabilidade" disabled required>
                                     <option value="">Selecione a habilidade</option>
-                                    <?php
-                                    $query = "SELECT id, codigo, descricao FROM habilidades_bncc ORDER BY codigo";
-                                    $result = $conn->query($query);
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<option value=\"{$row['id']}\" data-codigo=\"{$row['codigo']}\">{$row['codigo']} - {$row['descricao']}</option>";
-                                    }
-                                    $conn->close();
-                                    ?>
                                 </select>
                             </div>
                             <div class="col-auto">
                                 <label for="formularioId">Identificador do formulário:</label>
-                                <input type="text" id="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
+                                <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                             </div>
                             <div class="">
                                 <label>&nbsp;</label>
@@ -144,10 +133,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group">
                             <div>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
-                                <select id="formularioIdDelete">
+                                <select id="formularioIdDelete" name="formularioIdDelete">
                                     <option value="">Selecione um formulário</option>
                                     <?php
-                                    require_once "db_connection.php";
                                     $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
                                     $stmt = $conn->prepare($query);
                                     $stmt->bind_param("i", $funcionario_id);
@@ -158,7 +146,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         echo "<option value=\"$form_id\">$form_id</option>";
                                     }
                                     $stmt->close();
-                                    $conn->close();
                                     ?>
                                 </select>
                             </div>
@@ -168,6 +155,10 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             </div>
                         </div>
                     </form>
+
+                    <?php
+                    $conn->close(); // Fechar a conexão apenas no final da seção
+                    ?>
                 </div>
             </section>
 
@@ -195,9 +186,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <div id="modal-add-aluno" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
-    <div id="modal-add-bncc" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
     <?php endif; ?>
 
     <footer>
@@ -210,7 +198,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
-    <script src="./assets/js/modal-add-bncc.js"></script>
     <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/ajax.js"></script>
     <script>
