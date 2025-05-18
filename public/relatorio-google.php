@@ -109,6 +109,17 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <label for="bnccDisciplina">Disciplina:</label>
                                 <select id="bnccDisciplina" name="bnccDisciplina" disabled required>
                                     <option value="">Selecione a disciplina</option>
+                                    <?php
+                                    require_once "db_connection.php";
+                                    $query = "SELECT id, nome FROM disciplinas ORDER BY nome";
+                                    $result = $conn->query($query);
+                                    while ($row = $result->fetch_assoc()) {
+                                        $disciplina_id = htmlspecialchars($row['id']);
+                                        $disciplina_nome = htmlspecialchars($row['nome']);
+                                        echo "<option value=\"$disciplina_id\">$disciplina_nome</option>";
+                                    }
+                                    $conn->close();
+                                    ?>
                                 </select>
                             </div>
                             <div class="col-18">
