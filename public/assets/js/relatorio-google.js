@@ -4,9 +4,14 @@ let respostasCorretas = [];
 
 // Função para carregar anos escolares
 function carregarAnos() {
+    console.log('Iniciando carregarAnos()');
     fetch('fetch_anos_disciplinas_habilidades.php?action=anos')
-        .then(response => response.json())
+        .then(response => {
+            console.log('Resposta recebida do fetch:', response);
+            return response.json();
+        })
         .then(data => {
+            console.log('Dados recebidos:', data);
             const selectAno = document.getElementById('bnccAno');
             selectAno.innerHTML = '<option value="">Selecione o ano</option>';
             if (data.status === 'success') {
@@ -16,6 +21,7 @@ function carregarAnos() {
                     option.textContent = ano.nome;
                     selectAno.appendChild(option);
                 });
+                console.log('Dropdown bnccAno populado com:', data.data);
             } else {
                 console.error('Erro ao carregar anos:', data.message);
             }
@@ -24,6 +30,27 @@ function carregarAnos() {
             console.error('Erro ao carregar anos:', err);
         });
 }
+
+// Adicionar eventos de mudança
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded disparado');
+    carregarAnos();
+    atualizarDropdownFormularios();
+
+    const selectAno = document.getElementById('bnccAno');
+    const selectDisciplina = document.getElementById('bnccDisciplina');
+
+    selectAno.addEventListener('change', () => {
+        const anoId = selectAno.value;
+        carregarDisciplinas(anoId);
+    });
+
+    selectDisciplina.addEventListener('change', () => {
+        const anoId = selectAno.value;
+        const disciplinaId = selectDisciplina.value;
+        carregarHabilidades(anoId, disciplinaId);
+    });
+});
 
 // Função para carregar disciplinas com base no ano selecionado
 function carregarDisciplinas(anoId) {
