@@ -75,6 +75,7 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
                     <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
+                    <a href="#" onclick="openAddBnccModal(); return false;"><i class="fa-solid fa-book"></i>BNCC/Dados Escolares</a>
                 </div>
             </div>
             <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
