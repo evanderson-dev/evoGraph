@@ -2,34 +2,34 @@ let dadosPlanilha = [];
 let perguntas = [];
 let respostasCorretas = [];
 
-// Função para carregar anos escolares
-function carregarAnos() {
-    console.log('Iniciando carregarAnos()');
-    fetch('fetch_anos_disciplinas_habilidades.php?action=anos')
-        .then(response => {
-            console.log('Resposta recebida do fetch:', response);
-            return response.json();
-        })
-        .then(data => {
-            console.log('Dados recebidos:', data);
-            const selectAno = document.getElementById('bnccAno');
-            selectAno.innerHTML = '<option value="">Selecione o ano</option>';
-            if (data.status === 'success') {
-                data.data.forEach(ano => {
-                    const option = document.createElement('option');
-                    option.value = ano.id;
-                    option.textContent = ano.nome;
-                    selectAno.appendChild(option);
-                });
-                console.log('Dropdown bnccAno populado com:', data.data);
-            } else {
-                console.error('Erro ao carregar anos:', data.message);
-            }
-        })
-        .catch(err => {
-            console.error('Erro ao carregar anos:', err);
-        });
-}
+// // Função para carregar anos escolares
+// function carregarAnos() {
+//     console.log('Iniciando carregarAnos()');
+//     fetch('fetch_anos_disciplinas_habilidades.php?action=anos')
+//         .then(response => {
+//             console.log('Resposta recebida do fetch:', response);
+//             return response.json();
+//         })
+//         .then(data => {
+//             console.log('Dados recebidos:', data);
+//             const selectAno = document.getElementById('bnccAno');
+//             selectAno.innerHTML = '<option value="">Selecione o ano</option>';
+//             if (data.status === 'success') {
+//                 data.data.forEach(ano => {
+//                     const option = document.createElement('option');
+//                     option.value = ano.id;
+//                     option.textContent = ano.nome;
+//                     selectAno.appendChild(option);
+//                 });
+//                 console.log('Dropdown bnccAno populado com:', data.data);
+//             } else {
+//                 console.error('Erro ao carregar anos:', data.message);
+//             }
+//         })
+//         .catch(err => {
+//             console.error('Erro ao carregar anos:', err);
+//         });
+// }
 
 // Adicionar eventos de mudança
 document.addEventListener('DOMContentLoaded', () => {
@@ -398,6 +398,24 @@ function atualizarDropdownFormularios() {
         })
         .catch(err => {
             console.error("Erro ao atualizar dropdown de formulários:", err);
+        });
+}
+
+function atualizarDropdownAnoEscolar() {
+    fetch('fetch_formularios_AnoEscolar.php')
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('bnccAno');
+            select.innerHTML = '<option value="">Selecione um Ano Escolar</option>';
+            data.forEach(formId => {
+                const option = document.createElement('option');
+                option.value = formId;
+                option.textContent = formId;
+                select.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.error("Erro ao atualizar dropdown de Anos Escolares:", err);
         });
 }
 
