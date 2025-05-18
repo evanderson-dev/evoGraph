@@ -34,6 +34,7 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     <link rel="stylesheet" href="./assets/css/modals/modal-add-turma.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-aluno.css" />
+    <link rel="stylesheet" href="./assets/css/modals/modal-add-bncc.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-edit-turma.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-edit-aluno.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-delete-turma.css" />
@@ -289,51 +290,58 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
 
     <!-- Modal de Confirmação de Exclusão (exclusivo do Diretor) -->
     <?php if ($cargo === "Diretor" || $cargo === "Administrador"): ?>
-    <div id="modal-delete-aluno" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
+        <div id="modal-delete-aluno" class="modal" style="display: none;">
+            <div class="modal-content"></div>
+        </div>
     <?php endif; ?>
     
     <!-- Modal de Cadastro de Turma -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
-    <div id="modal-cadastrar-turma" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
+        <div id="modal-cadastrar-turma" class="modal" style="display: none;">
+            <div class="modal-content"></div>
+        </div>
     <?php endif; ?>
 
     <!-- Modal de Exclusão de Turma -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
-    <div id="modal-delete-turma" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
+        <div id="modal-delete-turma" class="modal" style="display: none;">
+            <div class="modal-content"></div>
+        </div>
     <?php endif; ?>
 
     <!-- Modal de Edição de Turma -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
-    <div id="modal-edit-turma" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
+        <div id="modal-edit-turma" class="modal" style="display: none;">
+            <div class="modal-content"></div>
+        </div>
     <?php endif; ?>
     
     <!-- Modal de Adição de Funcionário -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
-    <div id="modal-add-funcionario" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
+        <div id="modal-add-funcionario" class="modal" style="display: none;">
+            <div class="modal-content"></div>
+        </div>
     <?php endif; ?>
 
     <!-- Modal de Cadastro de Aluno -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
-    <div id="modal-add-aluno" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
+        <div id="modal-add-aluno" class="modal" style="display: none;">
+            <div class="modal-content"></div>
+        </div>
     <?php endif; ?>
 
     <!-- Modal de Edição de Aluno -->
     <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
-    <div id="modal-edit-aluno" class="modal" style="display: none;">
-        <div class="modal-content"></div>
-    </div>
+        <div id="modal-edit-aluno" class="modal" style="display: none;">
+            <div class="modal-content"></div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Modal de Cadastro de BNCC -->
+    <?php if ($_SESSION["cargo"] === "Coordenador" || $_SESSION["cargo"] === "Diretor" || $_SESSION["cargo"] === "Administrador"): ?>
+        <div id="modal-add-bncc" class="modal" style="display: none;">
+            <div class="modal-content"></div>
+        </div>
     <?php endif; ?>
 
     <!-- Modal de Detalhes do Aluno (compartilhado entre cargos) -->
@@ -352,6 +360,8 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
+    <script src="./assets/js/modal-add-bncc.js"></script>
+
 
     <script src="./assets/js/modal-edit-turma.js"></script>
     <script src="./assets/js/modal-edit-aluno.js"></script>
