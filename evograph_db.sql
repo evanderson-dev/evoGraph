@@ -125,3 +125,59 @@ INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
     (2, 1, 'EF07GE11', 'Caracterizar dinâmicas dos componentes físico-naturais no território nacional, bem como sua distribuição e biodiversidade (Florestas Tropicais, Cerrados, Caatingas, Campos Sulinos e Matas de Araucária).'),
     (2, 1, 'EF07GE12', 'Comparar unidades de conservação existentes no Município de residência e em outras localidades brasileiras, com base na organização do Sistema Nacional de Unidades de Conservação (SNUC).');
 
+-- Inserir habilidades BNCC para o 7º Ano de Matemática
+INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
+    (2, 2, 'EF07MA01', 'Resolver e elaborar problemas que envolvam as quatro operações com números inteiros e racionais.'),
+    (2, 2, 'EF07MA02', 'Resolver e elaborar problemas que envolvam porcentagens e proporções.'),
+    (2, 2, 'EF07MA03', 'Resolver e elaborar problemas que envolvam medidas de comprimento, área e volume.'),
+    (2, 2, 'EF07MA04', 'Resolver e elaborar problemas que envolvam a leitura e interpretação de gráficos e tabelas.');
+
+-- Inserir habilidades BNCC para o 7º Ano de História
+INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
+    (2, 3, 'EF07HI01', 'Analisar a formação do Brasil colonial e suas relações com o mundo.'),
+    (2, 3, 'EF07HI02', 'Compreender a importância da escravidão na formação da sociedade brasileira.'),
+    (2, 3, 'EF07HI03', 'Analisar os processos de independência e as transformações sociais e políticas no Brasil.'),
+    (2, 3, 'EF07HI04', 'Compreender a importância da Revolução Industrial e suas consequências sociais e econômicas.');
+
+-- Inserir habilidades BNCC para o 6º Ano de Geografia
+INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
+    (1, 1, 'EF06GE01', 'Identificar e analisar as características das paisagens naturais e culturais do Brasil.'),
+    (1, 1, 'EF06GE02', 'Compreender a importância da água e dos recursos hídricos para a vida humana.'),
+    (1, 1, 'EF06GE03', 'Analisar os impactos ambientais das atividades humanas no território brasileiro.'),
+    (1, 1, 'EF06GE04', 'Compreender a importância da preservação ambiental e das áreas de proteção.');
+
+-- Inserir habilidades BNCC para o 6º Ano de Matemática
+INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
+    (1, 2, 'EF06MA01', 'Resolver e elaborar problemas que envolvam as quatro operações com números naturais.'),
+    (1, 2, 'EF06MA02', 'Resolver e elaborar problemas que envolam frações e decimais.'),
+    (1, 2, 'EF06MA03', 'Resolver e elaborar problemas que envolvam medidas de comprimento, área e volume.'),
+    (1, 2, 'EF06MA04', 'Resolver e elaborar problemas que envolvam a leitura e interpretação de gráficos e tabelas.');
+
+-- Inserir habilidades BNCC para o 6º Ano de História
+INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
+    (1, 3, 'EF06HI01', 'Analisar a formação do Brasil pré-colonial e suas relações com os povos indígenas.'),
+    (1, 3, 'EF06HI02', 'Compreender a importância da colonização portuguesa e suas consequências sociais e econômicas.'),
+    (1, 3, 'EF06HI03', 'Analisar os processos de resistência indígena e africana no Brasil colonial.'),
+    (1, 3, 'EF06HI04', 'Compreender a importância da Revolução Francesa e suas consequências para o mundo.');
+
+-- Inserir habilidades BNCC para o 8º Ano de Geografia
+INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
+    (3, 1, 'EF08GE01', 'Analisar a formação do território brasileiro e suas relações com o mundo.'),
+    (3, 1, 'EF08GE02', 'Compreender a importância da agricultura e da pecuária na formação da sociedade brasileira.'),
+    (3, 1, 'EF08GE03', 'Analisar os impactos ambientais das atividades econômicas no território brasileiro.'),
+    (3, 1, 'EF08GE04', 'Compreender a importância da diversidade cultural e étnica no Brasil.');
+
+-- Inserir habilidades BNCC para o 8º Ano de Matemática
+INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
+    (3, 2, 'EF08MA01', 'Resolver e elaborar problemas que envolvam as quatro operações com números racionais.'),
+    (3, 2, 'EF08MA02', 'Resolver e elaborar problemas que envolam porcentagens e proporções.'),
+    (3, 2, 'EF08MA03', 'Resolver e elaborar problemas que envolvam medidas de comprimento, área e volume.'),
+    (3, 2, 'EF08MA04', 'Resolver e elaborar problemas que envolvam a leitura e interpretação de gráficos e tabelas.');
+
+-- Inserir habilidades BNCC para o 8º Ano de História
+INSERT INTO habilidades_bncc (ano_id, disciplina_id, codigo, descricao) VALUES
+    (3, 3, 'EF08HI01', 'Analisar a formação do Brasil contemporâneo e suas relações com o mundo.'),
+    (3, 3, 'EF08HI02', 'Compreender a importância da industrialização e suas consequências sociais e econômicas.'),
+    (3, 3, 'EF08HI03', 'Analisar os processos de resistência social e política no Brasil contemporâneo.'),
+    (3, 3, 'EF08HI04', 'Compreender a importância da globalização e suas consequências para o mundo.');
+
