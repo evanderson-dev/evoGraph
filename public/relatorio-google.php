@@ -83,30 +83,32 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group-link">
                             <label for="googleSheetLink">Link da planilha do Google:</label>
                             <div class="input-wrapper">
-                                <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                                <input type="text" id="googleSheetLink" name="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
                                 <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                             </div>
                         </div>
                         <div class="form-group-importar">
                             <div class="col-18">
                                 <label for="bnccAno">Ano Escolar:</label>
-                                <select id="bnccAno" required>
+                                <select id="bnccAno" name="bnccAno" required>
                                     <option value="">Selecione o ano</option>
                                 </select>
                             </div>
                             <div class="col-18">
                                 <label for="bnccDisciplina">Disciplina:</label>
-                                <select id="bnccDisciplina" disabled>
+                                <select id="bnccDisciplina" name="bnccDisciplina" disabled required>
                                     <option value="">Selecione a disciplina</option>
                                 </select>
                             </div>
                             <div class="col-18">
                                 <label for="bnccHabilidade">Habilidade BNCC:</label>
-                                <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
+                                <select id="bnccHabilidade" name="bnccHabilidade" disabled required>
+                                    <option value="">Selecione a habilidade</option>
+                                </select>
                             </div>
                             <div class="col-auto">
                                 <label for="formularioId">Identificador do formulário:</label>
-                                <input type="text" id="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
+                                <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                             </div>
                             <div class="">
                                 <label>&nbsp;</label>
@@ -117,7 +119,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group">
                             <div>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
-                                <select id="formularioIdDelete">
+                                <select id="formularioIdDelete" name="formularioIdDelete">
                                     <option value="">Selecione um formulário</option>
                                     <?php
                                     require_once "db_connection.php";

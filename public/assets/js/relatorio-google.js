@@ -2,6 +2,112 @@ let dadosPlanilha = [];
 let perguntas = [];
 let respostasCorretas = [];
 
+// Função para carregar anos escolares
+function carregarAnos() {
+    fetch('fetch_anos_disciplinas_habilidades.php?action=anos')
+        .then(response => response.json())
+        .then(data => {
+            const selectAno = document.getElementById('bnccAno');
+            selectAno.innerHTML = '<option value="">Selecione o ano</option>';
+            if (data.status === 'success') {
+                data.data.forEach(ano => {
+                    const option = document.createElement('option');
+                    option.value = ano.id;
+                    option.textContent = ano.nome;
+                    selectAno.appendChild(option);
+                });
+            } else {
+                console.error('Erro ao carregar anos:', data.message);
+            }
+        })
+        .catch(err => {
+            console.error('Erro ao carregar anos:', err);
+        });
+}
+
+// Função para carregar disciplinas com base no ano selecionado
+function carregarDisciplinas(anoId) {
+    const selectDisciplina = document.getElementById('bnccDisciplina');
+    const selectHabilidade = document.getElementById('bnccHabilidade');
+    
+    // Limpar e desabilitar disciplinas e habilidades
+    selectDisciplina.innerHTML = '<option value="">Selecione a disciplina</option>';
+    selectDisciplina.disabled = true;
+    selectHabilidade.innerHTML = '<option value="">Selecione a habilidade</option>';
+    selectHabilidade.disabled = true;
+
+    if (!anoId) return;
+
+    fetch(`fetch_anos_disciplinas_habilidades.php?action=disciplinas&ano_id=${anoId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                selectDisciplina.disabled = false;
+                data.data.forEach(disciplina => {
+                    const option = document.createElement('option');
+                    option.value = disciplina.id;
+                    option.textContent = disciplina.nome;
+                    selectDisciplina.appendChild(option);
+                });
+            } else {
+                console.error('Erro ao carregar disciplinas:', data.message);
+            }
+        })
+        .catch(err => {
+            console.error('Erro ao carregar disciplinas:', err);
+        });
+}
+
+// Função para carregar habilidades com base no ano e disciplina selecionados
+function carregarHabilidades(anoId, disciplinaId) {
+    const selectHabilidade = document.getElementById('bnccHabilidade');
+    
+    // Limpar e desabilitar habilidades
+    selectHabilidade.innerHTML = '<option value="">Selecione a habilidade</option>';
+    selectHabilidade.disabled = true;
+
+    if (!anoId || !disciplinaId) return;
+
+    fetch(`fetch_anos_disciplinas_habilidades.php?action=habilidades&ano_id=${anoId}&disciplina_id=${disciplinaId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                selectHabilidade.disabled = false;
+                data.data.forEach(habilidade => {
+                    const option = document.createElement('option');
+                    option.value = habilidade.codigo;
+                    option.textContent = `${habilidade.codigo} - ${habilidade.descricao.substring(0, 100)}${habilidade.descricao.length > 100 ? '...' : ''}`;
+                    selectHabilidade.appendChild(option);
+                });
+            } else {
+                console.error('Erro ao carregar habilidades:', data.message);
+            }
+        })
+        .catch(err => {
+            console.error('Erro ao carregar habilidades:', err);
+        });
+}
+
+// Adicionar eventos de mudança
+document.addEventListener('DOMContentLoaded', () => {
+    carregarAnos();
+    atualizarDropdownFormularios();
+
+    const selectAno = document.getElementById('bnccAno');
+    const selectDisciplina = document.getElementById('bnccDisciplina');
+
+    selectAno.addEventListener('change', () => {
+        const anoId = selectAno.value;
+        carregarDisciplinas(anoId);
+    });
+
+    selectDisciplina.addEventListener('change', () => {
+        const anoId = selectAno.value;
+        const disciplinaId = selectDisciplina.value;
+        carregarHabilidades(anoId, disciplinaId);
+    });
+});
+
 function formatGoogleSheetUrl(userInputUrl) {
     const idMatch = userInputUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
     if (!idMatch) {
@@ -126,8 +232,27 @@ function carregarPlanilha() {
 
 function importarParaBanco() {
     const formularioIdInput = document.getElementById('formularioId');
+    const anoInput = document.getElementById('bnccAno');
+    const disciplinaInput = document.getElementById('bnccDisciplina');
+    const habilidadeInput = document.getElementById('bnccHabilidade');
+
     if (!formularioIdInput.value.trim()) {
         alert("O campo 'Identificador do formulário' é obrigatório.");
+        return;
+    }
+
+    if (!anoInput.value) {
+        alert("O campo 'Ano Escolar' é obrigatório.");
+        return;
+    }
+
+    if (!disciplinaInput.value) {
+        alert("O campo 'Disciplina' é obrigatório.");
+        return;
+    }
+
+    if (!habilidadeInput.value) {
+        alert("O campo 'Habilidade BNCC' é obrigatório.");
         return;
     }
 
@@ -154,10 +279,10 @@ function importarParaBanco() {
         },
         body: JSON.stringify({
             dados: dadosFiltrados,
-            formularioId: document.getElementById('formularioId').value,
+            formularioId: formularioIdInput.value,
             perguntas: perguntas,
             respostasCorretas: respostasCorretas,
-            bnccHabilidade: document.getElementById('bnccHabilidade').value.trim(),
+            bnccHabilidade: habilidadeInput.value,
             funcionarioId: funcionarioId
         })
     })
@@ -175,14 +300,14 @@ function importarParaBanco() {
             atualizarDropdownFormularios();
         }
         button.disabled = false;
-        button.textContent = "Importar"; // Restaura o texto do botão
+        button.textContent = "Importar";
     })
     .catch(err => {
         console.error(err);
         const box = document.getElementById("message-box");
         box.innerHTML = `<div class="mensagem-erro">Erro ao importar os dados: ${err}</div>`;
         button.disabled = false;
-        button.textContent = "Importar"; // Restaura o texto do botão
+        button.textContent = "Importar";
     });
 }
 

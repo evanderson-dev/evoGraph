@@ -295,6 +295,18 @@ button:disabled {
     font-size: 14px;
 }
 
+.form-group-importar select#bnccHabilidade {
+    width: 100%;
+    max-width: 500px; /* Ajustar conforme necessário */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-group-importar select#bnccHabilidade option {
+    white-space: normal; /* Permitir quebras de linha nas opções quando abertas */
+}
+
 /* RESPONSIVIDADE */
 @media (max-width: 768px) {
     .form-group,
