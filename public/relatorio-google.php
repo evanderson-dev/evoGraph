@@ -76,7 +76,11 @@ $funcionario_id = $_SESSION["funcionario_id"];
 
             <section class="relatorio-section">
                 <div id="message-box"></div>
-                <div class="profile-form">
+                <div class="profile-form">                    
+                    <?php
+                    require_once "db_connection.php"; // Mover a conexão para o início da seção
+                    ?>
+
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
 
@@ -90,10 +94,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group-importar">
                             <div class="col-18">
                                 <label for="bnccAno">Ano Escolar:</label>
-                                <select id="bnccAno" required>
+                                <select id="bnccAno" name="bnccAno" required>
                                     <option value="">Selecione o ano</option>
                                     <?php
-                                    require_once "db_connection.php";
                                     $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
                                     $result = $conn->query($query);
                                     while ($row = $result->fetch_assoc()) {
@@ -101,23 +104,24 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         $ano_nome = htmlspecialchars($row['nome']);
                                         echo "<option value=\"$ano_id\">$ano_nome</option>";
                                     }
-                                    // $conn->close();
                                     ?>
                                 </select>
                             </div>
                             <div class="col-18">
                                 <label for="bnccDisciplina">Disciplina:</label>
-                                <select id="bnccDisciplina" disabled>
+                                <select id="bnccDisciplina" name="bnccDisciplina" disabled required>
                                     <option value="">Selecione a disciplina</option>
                                 </select>
                             </div>
                             <div class="col-18">
                                 <label for="bnccHabilidade">Habilidade BNCC:</label>
-                                <input type="text" id="bnccHabilidade" placeholder="Ex.: EF06GE10">
+                                <select id="bnccHabilidade" name="bnccHabilidade" disabled required>
+                                    <option value="">Selecione a habilidade</option>
+                                </select>
                             </div>
                             <div class="col-auto">
                                 <label for="formularioId">Identificador do formulário:</label>
-                                <input type="text" id="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
+                                <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                             </div>
                             <div class="">
                                 <label>&nbsp;</label>
@@ -128,10 +132,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="form-group">
                             <div>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
-                                <select id="formularioIdDelete">
+                                <select id="formularioIdDelete" name="formularioIdDelete">
                                     <option value="">Selecione um formulário</option>
                                     <?php
-                                    require_once "db_connection.php";
                                     $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
                                     $stmt = $conn->prepare($query);
                                     $stmt->bind_param("i", $funcionario_id);
@@ -142,7 +145,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         echo "<option value=\"$form_id\">$form_id</option>";
                                     }
                                     $stmt->close();
-                                    $conn->close();
                                     ?>
                                 </select>
                             </div>
@@ -152,6 +154,10 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             </div>
                         </div>
                     </form>
+
+                    <?php
+                    $conn->close(); // Fechar a conexão apenas no final da seção
+                    ?>
                 </div>
             </section>
 
