@@ -8,26 +8,18 @@ $response = ['status' => 'error', 'message' => 'Ação inválida'];
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     $response['message'] = 'Usuário não autenticado';
+    error_log('fetch_anos_disciplinas_habilidades: Usuário não autenticado');
     echo json_encode($response);
     exit;
 }
 
 $action = $_GET['action'] ?? '';
 
-if ($action === 'anos') {
-    // Buscar anos escolares
-    $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
-    $result = $conn->query($query);
-    $anos = [];
-    while ($row = $result->fetch_assoc()) {
-        $anos[] = $row;
-    }
-    echo json_encode(['status' => 'success', 'data' => $anos]);
-} elseif ($action === 'disciplinas') {
-    // Buscar disciplinas disponíveis para um ano específico
+if ($action === 'disciplinas') {
     $ano_id = intval($_GET['ano_id'] ?? 0);
     if ($ano_id <= 0) {
         $response['message'] = 'Ano escolar inválido';
+        error_log('fetch_anos_disciplinas_habilidades: Ano escolar inválido');
         echo json_encode($response);
         exit;
     }
@@ -45,13 +37,14 @@ if ($action === 'anos') {
         $disciplinas[] = $row;
     }
     $stmt->close();
+    error_log('Disciplinas retornadas para ano_id ' . $ano_id . ': ' . json_encode($disciplinas));
     echo json_encode(['status' => 'success', 'data' => $disciplinas]);
 } elseif ($action === 'habilidades') {
-    // Buscar habilidades BNCC para um ano e disciplina específicos
     $ano_id = intval($_GET['ano_id'] ?? 0);
     $disciplina_id = intval($_GET['disciplina_id'] ?? 0);
     if ($ano_id <= 0 || $disciplina_id <= 0) {
         $response['message'] = 'Ano escolar ou disciplina inválida';
+        error_log('fetch_anos_disciplinas_habilidades: Ano ou disciplina inválida');
         echo json_encode($response);
         exit;
     }
@@ -68,9 +61,11 @@ if ($action === 'anos') {
         $habilidades[] = $row;
     }
     $stmt->close();
+    error_log('Habilidades retornadas para ano_id ' . $ano_id . ', disciplina_id ' . $disciplina_id . ': ' . json_encode($habilidades));
     echo json_encode(['status' => 'success', 'data' => $habilidades]);
 } else {
     $response['message'] = 'Ação não especificada';
+    error_log('fetch_anos_disciplinas_habilidades: Ação não especificada');
     echo json_encode($response);
 }
 
