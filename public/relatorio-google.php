@@ -93,7 +93,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <select id="bnccAno" required>
                                     <option value="">Selecione o ano</option>
                                     <?php
-                                    // require_once "db_connection.php";
+                                    require_once "db_connection.php";
                                     $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
                                     $result = $conn->query($query);
                                     while ($row = $result->fetch_assoc()) {
