@@ -25,6 +25,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <link rel="stylesheet" href="./assets/css/modals/modal-add-funcionario.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-turma.css" />
     <link rel="stylesheet" href="./assets/css/modals/modal-add-aluno.css" />
+    <link rel="stylesheet" href="./assets/css/modals/modal-add-bncc.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>evoGraph - Relatório Google</title>
 </head>
@@ -58,8 +59,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
                 <div class="submenu">
                     <a href="#" onclick="openAddTurmaModal(); return false;"><i class="fa-solid fa-chalkboard"></i>Turma</a>
-                    <a href="#" onclick="openAddFuncionarioModal()"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
+                    <a href="#" onclick="openAddFuncionarioModal(); return false;"><i class="fa-solid fa-user-plus"></i>Funcionário</a>
                     <a href="#" onclick="openAddModal(); return false;"><i class="fa-solid fa-graduation-cap"></i>Aluno</a>
+                    <a href="#" onclick="openAddBnccModal(); return false;"><i class="fa-solid fa-book"></i>BNCC/Dados Escolares</a>
                 </div>
             </div>
             <a href="funcionarios.php"><i class="fa-solid fa-users"></i>Funcionários</a>
@@ -124,7 +126,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                             </div>
                             <div class="">
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
                             </div>                                
                         </div>
@@ -149,7 +151,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 </select>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>
@@ -185,6 +187,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <div id="modal-add-aluno" class="modal" style="display: none;">
         <div class="modal-content"></div>
     </div>
+    <div id="modal-add-bncc" class="modal" style="display: none;">
+        <div class="modal-content"></div>
+    </div>
     <?php endif; ?>
 
     <footer>
@@ -197,6 +202,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <script src="./assets/js/modal-add-funcionario.js"></script>
     <script src="./assets/js/modal-add-turma.js"></script>
     <script src="./assets/js/modal-add-aluno.js"></script>
+    <script src="./assets/js/modal-add-bncc.js"></script>
     <script src="./assets/js/sidebar.js"></script>
     <script src="./assets/js/ajax.js"></script>
     <script>

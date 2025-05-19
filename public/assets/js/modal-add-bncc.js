@@ -1,3 +1,5 @@
+console.log("modal-add-bncc.js carregado com sucesso");
+
 /* Responsabilidade: Gerencia o modal de cadastro de habilidades BNCC, disciplinas e anos escolares */
 $(document).ready(function() {
     $(document).on('click', '#modal-add-bncc .close-modal-btn', function() {
@@ -6,6 +8,7 @@ $(document).ready(function() {
 });
 
 function openAddBnccModal() {
+    console.log("Função openAddBnccModal chamada");
     const originalContent = `
         <h2 class="modal-title">Cadastrar Dados Escolares</h2>
         <form id="cadastro-bncc-form" enctype="multipart/form-data">
@@ -50,20 +53,20 @@ function openAddBnccModal() {
 
     // Load anos escolares and disciplinas for habilidade_bncc
     $.ajax({
-        url: 'fetch_anos_disciplinas.php',
+        url: 'fetch_anos_disciplinas_habilidades.php?action=anos_disciplinas',
         method: 'GET',
         dataType: 'json',
         success: function(response) {
             let anoOptions = '<option value="">Selecione o ano</option>';
             let disciplinaOptions = '<option value="">Selecione a disciplina</option>';
-            if (response.success) {
-                if (response.anos_escolares) {
-                    response.anos_escolares.forEach(ano => {
+            if (response.status === 'success') {
+                if (response.data.anos_escolares) {
+                    response.data.anos_escolares.forEach(ano => {
                         anoOptions += `<option value="${ano.id}">${ano.nome}</option>`;
                     });
                 }
-                if (response.disciplinas) {
-                    response.disciplinas.forEach(disciplina => {
+                if (response.data.disciplinas) {
+                    response.data.disciplinas.forEach(disciplina => {
                         disciplinaOptions += `<option value="${disciplina.id}">${disciplina.nome}</option>`;
                     });
                 }
@@ -73,6 +76,7 @@ function openAddBnccModal() {
         },
         error: function(xhr) {
             console.error('Erro ao carregar anos e disciplinas:', xhr.statusText);
+            alert('Erro ao carregar anos e disciplinas.');
         }
     });
 
@@ -145,7 +149,14 @@ function openAddBnccModal() {
                         </div>
                     `);
                     // Update dropdowns in relatorio-google.php
-                    updateBnccDropdowns();
+                    const selectAno = document.getElementById('bnccAno');
+                    if (selectAno.value) {
+                        carregarDisciplinas(selectAno.value);
+                        const selectDisciplina = document.getElementById('bnccDisciplina');
+                        if (selectDisciplina.value) {
+                            carregarHabilidades(selectAno.value, selectDisciplina.value);
+                        }
+                    }
                     setTimeout(function() {
                         $('#modal-add-bncc').css('display', 'none');
                     }, 2000);
@@ -157,46 +168,5 @@ function openAddBnccModal() {
                 modalContent.prepend(`<p class="modal-message error">Erro ao comunicar com o servidor: ${xhr.statusText}</p>`);
             }
         });
-    });
-}
-
-function updateBnccDropdowns() {
-    $.ajax({
-        url: 'fetch_anos_disciplinas.php',
-        method: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                // Update anos_escolares
-                let anoOptions = '<option value="">Selecione o ano</option>';
-                if (response.anos_escolares) {
-                    response.anos_escolares.forEach(ano => {
-                        anoOptions += `<option value="${ano.id}">${ano.nome}</option>`;
-                    });
-                }
-                $('#bnccAno').html(anoOptions);
-
-                // Update disciplinas
-                let disciplinaOptions = '<option value="">Selecione a disciplina</option>';
-                if (response.disciplinas) {
-                    response.disciplinas.forEach(disciplina => {
-                        disciplinaOptions += `<option value="${disciplina.id}">${disciplina.nome}</option>`;
-                    });
-                }
-                $('#bnccDisciplina').html(disciplinaOptions).prop('disabled', false);
-
-                // Update habilidades_bncc
-                let habilidadeOptions = '<option value="">Selecione a habilidade</option>';
-                if (response.habilidades_bncc) {
-                    response.habilidades_bncc.forEach(habilidade => {
-                        habilidadeOptions += `<option value="${habilidade.id}" data-codigo="${habilidade.codigo}">${habilidade.codigo} - ${habilidade.descricao}</option>`;
-                    });
-                }
-                $('#bnccHabilidade').html(habilidadeOptions);
-            }
-        },
-        error: function(xhr) {
-            console.error('Erro ao atualizar dropdowns:', xhr.statusText);
-        }
     });
 }
