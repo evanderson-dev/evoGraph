@@ -22,8 +22,9 @@ try {
         ('administrador@database.com', '$2y$10$exemploHashAqui', 'Admnistrador', 'Db', '2025-01-01', 'RF999', 'Administrador'),
         ('diretor@escola.com', '$2y$10$exemploHashAqui', 'Diretor', 'Fictício', '1975-03-10', 'RF001', 'Diretor'),
         ('coordenador@escola.com', '$2y$10$exemploHashAqui', 'Cordenador', 'Fictício', '1980-07-25', 'RF002', 'Coordenador'),
+        ('professor@escola.com', '$2y$10$exemploHashAqui', 'Professor', 'Fictício', '1975-03-10', 'RF003', 'Professor'),
         ('2206345@aluno.univesp.br', '$2y$10$exemploHashAqui', 'Marcio', 'Dias', '2000-02-20', '2206345', 'Professor'),
-        ('23225670@aluno.univesp.br', '$2y$10$exemploHashAqui', 'Sueanne', 'Ravena', '2000-06-10', '23225670', 'Diretor');
+        ('23225670@aluno.univesp.br', '$2y$10$exemploHashAqui', 'Sueanne', 'Ravena', '2000-06-10', '23225670', 'Administrador');
 
         -- Inserções na tabela turmas
         INSERT INTO turmas (nome, ano, professor_id)

@@ -50,30 +50,33 @@ CREATE TABLE respostas_formulario (
     dados_json JSON NOT NULL,
     pontuacao DECIMAL(5,2) DEFAULT NULL,
     funcionario_id INT,
+    bncc_habilidade_id INT,
+
     INDEX idx_email (email),
+    INDEX (aluno_id),
+    INDEX (funcionario_id),
+    INDEX fk_bncc_habilidade (bncc_habilidade_id),
+
     FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL,
-    FOREIGN KEY (funcionario_id) REFERENCES funcionarios(id) ON DELETE SET NULL
+    FOREIGN KEY (funcionario_id) REFERENCES funcionarios(id) ON DELETE SET NULL,
+    FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Tabela perguntas_formulario
 CREATE TABLE perguntas_formulario (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    formulario_id VARCHAR(50),
-    bncc_habilidade VARCHAR(50),
+    formulario_id VARCHAR(50) DEFAULT NULL,
+    bncc_habilidade VARCHAR(50) DEFAULT NULL,
     pergunta_texto TEXT NOT NULL,
-    resposta_correta VARCHAR(255),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+    resposta_correta VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    bncc_habilidade_id INT DEFAULT NULL,
 
--- Adicionar coluna bncc_habilidade_id à tabela respostas_formulario
-ALTER TABLE respostas_formulario
-ADD COLUMN bncc_habilidade_id INT DEFAULT NULL,
-ADD CONSTRAINT fk_bncc_habilidade FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL;
+    INDEX (formulario_id),
+    INDEX (bncc_habilidade),
 
--- Modificar a tabela perguntas_formulario para usar bncc_habilidade_id
-ALTER TABLE perguntas_formulario
-CHANGE COLUMN bncc_habilidade bncc_habilidade_id INT DEFAULT NULL,
-ADD CONSTRAINT fk_perguntas_bncc_habilidade FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL;
+    FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL
+); ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Tabela para armazenar os anos escolares
 CREATE TABLE anos_escolares (

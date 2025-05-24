@@ -124,6 +124,45 @@ CREATE TABLE IF NOT EXISTS perguntas_formulario (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );"
 
+# Adicionar coluna bncc_habilidade_id à tabela respostas_formulario
+sudo mysql -e "USE evograph_db;
+ALTER TABLE respostas_formulario
+ADD COLUMN bncc_habilidade_id INT DEFAULT NULL,
+ADD CONSTRAINT fk_bncc_habilidade FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL;"
+
+# Modificar a tabela perguntas_formulario para usar bncc_habilidade_id
+sudo mysql -e "USE evograph_db;
+ALTER TABLE perguntas_formulario
+CHANGE COLUMN bncc_habilidade bncc_habilidade_id INT DEFAULT NULL,
+ADD CONSTRAINT fk_perguntas_bncc_habilidade FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL;"
+
+# Tabela para armazenar os anos escolares
+sudo mysql -e "USE evograph_db;
+CREATE TABLE anos_escolares (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL UNIQUE,
+    ordem INT NOT NULL
+);"
+
+# Tabela para armazenar as disciplinas
+sudo mysql -e "USE evograph_db;
+CREATE TABLE disciplinas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL UNIQUE
+);"
+
+# Tabela para armazenar as habilidades BNCC
+sudo mysql -e "USE evograph_db;
+CREATE TABLE habilidades_bncc (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ano_id INT NOT NULL,
+    disciplina_id INT NOT NULL,
+    codigo VARCHAR(20) NOT NULL UNIQUE,
+    descricao TEXT NOT NULL,
+    FOREIGN KEY (ano_id) REFERENCES anos_escolares(id) ON DELETE RESTRICT,
+    FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id) ON DELETE RESTRICT
+);"
+
 # 9. Instalar o PHP e módulos necessários
 echo "Instalando o PHP e módulos..."
 sudo apt install php libapache2-mod-php php-mysql php-cli php-common php-json php-opcache php-mbstring php-zip php-gd -y
