@@ -30,8 +30,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>
-    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
     <script src="./assets/js/relatorios_bncc.js"></script>
 </head>
 <body>
@@ -49,6 +48,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     </header>
 
     <div class="container">
+
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
@@ -110,25 +110,11 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="media-chart-container">
                             <?php
                             if ($formulario_id) {
-                                // Tentar diferentes variações de "Série:"
-                                $serie_fields = [
-                                    '$.\"Série:\"',
-                                    '$.\"Serie:\"',
-                                    '$.\"Série :\"',
-                                    '$.\"Serie :\"',
-                                    '$.\"Série\"',
-                                    '$.\"Serie\"'
-                                ];
-                                $serie_query = implode(' OR ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
-                                }, $serie_fields));
-                                
-                                $query_medias = "SELECT COALESCE(" . implode(', ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field')";
-                                }, $serie_fields)) . ") AS serie,
+                                // Buscar todas as respostas para calcular a média
+                                $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
                                                 JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao
                                         FROM respostas_formulario
-                                        WHERE formulario_id = '$formulario_id' AND ($serie_query)
+                                        WHERE formulario_id = '$formulario_id'
                                         ORDER BY serie";
                                 $result_medias = $conn->query($query_medias);
                                 $series_medias = [];
@@ -136,9 +122,11 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 $pontuacoes_por_serie = [];
 
                                 if ($result_medias && $result_medias->num_rows > 0) {
+                                    // Agrupar pontuações por série
                                     while ($row = $result_medias->fetch_assoc()) {
                                         $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
                                         $pontuacao = $row['pontuacao'] ? trim($row['pontuacao'], '"') : '0 / 10';
+                                        // Extrair o número antes de " / 10"
                                         $pontuacao_valor = (float) explode(' / ', $pontuacao)[0];
                                         if (!isset($pontuacoes_por_serie[$serie])) {
                                             $pontuacoes_por_serie[$serie] = [];
@@ -146,6 +134,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         $pontuacoes_por_serie[$serie][] = $pontuacao_valor;
                                     }
 
+                                    // Calcular médias
                                     foreach ($pontuacoes_por_serie as $serie => $pontuacoes) {
                                         $media = count($pontuacoes) > 0 ? array_sum($pontuacoes) / count($pontuacoes) : 0;
                                         $media = round($media, 2);
@@ -171,23 +160,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <th>Habilidade BNCC</th>
                                 <?php
                                 if ($formulario_id) {
-                                    $serie_fields = [
-                                        '$.\"Série:\"',
-                                        '$.\"Serie:\"',
-                                        '$.\"Série :\"',
-                                        '$.\"Serie :\"',
-                                        '$.\"Série\"',
-                                        '$.\"Serie\"'
-                                    ];
-                                    $serie_query = implode(' OR ', array_map(function($field) {
-                                        return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
-                                    }, $serie_fields));
-                                    
-                                    $query_series = "SELECT DISTINCT COALESCE(" . implode(', ', array_map(function($field) {
-                                        return "JSON_EXTRACT(dados_json, '$field')";
-                                    }, $serie_fields)) . ") AS serie
+                                    $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                     FROM respostas_formulario
-                                                    WHERE formulario_id = '$formulario_id' AND ($serie_query)
+                                                    WHERE formulario_id = '$formulario_id'
                                                     ORDER BY serie";
                                     $result_series = $conn->query($query_series);
                                     $series = [];
@@ -223,9 +198,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                                                 SUM(CASE WHEN LOWER(JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"')) = LOWER('\"$resposta_correta\"') THEN 1 ELSE 0 END) AS acertos
                                                         FROM respostas_formulario
                                                         WHERE formulario_id = '$formulario_id'
-                                                        AND TRIM(COALESCE(" . implode(', ', array_map(function($field) {
-                                                            return "JSON_EXTRACT(dados_json, '$field')";
-                                                        }, $serie_fields)) . ")) = '\"$serie_escaped\"'";
+                                                        AND TRIM(JSON_EXTRACT(dados_json, '$.\"Série:\"')) = '\"$serie_escaped\"'";
                                                 $result_acertos = $conn->query($query_acertos);
                                                 if ($result_acertos) {
                                                     $acertos_row = $result_acertos->fetch_assoc();
@@ -265,23 +238,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             <option value="">Todas as Séries</option>
                             <?php
                             if ($formulario_id) {
-                                $serie_fields = [
-                                    '$.\"Série:\"',
-                                    '$.\"Serie:\"',
-                                    '$.\"Série :\"',
-                                    '$.\"Serie :\"',
-                                    '$.\"Série\"',
-                                    '$.\"Serie\"'
-                                ];
-                                $serie_query = implode(' OR ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
-                                }, $serie_fields));
-                                
-                                $query_series = "SELECT DISTINCT COALESCE(" . implode(', ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field')";
-                                }, $serie_fields)) . ") AS serie
+                                $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                 FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id' AND ($serie_query)
+                                                WHERE formulario_id = '$formulario_id'
                                                 ORDER BY serie";
                                 $result_series = $conn->query($query_series);
                                 while ($row = $result_series->fetch_assoc()) {
@@ -305,23 +264,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             <option value="">Todas as Séries</option>
                             <?php
                             if ($formulario_id) {
-                                $serie_fields = [
-                                    '$.\"Série:\"',
-                                    '$.\"Serie:\"',
-                                    '$.\"Série :\"',
-                                    '$.\"Serie :\"',
-                                    '$.\"Série\"',
-                                    '$.\"Serie\"'
-                                ];
-                                $serie_query = implode(' OR ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
-                                }, $serie_fields));
-                                
-                                $query_series = "SELECT DISTINCT COALESCE(" . implode(', ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field')";
-                                }, $serie_fields)) . ") AS serie
+                                $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                 FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id' AND ($serie_query)
+                                                WHERE formulario_id = '$formulario_id'
                                                 ORDER BY serie";
                                 $result_series = $conn->query($query_series);
                                 while ($row = $result_series->fetch_assoc()) {
@@ -372,12 +317,17 @@ $funcionario_id = $_SESSION["funcionario_id"];
         document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('mediaPorSerieChart');
             if (canvas) {
+                // Função para ajustar as dimensões do canvas
                 function resizeCanvas() {
-                    const containerWidth = canvas.parentElement.offsetWidth;
-                    canvas.width = containerWidth;
-                    canvas.height = containerWidth * 0.75;
+                    const containerWidth = canvas.parentElement.offsetWidth; // Largura do contêiner pai
+                    canvas.width = containerWidth; // Ajustar a largura do canvas
+                    canvas.height = containerWidth * 0.75; // Manter proporção (altura = 75% da largura)
                 }
+
+                // Ajustar inicialmente
                 resizeCanvas();
+
+                // Ajustar ao redimensionar a janela
                 window.addEventListener('resize', resizeCanvas);
             }
         });
