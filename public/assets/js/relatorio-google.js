@@ -113,24 +113,28 @@ function carregarPlanilha() {
                     globalSelectDisciplina.innerHTML = '<option value="">Selecione a disciplina</option>';
                     globalSelectDisciplina.disabled = true;
 
-                    fetch('fetch_anos_disciplinas_habilidades.php?action=anos')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success' && data.data.length > 0) {
-                                data.data.forEach(ano => {
-                                    const option = document.createElement('option');
-                                    option.value = ano.id;
-                                    option.textContent = ano.nome;
-                                    globalSelectAno.appendChild(option);
-                                });
-                            } else {
-                                alert('Nenhum ano escolar disponível.');
-                            }
-                        })
-                        .catch(err => {
-                            console.error('Erro ao carregar anos escolares:', err);
-                            alert('Erro ao carregar anos escolares.');
-                        });
+                    fetch('fetch_anos_disciplinas_habilidades.php?action=anos', {
+                        method: 'GET', // Especificar método GET
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Resposta da API para anos:', data); // Depuração
+                        if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
+                            data.data.forEach(ano => {
+                                const option = document.createElement('option');
+                                option.value = ano.id;
+                                option.textContent = ano.nome;
+                                globalSelectAno.appendChild(option);
+                            });
+                        } else {
+                            alert('Nenhum ano escolar disponível.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Erro ao carregar anos escolares:', err);
+                        alert('Erro ao carregar anos escolares.');
+                    });
 
                     // Carregar dropdowns para cada pergunta via AJAX
                     const perguntasHabilidadesList = document.getElementById('perguntas-habilidades-list');
