@@ -30,8 +30,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>if (typeof jQuery === 'undefined') { document.write('<script src="./assets/js/jquery-3.6.0.min.js"><\/script>'); }</script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>
-    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>    <script>if (typeof Chart === 'undefined') { document.write('<script src="./assets/js/chart.min.js"><\/script>'); }</script>
     <script src="./assets/js/relatorios_bncc.js"></script>
 </head>
 <body>
@@ -49,6 +48,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
     </header>
 
     <div class="container">
+
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <a href="dashboard.php" class="sidebar-active"><i class="fa-solid fa-house"></i>Home</a>
@@ -110,22 +110,23 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="media-chart-container">
                             <?php
                             if ($formulario_id) {
-                                // Query simplificada para depuração
+                                // Buscar todas as respostas para calcular a média
                                 $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
                                                 JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao
                                         FROM respostas_formulario
-                                        WHERE formulario_id = '$formulario_id'";
+                                        WHERE formulario_id = '$formulario_id'
+                                        ORDER BY serie";
                                 $result_medias = $conn->query($query_medias);
                                 $series_medias = [];
                                 $medias = [];
                                 $pontuacoes_por_serie = [];
 
                                 if ($result_medias && $result_medias->num_rows > 0) {
+                                    // Agrupar pontuações por série
                                     while ($row = $result_medias->fetch_assoc()) {
                                         $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
                                         $pontuacao = $row['pontuacao'] ? trim($row['pontuacao'], '"') : '0 / 10';
-                                        // Log para depuração
-                                        error_log("Série extraída: $serie, Pontuação: $pontuacao");
+                                        // Extrair o número antes de " / 10"
                                         $pontuacao_valor = (float) explode(' / ', $pontuacao)[0];
                                         if (!isset($pontuacoes_por_serie[$serie])) {
                                             $pontuacoes_por_serie[$serie] = [];
@@ -133,16 +134,13 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         $pontuacoes_por_serie[$serie][] = $pontuacao_valor;
                                     }
 
+                                    // Calcular médias
                                     foreach ($pontuacoes_por_serie as $serie => $pontuacoes) {
                                         $media = count($pontuacoes) > 0 ? array_sum($pontuacoes) / count($pontuacoes) : 0;
                                         $media = round($media, 2);
                                         $series_medias[] = $serie;
                                         $medias[] = $media;
                                     }
-                                    error_log("Séries para gráfico: " . json_encode($series_medias));
-                                    error_log("Médias para gráfico: " . json_encode($medias));
-                                } else {
-                                    error_log("Nenhuma resposta encontrada para formulario_id: $formulario_id");
                                 }
                             }
                             ?>
@@ -164,18 +162,14 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 if ($formulario_id) {
                                     $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                     FROM respostas_formulario
-                                                    WHERE formulario_id = '$formulario_id'";
+                                                    WHERE formulario_id = '$formulario_id'
+                                                    ORDER BY serie";
                                     $result_series = $conn->query($query_series);
                                     $series = [];
-                                    if ($result_series) {
-                                        while ($row = $result_series->fetch_assoc()) {
-                                            $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                            $series[] = $serie;
-                                            echo "<th>Série $serie</th>";
-                                        }
-                                        error_log("Séries para tabela: " . json_encode($series));
-                                    } else {
-                                        error_log("Erro na query de séries: " . $conn->error);
+                                    while ($row = $result_series->fetch_assoc()) {
+                                        $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                        $series[] = $serie;
+                                        echo "<th>Série $serie</th>";
                                     }
                                 }
                                 ?>
@@ -246,7 +240,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             if ($formulario_id) {
                                 $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                 FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id'";
+                                                WHERE formulario_id = '$formulario_id'
+                                                ORDER BY serie";
                                 $result_series = $conn->query($query_series);
                                 while ($row = $result_series->fetch_assoc()) {
                                     $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
@@ -271,7 +266,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             if ($formulario_id) {
                                 $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                 FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id'";
+                                                WHERE formulario_id = '$formulario_id'
+                                                ORDER BY serie";
                                 $result_series = $conn->query($query_series);
                                 while ($row = $result_series->fetch_assoc()) {
                                     $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
@@ -321,12 +317,17 @@ $funcionario_id = $_SESSION["funcionario_id"];
         document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('mediaPorSerieChart');
             if (canvas) {
+                // Função para ajustar as dimensões do canvas
                 function resizeCanvas() {
-                    const containerWidth = canvas.parentElement.offsetWidth;
-                    canvas.width = containerWidth;
-                    canvas.height = containerWidth * 0.75;
+                    const containerWidth = canvas.parentElement.offsetWidth; // Largura do contêiner pai
+                    canvas.width = containerWidth; // Ajustar a largura do canvas
+                    canvas.height = containerWidth * 0.75; // Manter proporção (altura = 75% da largura)
                 }
+
+                // Ajustar inicialmente
                 resizeCanvas();
+
+                // Ajustar ao redimensionar a janela
                 window.addEventListener('resize', resizeCanvas);
             }
         });
