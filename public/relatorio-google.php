@@ -104,6 +104,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 </div>
                             </div>
                             <div>
+                                <br>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
                                 <select id="formularioIdDelete" name="formularioIdDelete">
                                     <option value="">Selecione um formulário</option>
@@ -128,7 +129,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         </div>
 
                         <div class="form-group">
-                            
+
                         </div>
                     </form>
 
