@@ -117,10 +117,33 @@ function carregarPlanilha() {
                         })
                         .then(response => response.text())
                         .then(html => {
-                            const div = document.createElement('div');
-                            div.className = 'form-group-importar';
-                            div.innerHTML = html;
-                            perguntasHabilidadesList.appendChild(div);
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+
+                            // Reestruturar o HTML
+                            const formGroup = document.createElement('div');
+                            formGroup.className = 'form-group-importar pergunta-group';
+
+                            // Extrair a pergunta (.col-100)
+                            const col100 = tempDiv.querySelector('.col-100');
+                            const perguntaLabel = document.createElement('div');
+                            perguntaLabel.className = 'pergunta-label';
+                            if (col100) {
+                                perguntaLabel.appendChild(col100.querySelector('label'));
+                            }
+
+                            // Extrair os dropdowns (.col-18)
+                            const dropdownGroup = document.createElement('div');
+                            dropdownGroup.className = 'dropdown-group';
+                            const col18s = tempDiv.querySelectorAll('.col-18');
+                            col18s.forEach(col => {
+                                dropdownGroup.appendChild(col);
+                            });
+
+                            // Montar a nova estrutura
+                            formGroup.appendChild(perguntaLabel);
+                            formGroup.appendChild(dropdownGroup);
+                            perguntasHabilidadesList.appendChild(formGroup);
 
                             // Adicionar eventos de mudança
                             const selectAno = document.getElementById(`bnccAno_${index}`);
