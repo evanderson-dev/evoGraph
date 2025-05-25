@@ -47,15 +47,12 @@
 
                         // Normalizar cabeçalhos
                         const headers = Object.keys(dadosPlanilha[0]).map(header => {
-                            const normalized = header.trim()
-                                .normalize("NFD")
-                                .replace(/[\u0300-\u036f]/g, "") // Remove acentos
-                                .replace(/\s+/g, " "); // Normaliza múltiplos espaços
-                            // Padronizar variações de "Série:"
-                            if (/^S[eé]rie\s*:?\s*$/i.test(normalized)) {
+                            const cleanedHeader = header.trim();
+                            // Normalizar variações de "Série:"
+                            if (/^S[eé]rie\s*:?\s*$/i.test(cleanedHeader)) {
                                 return "Série:";
                             }
-                            return normalized;
+                            return cleanedHeader;
                         });
                         console.log("Cabeçalhos normalizados:", headers);
 

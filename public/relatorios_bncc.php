@@ -110,26 +110,11 @@ $funcionario_id = $_SESSION["funcionario_id"];
                         <div class="media-chart-container">
                             <?php
                             if ($formulario_id) {
-                                // Tentar diferentes variações de "Série:"
-                                $serie_fields = [
-                                    '$.\"Série:\"',
-                                    '$.\"Serie:\"',
-                                    '$.\"Série :\"',
-                                    '$.\"Serie :\"',
-                                    '$.\"Série\"',
-                                    '$.\"Serie\"'
-                                ];
-                                $serie_query = implode(' OR ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
-                                }, $serie_fields));
-                                
-                                $query_medias = "SELECT COALESCE(" . implode(', ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field')";
-                                }, $serie_fields)) . ") AS serie,
+                                // Query simplificada para depuração
+                                $query_medias = "SELECT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie, 
                                                 JSON_EXTRACT(dados_json, '$.\"Pontuação\"') AS pontuacao
                                         FROM respostas_formulario
-                                        WHERE formulario_id = '$formulario_id' AND ($serie_query)
-                                        ORDER BY serie";
+                                        WHERE formulario_id = '$formulario_id'";
                                 $result_medias = $conn->query($query_medias);
                                 $series_medias = [];
                                 $medias = [];
@@ -139,6 +124,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     while ($row = $result_medias->fetch_assoc()) {
                                         $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
                                         $pontuacao = $row['pontuacao'] ? trim($row['pontuacao'], '"') : '0 / 10';
+                                        // Log para depuração
+                                        error_log("Série extraída: $serie, Pontuação: $pontuacao");
                                         $pontuacao_valor = (float) explode(' / ', $pontuacao)[0];
                                         if (!isset($pontuacoes_por_serie[$serie])) {
                                             $pontuacoes_por_serie[$serie] = [];
@@ -152,6 +139,10 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         $series_medias[] = $serie;
                                         $medias[] = $media;
                                     }
+                                    error_log("Séries para gráfico: " . json_encode($series_medias));
+                                    error_log("Médias para gráfico: " . json_encode($medias));
+                                } else {
+                                    error_log("Nenhuma resposta encontrada para formulario_id: $formulario_id");
                                 }
                             }
                             ?>
@@ -171,30 +162,20 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <th>Habilidade BNCC</th>
                                 <?php
                                 if ($formulario_id) {
-                                    $serie_fields = [
-                                        '$.\"Série:\"',
-                                        '$.\"Serie:\"',
-                                        '$.\"Série :\"',
-                                        '$.\"Serie :\"',
-                                        '$.\"Série\"',
-                                        '$.\"Serie\"'
-                                    ];
-                                    $serie_query = implode(' OR ', array_map(function($field) {
-                                        return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
-                                    }, $serie_fields));
-                                    
-                                    $query_series = "SELECT DISTINCT COALESCE(" . implode(', ', array_map(function($field) {
-                                        return "JSON_EXTRACT(dados_json, '$field')";
-                                    }, $serie_fields)) . ") AS serie
+                                    $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                     FROM respostas_formulario
-                                                    WHERE formulario_id = '$formulario_id' AND ($serie_query)
-                                                    ORDER BY serie";
+                                                    WHERE formulario_id = '$formulario_id'";
                                     $result_series = $conn->query($query_series);
                                     $series = [];
-                                    while ($row = $result_series->fetch_assoc()) {
-                                        $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
-                                        $series[] = $serie;
-                                        echo "<th>Série $serie</th>";
+                                    if ($result_series) {
+                                        while ($row = $result_series->fetch_assoc()) {
+                                            $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
+                                            $series[] = $serie;
+                                            echo "<th>Série $serie</th>";
+                                        }
+                                        error_log("Séries para tabela: " . json_encode($series));
+                                    } else {
+                                        error_log("Erro na query de séries: " . $conn->error);
                                     }
                                 }
                                 ?>
@@ -223,9 +204,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                                                 SUM(CASE WHEN LOWER(JSON_EXTRACT(dados_json, '$.\"$pergunta_escaped\"')) = LOWER('\"$resposta_correta\"') THEN 1 ELSE 0 END) AS acertos
                                                         FROM respostas_formulario
                                                         WHERE formulario_id = '$formulario_id'
-                                                        AND TRIM(COALESCE(" . implode(', ', array_map(function($field) {
-                                                            return "JSON_EXTRACT(dados_json, '$field')";
-                                                        }, $serie_fields)) . ")) = '\"$serie_escaped\"'";
+                                                        AND TRIM(JSON_EXTRACT(dados_json, '$.\"Série:\"')) = '\"$serie_escaped\"'";
                                                 $result_acertos = $conn->query($query_acertos);
                                                 if ($result_acertos) {
                                                     $acertos_row = $result_acertos->fetch_assoc();
@@ -265,24 +244,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             <option value="">Todas as Séries</option>
                             <?php
                             if ($formulario_id) {
-                                $serie_fields = [
-                                    '$.\"Série:\"',
-                                    '$.\"Serie:\"',
-                                    '$.\"Série :\"',
-                                    '$.\"Serie :\"',
-                                    '$.\"Série\"',
-                                    '$.\"Serie\"'
-                                ];
-                                $serie_query = implode(' OR ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
-                                }, $serie_fields));
-                                
-                                $query_series = "SELECT DISTINCT COALESCE(" . implode(', ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field')";
-                                }, $serie_fields)) . ") AS serie
+                                $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                 FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id' AND ($serie_query)
-                                                ORDER BY serie";
+                                                WHERE formulario_id = '$formulario_id'";
                                 $result_series = $conn->query($query_series);
                                 while ($row = $result_series->fetch_assoc()) {
                                     $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
@@ -305,24 +269,9 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             <option value="">Todas as Séries</option>
                             <?php
                             if ($formulario_id) {
-                                $serie_fields = [
-                                    '$.\"Série:\"',
-                                    '$.\"Serie:\"',
-                                    '$.\"Série :\"',
-                                    '$.\"Serie :\"',
-                                    '$.\"Série\"',
-                                    '$.\"Serie\"'
-                                ];
-                                $serie_query = implode(' OR ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
-                                }, $serie_fields));
-                                
-                                $query_series = "SELECT DISTINCT COALESCE(" . implode(', ', array_map(function($field) {
-                                    return "JSON_EXTRACT(dados_json, '$field')";
-                                }, $serie_fields)) . ") AS serie
+                                $query_series = "SELECT DISTINCT JSON_EXTRACT(dados_json, '$.\"Série:\"') AS serie
                                                 FROM respostas_formulario
-                                                WHERE formulario_id = '$formulario_id' AND ($serie_query)
-                                                ORDER BY serie";
+                                                WHERE formulario_id = '$formulario_id'";
                                 $result_series = $conn->query($query_series);
                                 while ($row = $result_series->fetch_assoc()) {
                                     $serie = $row['serie'] ? trim($row['serie'], '"') : 'Não Informada';
