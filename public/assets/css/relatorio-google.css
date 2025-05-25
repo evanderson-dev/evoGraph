@@ -567,11 +567,11 @@ button:disabled,
         grid-column: 1 / -1;
     }
 }
-
+/* 
 @media (min-width: 1200px) {
     .form-container,
     #perguntas-habilidades-section,
     #dados-planilha-section {
         max-width: 1000px;
     }
-}
+} */
