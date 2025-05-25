@@ -140,7 +140,8 @@ header .icons {
     border-radius: 10px;
     margin: 0 auto 25px;
     border: 1px solid var(--border-color);
-    max-width: 1200px;
+    /* max-width: 1200px; */
+    max-width: 100%;
     box-shadow: 0 3px 6px var(--shadow-color);
 }
 
