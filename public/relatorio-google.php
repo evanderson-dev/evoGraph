@@ -93,42 +93,49 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                             </div>
                         </div>
-                        <div class="form-group-importar">
-                            <div class="col-18">
-                                <label for="bnccAno">Ano Escolar:</label>
-                                <select id="bnccAno" name="bnccAno" required>
-                                    <option value="">Selecione o ano</option>
-                                    <?php
-                                    $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
-                                    $result = $conn->query($query);
-                                    while ($row = $result->fetch_assoc()) {
-                                        $ano_id = htmlspecialchars($row['id']);
-                                        $ano_nome = htmlspecialchars($row['nome']);
-                                        echo "<option value=\"$ano_id\">$ano_nome</option>";
-                                    }
-                                    ?>
-                                </select>
+                        <!-- Seção de input da planilha e identificador do formulário -->
+                        <div class="form-container">
+                            <h3>Importar Dados da Planilha</h3>
+                            <div class="form-group-importar">
+                                <div class="col-70">
+                                    <label for="googleSheetLink">Link da Planilha:</label>
+                                    <input type="text" id="googleSheetLink" name="googleSheetLink" placeholder="Cole o link da planilha do Google Sheets" required>
+                                </div>
+                                <div class="col-30">
+                                    <label for="formularioId">Identificador do formulário:</label>
+                                    <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
+                                </div>
+                                <div class="col-auto">
+                                    <label>&nbsp;</label>
+                                    <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                                </div>
                             </div>
-                            <div class="col-18">
-                                <label for="bnccDisciplina">Disciplina:</label>
-                                <select id="bnccDisciplina" name="bnccDisciplina" disabled required>
-                                    <option value="">Selecione a disciplina</option>
-                                </select>
+                        </div>
+
+                        <!-- Seção para associar habilidades às perguntas -->
+                        <div class="tabela" id="perguntas-habilidades-section" style="display: none;">
+                            <div class="tabela-scroll">
+                                <h4>Associar Habilidades BNCC às Perguntas</h4>
+                                <div id="perguntas-habilidades-list" class="perguntas-habilidades-container">
+                                    <!-- Aqui será preenchido dinamicamente via JavaScript -->
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
+                                </div>
                             </div>
-                            <div class="col-18">
-                                <label for="bnccHabilidade">Habilidade BNCC:</label>
-                                <select id="bnccHabilidade" name="bnccHabilidade" disabled required>
-                                    <option value="">Selecione a habilidade</option>
-                                </select>
+                        </div>
+
+                        <!-- Seção para exibir os dados carregados da planilha -->
+                        <div class="tabela" id="dados-planilha-section">
+                            <div class="tabela-scroll">
+                                <h4>Dados Carregados da Planilha</h4>
+                                <div style="overflow-x: auto;">
+                                    <table id="tabela-dados">
+                                        <thead></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="col-auto">
-                                <label for="formularioId">Identificador do formulário:</label>
-                                <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
-                            </div>
-                            <div class="">
-                                <label> </label>
-                                <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
-                            </div>                                
                         </div>
 
                         <div class="form-group">
