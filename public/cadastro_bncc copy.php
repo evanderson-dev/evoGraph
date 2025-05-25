@@ -43,14 +43,14 @@ try {
     } elseif ($tipo === 'habilidade_bncc') {
         $codigo = trim($_POST['codigo_habilidade'] ?? '');
         $descricao = trim($_POST['descricao_habilidade'] ?? '');
-        $ano_id = filter_var($_POST['ano_id'] ?? '', FILTER_VALIDATE_INT);
+        $ano_escolar_id = filter_var($_POST['ano_escolar_id'] ?? '', FILTER_VALIDATE_INT);
         $disciplina_id = filter_var($_POST['disciplina_id'] ?? '', FILTER_VALIDATE_INT);
-        if (empty($codigo) || empty($descricao) || !$ano_id || !$disciplina_id) {
+        if (empty($codigo) || empty($descricao) || !$ano_escolar_id || !$disciplina_id) {
             echo json_encode(['success' => false, 'message' => 'Todos os campos da habilidade BNCC são obrigatórios.']);
             exit;
         }
-        $stmt = $conn->prepare("INSERT INTO habilidades_bncc (codigo, descricao, ano_id, disciplina_id) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssii", $codigo, $descricao, $ano_id, $disciplina_id);
+        $stmt = $conn->prepare("INSERT INTO habilidades_bncc (codigo, descricao, ano_escolar_id, disciplina_id) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssii", $codigo, $descricao, $ano_escolar_id, $disciplina_id);
         $stmt->execute();
         $stmt->close();
         echo json_encode(['success' => true, 'message' => 'Habilidade BNCC cadastrada com sucesso.']);
