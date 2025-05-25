@@ -113,15 +113,15 @@ function carregarPlanilha() {
                     globalSelectDisciplina.innerHTML = '<option value="">Selecione a disciplina</option>';
                     globalSelectDisciplina.disabled = true;
 
-                    fetch('fetch_anos_disciplinas_habilidades.php?action=anos', {
-                        method: 'GET', // Especificar método GET
+                    fetch('fetch_anos_disciplinas_habilidades.php?action=anos_disciplinas', {
+                        method: 'GET',
                         headers: { 'Content-Type': 'application/json' }
                     })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('Resposta da API para anos:', data); // Depuração
-                        if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
-                            data.data.forEach(ano => {
+                        console.log('Resposta da API para anos_disciplinas:', data);
+                        if (data.status === 'success' && data.data && Array.isArray(data.data.anos_escolares) && data.data.anos_escolares.length > 0) {
+                            data.data.anos_escolares.forEach(ano => {
                                 const option = document.createElement('option');
                                 option.value = ano.id;
                                 option.textContent = ano.nome;
