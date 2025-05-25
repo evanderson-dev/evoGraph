@@ -35,7 +35,7 @@ function openAddBnccModal() {
                 <label for="add-descricao-habilidade">Descrição da Habilidade:</label>
                 <textarea id="add-descricao-habilidade" name="descricao_habilidade" placeholder="Ex.: Analisar a distribuição da população..." rows="4"></textarea>
                 <label for="add-ano-escolar-habilidade">Ano Escolar:</label>
-                <select id="add-ano-escolar-habilidade" name="ano_escolar_id"></select>
+                <select id="add-ano-escolar-habilidade" name="ano_id"></select>
                 <label for="add-disciplina-habilidade">Disciplina:</label>
                 <select id="add-disciplina-habilidade" name="disciplina_id"></select>
             </div>
