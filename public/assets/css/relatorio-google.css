@@ -307,7 +307,7 @@ button:disabled {
     white-space: normal; /* Permitir quebras de linha nas opções quando abertas */
 }
 
-#perguntas-habilidades-list .form-group-importar {
+/* #perguntas-habilidades-list .form-group-importar {
     margin-bottom: 20px;
     border-bottom: 1px solid #ddd;
     padding-bottom: 15px;
@@ -324,10 +324,12 @@ button:disabled {
 
 #perguntas-habilidades-list select {
     max-width: 300px;
-}
+} */
+
+
 
 /* RESPONSIVIDADE */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .form-group,
     .form-group-importar {
         flex-direction: column;
@@ -343,5 +345,168 @@ button:disabled {
 
     .btn-importar {
         width: 100%;
+    }
+} */
+
+/* NOVO CONTEUDO ADICIONADO */
+
+/* Estilos para a seção de habilidades BNCC */
+#perguntas-habilidades-section {
+    margin-bottom: 20px;
+}
+
+.perguntas-habilidades-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.form-group-importar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-group-importar:last-child {
+    border-bottom: none;
+}
+
+.form-group-importar label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.form-group-importar select {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+    transition: border-color 0.2s;
+}
+
+.form-group-importar select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.form-group-importar .col-100 label {
+    font-size: 16px;
+    color: #222;
+    font-weight: 700;
+}
+
+/* Estilos para o botão Importar */
+.form-group .btn-importar {
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.form-group .btn-importar:hover {
+    background-color: #218838;
+}
+
+.form-group .btn-importar:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    .perguntas-habilidades-container {
+        padding: 10px;
+    }
+
+    .form-group-importar {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .form-group-importar label {
+        font-size: 13px;
+    }
+
+    .form-group-importar select {
+        font-size: 13px;
+        padding: 6px;
+    }
+
+    .form-group-importar .col-100 label {
+        font-size: 14px;
+    }
+
+    .form-group .btn-importar {
+        width: 100%;
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .tabela-scroll {
+        padding: 0 5px;
+    }
+}
+
+@media (min-width: 769px) {
+    .form-group-importar {
+        grid-template-columns: repeat(3, 1fr);
+        align-items: center;
+    }
+
+    .form-group-importar .col-100 {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Estilos para a tabela de dados */
+#dados-planilha-section {
+    margin-top: 20px;
+}
+
+#tabela-dados {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+#tabela-dados th,
+#tabela-dados td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#tabela-dados th {
+    background-color: #f2f2f2;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    #tabela-dados {
+        font-size: 12px;
+    }
+
+    #tabela-dados th,
+    #tabela-dados td {
+        padding: 6px;
     }
 }

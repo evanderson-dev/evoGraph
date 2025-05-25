@@ -174,8 +174,19 @@ $funcionario_id = $_SESSION["funcionario_id"];
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
+            <!-- Nova seção para associar habilidades às perguntas -->
+            <div class="tabela" id="perguntas-habilidades-section" style="display: none;">
+                <div class="tabela-scroll">
+                    <h4>Associar Habilidades BNCC às Perguntas</h4>
+                    <div id="perguntas-habilidades-list">
+                        <!-- Aqui será preenchido dinamicamente via JavaScript -->
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
+                    </div>
+                </div>
+            </div>
 
     <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">

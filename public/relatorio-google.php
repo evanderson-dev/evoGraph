@@ -163,7 +163,21 @@ $funcionario_id = $_SESSION["funcionario_id"];
                 </div>
             </section>
 
-            <div class="tabela">
+            <!-- Seção para associar habilidades às perguntas -->
+            <div class="tabela" id="perguntas-habilidades-section" style="display: none;">
+                <div class="tabela-scroll">
+                    <h4>Associar Habilidades BNCC às Perguntas</h4>
+                    <div id="perguntas-habilidades-list" class="perguntas-habilidades-container">
+                        <!-- Aqui será preenchido dinamicamente via JavaScript -->
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção para exibir os dados carregados da planilha -->
+            <div class="tabela" id="dados-planilha-section">
                 <div class="tabela-scroll">
                     <h4>Dados Carregados da Planilha</h4>
                     <div style="overflow-x: auto;">
@@ -171,19 +185,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             <thead></thead>
                             <tbody></tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Nova seção para associar habilidades às perguntas -->
-            <div class="tabela" id="perguntas-habilidades-section" style="display: none;">
-                <div class="tabela-scroll">
-                    <h4>Associar Habilidades BNCC às Perguntas</h4>
-                    <div id="perguntas-habilidades-list">
-                        <!-- Aqui será preenchido dinamicamente via JavaScript -->
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
                     </div>
                 </div>
             </div>
