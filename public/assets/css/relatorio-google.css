@@ -205,7 +205,8 @@ header .icons {
 ================================================== */
 #perguntas-habilidades-section {
     margin-bottom: 25px;
-    max-width: 1200px;
+    /* max-width: 1200px; */
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
