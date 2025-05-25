@@ -121,6 +121,7 @@ function carregarPlanilha() {
                                 <label for="bnccAno_${index}">Ano Escolar:</label>
                                 <select id="bnccAno_${index}" name="bnccAno_${index}" required>
                                     <option value="">Selecione o ano</option>
+                                    ${document.getElementById('bnccAno').innerHTML}
                                 </select>
                             </div>
                             <div class="col-18">
@@ -138,39 +139,21 @@ function carregarPlanilha() {
                         `;
                         perguntasHabilidadesList.appendChild(div);
 
-                        // Carregar anos escolares
-                        fetch('fetch_anos_disciplinas_habilidades.php?action=anos_disciplinas')
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status === 'success') {
-                                    const selectAno = document.getElementById(`bnccAno_${index}`);
-                                    data.data.anos_escolares.forEach(ano => {
-                                        const option = document.createElement('option');
-                                        option.value = ano.id;
-                                        option.textContent = ano.nome;
-                                        selectAno.appendChild(option);
-                                    });
+                        // Adicionar eventos de mudança para carregar disciplinas e habilidades
+                        const selectAno = document.getElementById(`bnccAno_${index}`);
+                        const selectDisciplina = document.getElementById(`bnccDisciplina_${index}`);
+                        const selectHabilidade = document.getElementById(`bnccHabilidade_${index}`);
 
-                                    // Adicionar evento de mudança para carregar disciplinas
-                                    selectAno.addEventListener('change', () => {
-                                        const anoId = selectAno.value;
-                                        const selectDisciplina = document.getElementById(`bnccDisciplina_${index}`);
-                                        carregarDisciplinas(anoId, selectDisciplina);
-                                    });
+                        selectAno.addEventListener('change', () => {
+                            const anoId = selectAno.value;
+                            carregarDisciplinas(anoId, selectDisciplina);
+                        });
 
-                                    // Adicionar evento de mudança para carregar habilidades
-                                    const selectDisciplina = document.getElementById(`bnccDisciplina_${index}`);
-                                    selectDisciplina.addEventListener('change', () => {
-                                        const anoId = selectAno.value;
-                                        const disciplinaId = selectDisciplina.value;
-                                        const selectHabilidade = document.getElementById(`bnccHabilidade_${index}`);
-                                        carregarHabilidades(anoId, disciplinaId, selectHabilidade);
-                                    });
-                                }
-                            })
-                            .catch(err => {
-                                console.error('Erro ao carregar anos escolares:', err);
-                            });
+                        selectDisciplina.addEventListener('change', () => {
+                            const anoId = selectAno.value;
+                            const disciplinaId = selectDisciplina.value;
+                            carregarHabilidades(anoId, disciplinaId, selectHabilidade);
+                        });
                     });
 
                     document.getElementById('perguntas-habilidades-section').style.display = 'block';
