@@ -91,13 +91,12 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             <h3>Importar Dados da Planilha</h3>
                             <div class="form-group-importar">
                                 <!-- Primeira linha: Link da Planilha e botão Carregar -->
-                                <div class="col-70">
+                                <div class="col-70 form-section form-section-link">
                                     <label for="googleSheetLink">Link da Planilha:</label>
-                                    <input type="text" id="googleSheetLink" name="googleSheetLink" placeholder="Cole o link da planilha do Google Sheets" required>
-                                </div>
-                                <div class="col-auto">
-                                    <label> </label>
-                                    <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                                    <div class="link-group">
+                                        <input type="text" id="googleSheetLink" name="googleSheetLink" placeholder="Cole o link da planilha do Google Sheets" required>
+                                        <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                                    </div>
                                 </div>
                                 <!-- Segunda linha: Identificador e Excluir formulário -->
                                 <div class="col-30 form-section form-section-identifier">

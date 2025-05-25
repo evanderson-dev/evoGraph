@@ -155,7 +155,7 @@ header .icons {
 
 .form-group-importar {
     display: grid;
-    grid-template-columns: 3fr auto; /* Primeira linha: Link, Carregar */
+    grid-template-columns: 1fr; /* Primeira linha ocupa toda a largura */
     grid-template-rows: auto auto; /* Duas linhas */
     gap: 15px;
     align-items: flex-end;
@@ -200,26 +200,41 @@ header .icons {
     grid-column: span 1;
 }
 
-.col-auto {
-    display: flex;
-    align-items: flex-end;
-}
-
-/* Segunda linha: Identificador e Excluir */
+/* Seções com borda */
 .form-section {
-    grid-row: 2;
     padding: 10px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     background-color: #fafafa;
 }
 
+.form-section-link {
+    grid-column: 1;
+}
+
 .form-section-identifier {
+    grid-row: 2;
     grid-column: 1;
 }
 
 .form-section-exclude {
+    grid-row: 2;
     grid-column: 2;
+}
+
+/* Agrupar input e botão Carregar */
+.link-group {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.link-group input {
+    flex: 1; /* Input ocupa todo o espaço disponível */
+}
+
+.link-group .btn-carregar {
+    margin-bottom: 0; /* Alinhar com o input */
 }
 
 /* Agrupar dropdown e botão Excluir */
