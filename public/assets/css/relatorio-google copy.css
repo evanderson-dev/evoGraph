@@ -106,6 +106,7 @@ header .icons {
     border-radius: 8px;
     border-top: 3px solid #73b4ff;
     box-shadow: 0 2px 8px var(--shadow-color);
+    width: 100%; /* Garantir 100% da largura */
 }
 
 .titulo-secao p {
@@ -142,6 +143,7 @@ header .icons {
     border: 1px solid var(--border-color);
     max-width: 100%;
     box-shadow: 0 3px 6px var(--shadow-color);
+    width: 100%; /* Garantir 100% da largura */
 }
 
 .form-container h3 {
@@ -153,7 +155,7 @@ header .icons {
 
 .form-group-importar {
     display: grid;
-    grid-template-columns: 2fr 1fr auto;
+    grid-template-columns: 2fr 1fr auto auto auto; /* Adicionar colunas para exclusão */
     gap: 15px;
     align-items: flex-end;
 }
@@ -165,7 +167,8 @@ header .icons {
     font-size: 14px;
 }
 
-.form-group-importar input {
+.form-group-importar input,
+.form-group-importar select {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--border-color);
@@ -175,13 +178,15 @@ header .icons {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.form-group-importar input:focus {
+.form-group-importar input:focus,
+.form-group-importar select:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
     outline: none;
 }
 
-.form-group-importar input:focus-visible {
+.form-group-importar input:focus-visible,
+.form-group-importar select:focus-visible {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
 }
@@ -207,17 +212,17 @@ header .icons {
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    width: 100%; /* Garantir 100% da largura */
 }
 
 .perguntas-habilidades-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: block;
     padding: 15px;
     background-color: var(--bg-white);
     border-radius: 10px;
     border: 1px solid var(--border-color);
     box-shadow: 0 3px 6px var(--shadow-color);
+    width: 100%; /* Garantir 100% da largura */
 }
 
 .perguntas-habilidades-container h4 {
@@ -229,8 +234,8 @@ header .icons {
 
 .form-group-importar.pergunta-group {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-rows: auto auto; /* Linha para pergunta, linha para dropdowns */
+    gap: 10px;
     padding: 12px;
     border-bottom: 1px solid #e0e0e0;
     border-radius: 6px;
@@ -250,6 +255,30 @@ header .icons {
     color: var(--text-dark);
     margin-bottom: 4px;
     font-size: 14px;
+}
+
+.form-group-importar.pergunta-group .pergunta-label {
+    grid-row: 1;
+    grid-column: 1 / -1; /* Ocupa toda a largura */
+}
+
+.form-group-importar.pergunta-group .pergunta-label label {
+    font-size: 16px;
+    color: var(--text-darker);
+    font-weight: bold;
+}
+
+.form-group-importar.pergunta-group .dropdown-group {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas para dropdowns */
+    gap: 12px;
+}
+
+.form-group-importar.pergunta-group .col-18 {
+    display: flex;
+    flex-direction: column;
 }
 
 .form-group-importar.pergunta-group select {
@@ -278,14 +307,9 @@ header .icons {
     cursor: not-allowed;
 }
 
-.form-group-importar.pergunta-group .col-100 label {
-    font-size: 16px;
-    color: var(--text-darker);
-    font-weight: bold;
-}
-
-.col-18 {
-    flex-basis: 18%;
+/* Remover estilos desnecessários */
+.col-100 {
+    display: none; /* Não usado com a nova estrutura */
 }
 
 /* ==================================================
@@ -367,6 +391,7 @@ button:disabled,
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    width: 100%; /* Garantir 100% da largura */
 }
 
 #tabela-dados {
@@ -471,17 +496,21 @@ button:disabled,
         gap: 10px;
     }
 
-    .form-group-importar.pergunta-group label {
+    .form-group-importar.pergunta-group .dropdown-group {
+        grid-template-columns: 1fr; /* Empilhar em telas pequenas */
+    }
+
+    .form-group-importar.pergunta-group .pergunta-label label {
+        font-size: 14px;
+    }
+
+    .form-group-importar.pergunta-group .col-18 label {
         font-size: 13px;
     }
 
     .form-group-importar.pergunta-group select {
         font-size: 13px;
         padding: 7px;
-    }
-
-    .form-group-importar.pergunta-group .col-100 label {
-        font-size: 14px;
     }
 
     .form-group .btn-importar {
@@ -542,6 +571,18 @@ button:disabled,
         gap: 8px;
     }
 
+    .form-group-importar.pergunta-group .dropdown-group {
+        grid-template-columns: 1fr; /* Empilhar em telas muito pequenas */
+    }
+
+    .form-group-importar.pergunta-group .pergunta-label label {
+        font-size: 13px;
+    }
+
+    .form-group-importar.pergunta-group .col-18 label {
+        font-size: 12px;
+    }
+
     .form-group-importar.pergunta-group select {
         font-size: 12px;
         padding: 6px;
@@ -558,20 +599,7 @@ button:disabled,
 }
 
 @media (min-width: 769px) {
-    .form-group-importar.pergunta-group {
-        grid-template-columns: repeat(3, 1fr);
-        align-items: center;
-    }
-
-    .form-group-importar.pergunta-group .col-100 {
-        grid-column: 1 / -1;
+    .form-group-importar.pergunta-group .dropdown-group {
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas maiores */
     }
 }
-
-/* @media (min-width: 1200px) {
-    .form-container,
-    #perguntas-habilidades-section,
-    #dados-planilha-section {
-        max-width: 1000px;
-    }
-} */

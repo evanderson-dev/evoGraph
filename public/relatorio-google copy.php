@@ -99,32 +99,31 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                                 </div>
                                 <div class="col-auto">
-                                    <label>&nbsp;</label>
+                                    <label> </label>
                                     <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                                 </div>
-                            </div>
-                            <div>
-                                <br>
-                                <label for="formularioIdDelete">Excluir formulário:</label>
-                                <select id="formularioIdDelete" name="formularioIdDelete">
-                                    <option value="">Selecione um formulário</option>
-                                    <?php
-                                    $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
-                                    $stmt = $conn->prepare($query);
-                                    $stmt->bind_param("i", $funcionario_id);
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
-                                    while ($row = $result->fetch_assoc()) {
-                                        $form_id = htmlspecialchars($row['formulario_id']);
-                                        echo "<option value=\"$form_id\">$form_id</option>";
-                                    }
-                                    $stmt->close();
-                                    ?>
-                                </select>
-                            </div>
-                            <div>
-                                <label>&nbsp;</label>
-                                <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
+                                <div class="col-30">
+                                    <label for="formularioIdDelete">Excluir formulário:</label>
+                                    <select id="formularioIdDelete" name="formularioIdDelete">
+                                        <option value="">Selecione um formulário</option>
+                                        <?php
+                                        $query = "SELECT DISTINCT formulario_id FROM respostas_formulario WHERE funcionario_id = ? ORDER BY formulario_id";
+                                        $stmt = $conn->prepare($query);
+                                        $stmt->bind_param("i", $funcionario_id);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        while ($row = $result->fetch_assoc()) {
+                                            $form_id = htmlspecialchars($row['formulario_id']);
+                                            echo "<option value=\"$form_id\">$form_id</option>";
+                                        }
+                                        $stmt->close();
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <label> </label>
+                                    <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
+                                </div>
                             </div>
                         </div>
                     </form>
