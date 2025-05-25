@@ -70,7 +70,6 @@ function carregarPlanilha() {
                     }
 
                     if (!gabaritoRow) {
-                        // Procurar uma linha com pontuação 10/10
                         gabaritoRow = dadosPlanilha.find(row => row['Pontuação'] === '10 / 10');
                     }
 
@@ -96,7 +95,7 @@ function carregarPlanilha() {
 
                     dadosPlanilha.forEach(row => {
                         if (row['Nome:'] && row['Nome:'].trim().toUpperCase() === 'GABARITO') {
-                            return; // Ignora a linha GABARITO na tabela visual
+                            return;
                         }
                         const tr = document.createElement("tr");
                         headers.forEach(h => {
@@ -107,52 +106,40 @@ function carregarPlanilha() {
                         tbody.appendChild(tr);
                     });
 
-                    // Exibir perguntas e dropdowns para associar habilidades
+                    // Carregar dropdowns para cada pergunta via AJAX
                     const perguntasHabilidadesList = document.getElementById('perguntas-habilidades-list');
                     perguntasHabilidadesList.innerHTML = '';
                     perguntas.forEach((pergunta, index) => {
-                        const div = document.createElement('div');
-                        div.className = 'form-group-importar';
-                        div.innerHTML = `
-                            <div class="col-100">
-                                <label>Pergunta ${index + 1}: ${pergunta}</label>
-                            </div>
-                            <div class="col-18">
-                                <label for="bnccAno_${index}">Ano Escolar:</label>
-                                <select id="bnccAno_${index}" name="bnccAno_${index}" required>
-                                    <option value="">Selecione o ano</option>
-                                    ${document.getElementById('bnccAno').innerHTML}
-                                </select>
-                            </div>
-                            <div class="col-18">
-                                <label for="bnccDisciplina_${index}">Disciplina:</label>
-                                <select id="bnccDisciplina_${index}" name="bnccDisciplina_${index}" disabled required>
-                                    <option value="">Selecione a disciplina</option>
-                                </select>
-                            </div>
-                            <div class="col-18">
-                                <label for="bnccHabilidade_${index}">Habilidade BNCC:</label>
-                                <select id="bnccHabilidade_${index}" name="bnccHabilidade_${index}" disabled required>
-                                    <option value="">Selecione a habilidade</option>
-                                </select>
-                            </div>
-                        `;
-                        perguntasHabilidadesList.appendChild(div);
+                        fetch('render_pergunta_dropdowns.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ index: index, pergunta: pergunta })
+                        })
+                        .then(response => response.text())
+                        .then(html => {
+                            const div = document.createElement('div');
+                            div.className = 'form-group-importar';
+                            div.innerHTML = html;
+                            perguntasHabilidadesList.appendChild(div);
 
-                        // Adicionar eventos de mudança para carregar disciplinas e habilidades
-                        const selectAno = document.getElementById(`bnccAno_${index}`);
-                        const selectDisciplina = document.getElementById(`bnccDisciplina_${index}`);
-                        const selectHabilidade = document.getElementById(`bnccHabilidade_${index}`);
+                            // Adicionar eventos de mudança
+                            const selectAno = document.getElementById(`bnccAno_${index}`);
+                            const selectDisciplina = document.getElementById(`bnccDisciplina_${index}`);
+                            const selectHabilidade = document.getElementById(`bnccHabilidade_${index}`);
 
-                        selectAno.addEventListener('change', () => {
-                            const anoId = selectAno.value;
-                            carregarDisciplinas(anoId, selectDisciplina);
-                        });
+                            selectAno.addEventListener('change', () => {
+                                const anoId = selectAno.value;
+                                carregarDisciplinas(anoId, selectDisciplina);
+                            });
 
-                        selectDisciplina.addEventListener('change', () => {
-                            const anoId = selectAno.value;
-                            const disciplinaId = selectDisciplina.value;
-                            carregarHabilidades(anoId, disciplinaId, selectHabilidade);
+                            selectDisciplina.addEventListener('change', () => {
+                                const anoId = selectAno.value;
+                                const disciplinaId = selectDisciplina.value;
+                                carregarHabilidades(anoId, disciplinaId, selectHabilidade);
+                            });
+                        })
+                        .catch(err => {
+                            console.error('Erro ao carregar dropdowns:', err);
                         });
                     });
 
