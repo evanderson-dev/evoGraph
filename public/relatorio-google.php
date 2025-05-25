@@ -103,9 +103,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group">
                             <div>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
                                 <select id="formularioIdDelete" name="formularioIdDelete">
@@ -128,6 +125,10 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <label>&nbsp;</label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            
                         </div>
                     </form>
 
