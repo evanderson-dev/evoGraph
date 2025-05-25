@@ -106,6 +106,32 @@ function carregarPlanilha() {
                         tbody.appendChild(tr);
                     });
 
+                    // Carregar dropdowns globais de ano escolar
+                    const globalSelectAno = document.getElementById('globalBnccAno');
+                    const globalSelectDisciplina = document.getElementById('globalBnccDisciplina');
+                    globalSelectAno.innerHTML = '<option value="">Selecione o ano</option>';
+                    globalSelectDisciplina.innerHTML = '<option value="">Selecione a disciplina</option>';
+                    globalSelectDisciplina.disabled = true;
+
+                    fetch('fetch_anos_disciplinas_habilidades.php?action=anos')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success' && data.data.length > 0) {
+                                data.data.forEach(ano => {
+                                    const option = document.createElement('option');
+                                    option.value = ano.id;
+                                    option.textContent = ano.nome;
+                                    globalSelectAno.appendChild(option);
+                                });
+                            } else {
+                                alert('Nenhum ano escolar disponível.');
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Erro ao carregar anos escolares:', err);
+                            alert('Erro ao carregar anos escolares.');
+                        });
+
                     // Carregar dropdowns para cada pergunta via AJAX
                     const perguntasHabilidadesList = document.getElementById('perguntas-habilidades-list');
                     perguntasHabilidadesList.innerHTML = '';
@@ -120,29 +146,26 @@ function carregarPlanilha() {
                             const div = document.createElement('div');
                             div.innerHTML = html;
                             perguntasHabilidadesList.appendChild(div);
-
-                            // Adicionar eventos de mudança
-                            const selectAno = document.getElementById(`bnccAno_${index}`);
-                            const selectDisciplina = document.getElementById(`bnccDisciplina_${index}`);
-                            const selectHabilidade = document.getElementById(`bnccHabilidade_${index}`);
-
-                            console.log(`Adicionando eventos para pergunta ${index + 1}, selectAno id: ${selectAno.id}`);
-
-                            selectAno.addEventListener('change', () => {
-                                const anoId = selectAno.value;
-                                console.log(`Ano selecionado para pergunta ${index + 1}: ${anoId}`);
-                                carregarDisciplinas(anoId, selectDisciplina);
-                            });
-
-                            selectDisciplina.addEventListener('change', () => {
-                                const anoId = selectAno.value;
-                                const disciplinaId = selectDisciplina.value;
-                                console.log(`Disciplina selecionada para pergunta ${index + 1}: ${disciplinaId}, ano: ${anoId}`);
-                                carregarHabilidades(anoId, disciplinaId, selectHabilidade);
-                            });
                         })
                         .catch(err => {
                             console.error('Erro ao carregar dropdowns:', err);
+                        });
+                    });
+
+                    // Adicionar eventos de mudança para os dropdowns globais
+                    globalSelectAno.addEventListener('change', () => {
+                        const anoId = globalSelectAno.value;
+                        console.log(`Ano global selecionado: ${anoId}`);
+                        carregarDisciplinas(anoId, globalSelectDisciplina);
+                    });
+
+                    globalSelectDisciplina.addEventListener('change', () => {
+                        const anoId = globalSelectAno.value;
+                        const disciplinaId = globalSelectDisciplina.value;
+                        console.log(`Disciplina global selecionada: ${disciplinaId}, ano: ${anoId}`);
+                        perguntas.forEach((_, index) => {
+                            const selectHabilidade = document.getElementById(`bnccHabilidade_${index}`);
+                            carregarHabilidades(anoId, disciplinaId, selectHabilidade);
                         });
                     });
 
@@ -184,11 +207,9 @@ function importarParaBanco() {
 
     // Coletar habilidades BNCC para cada pergunta
     const habilidadesPorPergunta = perguntas.map((pergunta, index) => {
-        const anoId = document.getElementById(`bnccAno_${index}`).value;
-        const disciplinaId = document.getElementById(`bnccDisciplina_${index}`).value;
         const habilidade = document.getElementById(`bnccHabilidade_${index}`).value;
-        if (!anoId || !disciplinaId || !habilidade) {
-            alert(`Selecione ano escolar, disciplina e habilidade BNCC para a pergunta ${index + 1}: ${pergunta}`);
+        if (!habilidade) {
+            alert(`Selecione a habilidade BNCC para a pergunta ${index + 1}: ${pergunta}`);
             throw new Error('Habilidade não selecionada');
         }
         return { pergunta, habilidade };
@@ -306,11 +327,6 @@ function atualizarDropdownFormularios() {
 function carregarDisciplinas(anoId, selectDisciplina) {
     selectDisciplina.innerHTML = '<option value="">Selecione a disciplina</option>';
     selectDisciplina.disabled = true;
-    const selectHabilidade = document.getElementById(selectDisciplina.id.replace('Disciplina', 'Habilidade'));
-    if (selectHabilidade) {
-        selectHabilidade.innerHTML = '<option value="">Selecione a habilidade</option>';
-        selectHabilidade.disabled = true;
-    }
 
     if (!anoId) {
         console.log('Nenhum anoId fornecido, mantendo disciplina desabilitada');
@@ -379,18 +395,4 @@ function carregarHabilidades(anoId, disciplinaId, selectHabilidade) {
 // Adicionar eventos de mudança
 document.addEventListener('DOMContentLoaded', () => {
     atualizarDropdownFormularios();
-
-    const selectAno = document.getElementById('bnccAno');
-    const selectDisciplina = document.getElementById('bnccDisciplina');
-
-    selectAno.addEventListener('change', () => {
-        const anoId = selectAno.value;
-        carregarDisciplinas(anoId);
-    });
-
-    selectDisciplina.addEventListener('change', () => {
-        const anoId = selectAno.value;
-        const disciplinaId = selectDisciplina.value;
-        carregarHabilidades(anoId, disciplinaId);
-    });
 });

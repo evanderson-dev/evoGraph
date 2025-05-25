@@ -138,6 +138,22 @@ $funcionario_id = $_SESSION["funcionario_id"];
             <div class="tabela" id="perguntas-habilidades-section" style="display: none;">
                 <div class="tabela-scroll">
                     <h4>Associar Habilidades BNCC às Perguntas</h4>
+                    <!-- Dropdowns globais para Ano Escolar e Disciplina -->
+                    <div class="global-selections">
+                        <div class="col-18">
+                            <label for="globalBnccAno">Ano Escolar:</label>
+                            <select id="globalBnccAno" name="globalBnccAno" required>
+                                <option value="">Selecione o ano</option>
+                            </select>
+                        </div>
+                        <div class="col-18">
+                            <label for="globalBnccDisciplina">Disciplina:</label>
+                            <select id="globalBnccDisciplina" name="globalBnccDisciplina" disabled required>
+                                <option value="">Selecione a disciplina</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Lista de perguntas preenchida dinamicamente -->
                     <div id="perguntas-habilidades-list" class="perguntas-habilidades-container">
                         <!-- Aqui será preenchido dinamicamente via JavaScript -->
                     </div>
