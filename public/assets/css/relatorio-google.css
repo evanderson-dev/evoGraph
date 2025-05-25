@@ -155,7 +155,7 @@ header .icons {
 
 .form-group-importar {
     display: grid;
-    grid-template-columns: 2fr 1fr auto; /* Primeira linha: Link, Identificador, Carregar */
+    grid-template-columns: 3fr auto; /* Primeira linha: Link, Carregar */
     grid-template-rows: auto auto; /* Duas linhas */
     gap: 15px;
     align-items: flex-end;
@@ -193,7 +193,7 @@ header .icons {
 }
 
 .col-70 {
-    grid-column: span 2;
+    grid-column: span 1;
 }
 
 .col-30 {
@@ -203,6 +203,38 @@ header .icons {
 .col-auto {
     display: flex;
     align-items: flex-end;
+}
+
+/* Segunda linha: Identificador e Excluir */
+.form-section {
+    grid-row: 2;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+.form-section-identifier {
+    grid-column: 1;
+}
+
+.form-section-exclude {
+    grid-column: 2;
+}
+
+/* Agrupar dropdown e botão Excluir */
+.exclude-group {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.exclude-group select {
+    flex: 1;
+}
+
+.exclude-group .btn-excluir {
+    margin-bottom: 0; /* Alinhar com o dropdown */
 }
 
 /* Nova classe para a segunda linha (Excluir) */
