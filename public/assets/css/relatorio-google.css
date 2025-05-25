@@ -607,10 +607,10 @@ button:disabled,
     }
 }
 
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
     .form-container,
     #perguntas-habilidades-section,
     #dados-planilha-section {
         max-width: 1000px;
     }
-}
+} */
