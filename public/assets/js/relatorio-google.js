@@ -46,24 +46,9 @@ function carregarPlanilha() {
                         return;
                     }
 
-                    // Identificar cabeçalhos e normalizar "Série:"
-                    const headers = Object.keys(dadosPlanilha[0]).map(header => {
-                        // Normalizar variações de "Série:" com espaços
-                        if (/^S[eé]rie\s*:+\s*$/i.test(header)) {
-                            return "Série:";
-                        }
-                        return header;
-                    });
-                    console.log("Cabeçalhos normalizados:", headers);
-
-                    // Atualizar dadosPlanilha com cabeçalhos normalizados
-                    dadosPlanilha = dadosPlanilha.map(row => {
-                        let newRow = {};
-                        Object.keys(row).forEach((key, index) => {
-                            newRow[headers[index]] = row[key];
-                        });
-                        return newRow;
-                    });
+                    // Identificar cabeçalhos
+                    const headers = Object.keys(dadosPlanilha[0]);
+                    console.log("Cabeçalhos da planilha:", headers);
 
                     // Colunas fixas que não são perguntas
                     const fixedColumns = [
@@ -122,6 +107,74 @@ function carregarPlanilha() {
                         tbody.appendChild(tr);
                     });
 
+                    // Exibir perguntas e dropdowns para associar habilidades
+                    const perguntasHabilidadesList = document.getElementById('perguntas-habilidades-list');
+                    perguntasHabilidadesList.innerHTML = '';
+                    perguntas.forEach((pergunta, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'form-group-importar';
+                        div.innerHTML = `
+                            <div class="col-100">
+                                <label>Pergunta ${index + 1}: ${pergunta}</label>
+                            </div>
+                            <div class="col-18">
+                                <label for="bnccAno_${index}">Ano Escolar:</label>
+                                <select id="bnccAno_${index}" name="bnccAno_${index}" required>
+                                    <option value="">Selecione o ano</option>
+                                </select>
+                            </div>
+                            <div class="col-18">
+                                <label for="bnccDisciplina_${index}">Disciplina:</label>
+                                <select id="bnccDisciplina_${index}" name="bnccDisciplina_${index}" disabled required>
+                                    <option value="">Selecione a disciplina</option>
+                                </select>
+                            </div>
+                            <div class="col-18">
+                                <label for="bnccHabilidade_${index}">Habilidade BNCC:</label>
+                                <select id="bnccHabilidade_${index}" name="bnccHabilidade_${index}" disabled required>
+                                    <option value="">Selecione a habilidade</option>
+                                </select>
+                            </div>
+                        `;
+                        perguntasHabilidadesList.appendChild(div);
+
+                        // Carregar anos escolares
+                        fetch('fetch_anos_disciplinas_habilidades.php?action=anos_disciplinas')
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    const selectAno = document.getElementById(`bnccAno_${index}`);
+                                    data.data.anos_escolares.forEach(ano => {
+                                        const option = document.createElement('option');
+                                        option.value = ano.id;
+                                        option.textContent = ano.nome;
+                                        selectAno.appendChild(option);
+                                    });
+
+                                    // Adicionar evento de mudança para carregar disciplinas
+                                    selectAno.addEventListener('change', () => {
+                                        const anoId = selectAno.value;
+                                        const selectDisciplina = document.getElementById(`bnccDisciplina_${index}`);
+                                        carregarDisciplinas(anoId, selectDisciplina);
+                                    });
+
+                                    // Adicionar evento de mudança para carregar habilidades
+                                    const selectDisciplina = document.getElementById(`bnccDisciplina_${index}`);
+                                    selectDisciplina.addEventListener('change', () => {
+                                        const anoId = selectAno.value;
+                                        const disciplinaId = selectDisciplina.value;
+                                        const selectHabilidade = document.getElementById(`bnccHabilidade_${index}`);
+                                        carregarHabilidades(anoId, disciplinaId, selectHabilidade);
+                                    });
+                                }
+                            })
+                            .catch(err => {
+                                console.error('Erro ao carregar anos escolares:', err);
+                            });
+                    });
+
+                    document.getElementById('perguntas-habilidades-section').style.display = 'block';
+
                     button.disabled = false;
                     button.textContent = "Carregar";
                 },
@@ -141,27 +194,8 @@ function carregarPlanilha() {
 
 function importarParaBanco() {
     const formularioIdInput = document.getElementById('formularioId');
-    const anoInput = document.getElementById('bnccAno');
-    const disciplinaInput = document.getElementById('bnccDisciplina');
-    const habilidadeInput = document.getElementById('bnccHabilidade');
-
     if (!formularioIdInput.value.trim()) {
         alert("O campo 'Identificador do formulário' é obrigatório.");
-        return;
-    }
-
-    if (!anoInput.value) {
-        alert("O campo 'Ano Escolar' é obrigatório.");
-        return;
-    }
-
-    if (!disciplinaInput.value) {
-        alert("O campo 'Disciplina' é obrigatório.");
-        return;
-    }
-
-    if (!habilidadeInput.value) {
-        alert("O campo 'Habilidade BNCC' é obrigatório.");
         return;
     }
 
@@ -174,6 +208,18 @@ function importarParaBanco() {
         alert("Erro: Usuário não autenticado.");
         return;
     }
+
+    // Coletar habilidades BNCC para cada pergunta
+    const habilidadesPorPergunta = perguntas.map((pergunta, index) => {
+        const anoId = document.getElementById(`bnccAno_${index}`).value;
+        const disciplinaId = document.getElementById(`bnccDisciplina_${index}`).value;
+        const habilidade = document.getElementById(`bnccHabilidade_${index}`).value;
+        if (!anoId || !disciplinaId || !habilidade) {
+            alert(`Selecione ano escolar, disciplina e habilidade BNCC para a pergunta ${index + 1}: ${pergunta}`);
+            throw new Error('Habilidade não selecionada');
+        }
+        return { pergunta, habilidade };
+    });
 
     const button = document.querySelector('button[onclick="importarParaBanco()"]');
     button.disabled = true;
@@ -191,7 +237,7 @@ function importarParaBanco() {
             formularioId: formularioIdInput.value,
             perguntas: perguntas,
             respostasCorretas: respostasCorretas,
-            bnccHabilidade: habilidadeInput.value,
+            habilidadesPorPergunta: habilidadesPorPergunta,
             funcionarioId: funcionarioId
         })
     })
@@ -207,6 +253,7 @@ function importarParaBanco() {
         } else {
             box.innerHTML = `<div class="mensagem-sucesso">${mensagem}</div>`;
             atualizarDropdownFormularios();
+            document.getElementById('perguntas-habilidades-section').style.display = 'none';
         }
         button.disabled = false;
         button.textContent = "Importar";

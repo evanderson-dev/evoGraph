@@ -46,9 +46,24 @@ function carregarPlanilha() {
                         return;
                     }
 
-                    // Identificar cabeçalhos
-                    const headers = Object.keys(dadosPlanilha[0]);
-                    console.log("Cabeçalhos da planilha:", headers);
+                    // Identificar cabeçalhos e normalizar "Série:"
+                    const headers = Object.keys(dadosPlanilha[0]).map(header => {
+                        // Normalizar variações de "Série:" com espaços
+                        if (/^S[eé]rie\s*:+\s*$/i.test(header)) {
+                            return "Série:";
+                        }
+                        return header;
+                    });
+                    console.log("Cabeçalhos normalizados:", headers);
+
+                    // Atualizar dadosPlanilha com cabeçalhos normalizados
+                    dadosPlanilha = dadosPlanilha.map(row => {
+                        let newRow = {};
+                        Object.keys(row).forEach((key, index) => {
+                            newRow[headers[index]] = row[key];
+                        });
+                        return newRow;
+                    });
 
                     // Colunas fixas que não são perguntas
                     const fixedColumns = [

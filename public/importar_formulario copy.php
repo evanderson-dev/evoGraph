@@ -59,37 +59,16 @@ if ($result && $result->num_rows > 0) {
 
 // Salvar perguntas e respostas corretas na tabela perguntas_formulario
 if (!empty($perguntas) && !empty($respostasCorretas) && count($perguntas) === count($respostasCorretas)) {
-    $habilidadesPorPergunta = isset($dados['habilidadesPorPergunta']) ? $dados['habilidadesPorPergunta'] : [];
-    
     for ($i = 0; $i < count($perguntas); $i++) {
         $pergunta_texto = $conn->real_escape_string($perguntas[$i]);
         $resposta_correta = $conn->real_escape_string($respostasCorretas[$i]);
-        $bncc_habilidade = !empty($habilidadesPorPergunta[$i]['habilidade']) ? $conn->real_escape_string($habilidadesPorPergunta[$i]['habilidade']) : null;
-        
-        // Buscar o bncc_habilidade_id com base no código da habilidade
-        $bncc_habilidade_id = null;
-        if ($bncc_habilidade) {
-            $query_habilidade = "SELECT id FROM habilidades_bncc WHERE codigo = ?";
-            $stmt_habilidade = $conn->prepare($query_habilidade);
-            $stmt_habilidade->bind_param("s", $bncc_habilidade);
-            $stmt_habilidade->execute();
-            $result_habilidade = $stmt_habilidade->get_result();
-            if ($result_habilidade->num_rows > 0) {
-                $habilidade = $result_habilidade->fetch_assoc();
-                $bncc_habilidade_id = $habilidade['id'];
-            } else {
-                $erros[] = "Habilidade BNCC '$bncc_habilidade' não encontrada para a pergunta '$pergunta_texto'.";
-                writeLog("Habilidade BNCC '$bncc_habilidade' não encontrada para a pergunta '$pergunta_texto'.");
-            }
-            $stmt_habilidade->close();
-        }
 
-        $query = "INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, resposta_correta, bncc_habilidade, bncc_habilidade_id) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO perguntas_formulario (formulario_id, pergunta_texto, resposta_correta, bncc_habilidade) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("sssss", $formulario_id, $pergunta_texto, $resposta_correta, $bncc_habilidade, $bncc_habilidade_id);
+        $stmt->bind_param("ssss", $formulario_id, $pergunta_texto, $resposta_correta, $bncc_habilidade);
         
         if ($stmt->execute()) {
-            writeLog("Pergunta '$pergunta_texto' salva com sucesso para formulario_id '$formulario_id' com bncc_habilidade '$bncc_habilidade' e bncc_habilidade_id '$bncc_habilidade_id'.");
+            writeLog("Pergunta '$pergunta_texto' salva com sucesso para formulario_id '$formulario_id' com bncc_habilidade '$bncc_habilidade'.");
         } else {
             $erros[] = "Erro ao salvar pergunta '$pergunta_texto': " . $stmt->error;
             writeLog("Erro ao salvar pergunta '$pergunta_texto': " . $stmt->error);
