@@ -21,10 +21,14 @@ ob_start();
         <?php
         $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
         $result = $conn->query($query);
-        while ($row = $result->fetch_assoc()) {
-            $ano_id = htmlspecialchars($row['id']);
-            $ano_nome = htmlspecialchars($row['nome']);
-            echo "<option value=\"$ano_id\">$ano_nome</option>";
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $ano_id = htmlspecialchars($row['id']);
+                $ano_nome = htmlspecialchars($row['nome']);
+                echo "<option value=\"$ano_id\">$ano_nome</option>";
+            }
+        } else {
+            echo "<option value=\"\">Nenhum ano escolar disponível</option>";
         }
         ?>
     </select>
