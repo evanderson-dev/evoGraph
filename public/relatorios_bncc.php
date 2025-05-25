@@ -307,11 +307,13 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             if ($formulario_id) {
                                 $serie_fields = [
                                     '$.\"Série:\"',
+                                    '$.\"Série: \"',
                                     '$.\"Serie:\"',
-                                    '$.\"Série :\"',
-                                    '$.\"Serie :\"',
+                                    '$.\"Serie: \"',
                                     '$.\"Série\"',
-                                    '$.\"Serie\"'
+                                    '$.\"Série \"',
+                                    '$.\"Serie\"',
+                                    '$.\"Serie \"'
                                 ];
                                 $serie_query = implode(' OR ', array_map(function($field) {
                                     return "JSON_EXTRACT(dados_json, '$field') IS NOT NULL";
