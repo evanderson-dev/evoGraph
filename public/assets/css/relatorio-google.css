@@ -216,8 +216,8 @@ header .icons {
 }
 
 .perguntas-habilidades-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto auto; /* Duas linhas: pergunta e dropdowns */
     gap: 15px;
     padding: 15px;
     background-color: var(--bg-white);
@@ -236,8 +236,8 @@ header .icons {
 
 .form-group-importar.pergunta-group {
     display: grid;
-    grid-template-columns: 1fr; /* Padrão para telas pequenas */
-    gap: 12px;
+    grid-template-rows: auto auto; /* Linha para pergunta, linha para dropdowns */
+    gap: 10px;
     padding: 12px;
     border-bottom: 1px solid #e0e0e0;
     border-radius: 6px;
@@ -260,12 +260,15 @@ header .icons {
 }
 
 .form-group-importar.pergunta-group .pergunta-label {
-    grid-column: 1 / -1; /* Ocupa toda a largura para a pergunta */
+    grid-row: 1;
+    grid-column: 1 / -1; /* Ocupa toda a largura */
     font-weight: bold;
     margin-bottom: 10px;
 }
 
 .form-group-importar.pergunta-group .dropdown-group {
+    grid-row: 2;
+    grid-column: 1 / -1; /* Ocupa toda a largura */
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 colunas para dropdowns */
     gap: 12px;
@@ -491,10 +494,6 @@ button:disabled,
         gap: 10px;
     }
 
-    .form-group-importar.pergunta-group label {
-        font-size: 13px;
-    }
-
     .form-group-importar.pergunta-group .dropdown-group {
         grid-template-columns: 1fr; /* Empilhar em telas pequenas */
     }
@@ -595,7 +594,7 @@ button:disabled,
 
 @media (min-width: 769px) {
     .form-group-importar.pergunta-group {
-        grid-template-columns: 1fr; /* Manter padrão, ajustado abaixo */
+        grid-template-rows: auto auto; /* Manter duas linhas */
     }
 
     .form-group-importar.pergunta-group .dropdown-group {
@@ -603,14 +602,7 @@ button:disabled,
     }
 
     .form-group-importar.pergunta-group .pergunta-label {
+        grid-row: 1;
         grid-column: 1 / -1; /* Ocupa toda a largura */
     }
 }
-
-/* @media (min-width: 1200px) {
-    .form-container,
-    #perguntas-habilidades-section,
-    #dados-planilha-section {
-        max-width: 1000px;
-    }
-} */
