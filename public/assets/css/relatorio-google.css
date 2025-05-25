@@ -409,17 +409,32 @@ header .icons {
 .btn-carregar,
 .btn-importar,
 .btn-excluir {
-    padding: 10px 25px;
+    padding: 10px 0; /* Ajustado para centralizar o texto */
     font-size: 14px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s;
+    width: 100px; /* Largura fixa para garantir tamanhos iguais */
+    text-align: center; /* Centralizar o texto */
 }
 
 .btn-carregar {
     background-color: var(--primary-color);
     color: white;
+}
+
+.btn-excluir {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-importar {
+    background-color: var(--success-color);
+    color: white;
+    width: 100%;
+    max-width: 250px;
+    margin-top: 10px;
 }
 
 .btn-carregar:hover:not(:disabled) {
@@ -432,14 +447,6 @@ header .icons {
     outline-offset: 2px;
 }
 
-.btn-importar {
-    background-color: var(--success-color);
-    color: white;
-    width: 100%;
-    max-width: 250px;
-    margin-top: 10px;
-}
-
 .btn-importar:hover:not(:disabled) {
     background-color: #218838;
     transform: translateY(-1px);
@@ -448,11 +455,6 @@ header .icons {
 .btn-importar:focus-visible {
     outline: 2px solid #218838;
     outline-offset: 2px;
-}
-
-.btn-excluir {
-    background-color: var(--danger-color);
-    color: white;
 }
 
 .btn-excluir:hover:not(:disabled) {
@@ -563,13 +565,14 @@ button:disabled,
         gap: 12px;
     }
 
-    .col-70, .col-30, .col-18 {
-        grid-column: span 1;
-        flex-basis: 100% !important;
+    .grid-area-identifier,
+    .grid-area-exclude {
+        grid-column: 1; /* Empilhar em uma coluna */
     }
 
-    .btn-carregar {
-        width: 100%;
+    .btn-carregar,
+    .btn-excluir {
+        width: 100%; /* Botões ocupam toda a largura em telas menores */
         padding: 12px;
         font-size: 13px;
     }
@@ -605,7 +608,7 @@ button:disabled,
         padding: 7px;
     }
 
-    .form-group .btn-importar {
+    .form-group-importar .btn-importar {
         max-width: 100%;
         padding: 12px;
         font-size: 13px;
@@ -649,6 +652,7 @@ button:disabled,
     }
 
     .btn-carregar,
+    .btn-excluir,
     .btn-importar {
         font-size: 12px;
         padding: 10px;

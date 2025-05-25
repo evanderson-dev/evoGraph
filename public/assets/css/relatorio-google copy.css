@@ -155,7 +155,11 @@ header .icons {
 
 .form-group-importar {
     display: grid;
-    grid-template-columns: 2fr 1fr auto auto auto; /* Adicionar colunas para exclusão */
+    grid-template-areas: 
+        "link link"
+        "identifier exclude";
+    grid-template-columns: 1fr 1fr; /* Segunda linha: duas colunas de tamanhos iguais */
+    grid-template-rows: auto auto; /* Duas linhas */
     gap: 15px;
     align-items: flex-end;
 }
@@ -191,17 +195,60 @@ header .icons {
     outline-offset: 2px;
 }
 
-.col-70 {
-    grid-column: span 2;
+/* Definindo as áreas do grid */
+.grid-area-link {
+    grid-area: link;
 }
 
-.col-30 {
-    grid-column: span 1;
+.grid-area-identifier {
+    grid-area: identifier;
 }
 
-.col-auto {
+.grid-area-exclude {
+    grid-area: exclude;
+}
+
+/* Seções com borda */
+.form-section {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+/* Garantir que a seção Link ocupe toda a largura */
+.form-section-link {
+    width: 100%;
+}
+
+/* Agrupar input e botão Carregar */
+.link-group {
     display: flex;
+    gap: 10px;
     align-items: flex-end;
+}
+
+.link-group input {
+    flex: 1; /* Input ocupa todo o espaço disponível */
+}
+
+.link-group .btn-carregar {
+    margin-bottom: 0; /* Alinhar com o input */
+}
+
+/* Agrupar dropdown e botão Excluir */
+.exclude-group {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.exclude-group select {
+    flex: 1;
+}
+
+.exclude-group .btn-excluir {
+    margin-bottom: 0; /* Alinhar com o dropdown */
 }
 
 /* ==================================================
@@ -226,15 +273,62 @@ header .icons {
 }
 
 .perguntas-habilidades-container h4 {
-    margin: 0 0 10px;
+    margin: 0 0 15px;
     font-size: 18px;
     color: var(--text-dark);
     font-weight: 700;
 }
 
+/* Dropdowns globais (Ano e Disciplina) */
+.global-selections {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.global-selections .col-18 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.global-selections label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.global-selections select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: var(--bg-white);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.global-selections select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.global-selections select:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.global-selections select:disabled {
+    background-color: var(--bg-light);
+    cursor: not-allowed;
+}
+
+/* Lista de perguntas */
 .form-group-importar.pergunta-group {
     display: grid;
-    grid-template-rows: auto auto; /* Linha para pergunta, linha para dropdowns */
+    grid-template-rows: auto auto; /* Linha para pergunta, linha para dropdown */
     gap: 10px;
     padding: 12px;
     border-bottom: 1px solid #e0e0e0;
@@ -271,9 +365,6 @@ header .icons {
 .form-group-importar.pergunta-group .dropdown-group {
     grid-row: 2;
     grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas para dropdowns */
-    gap: 12px;
 }
 
 .form-group-importar.pergunta-group .col-18 {
@@ -331,14 +422,9 @@ header .icons {
     color: white;
 }
 
-.btn-carregar:hover:not(:disabled) {
-    background-color: #0056b3;
-    transform: translateY(-1px);
-}
-
-.btn-carregar:focus-visible {
-    outline: 2px solid #0056b3;
-    outline-offset: 2px;
+.btn-excluir {
+    background-color: var(--danger-color);
+    color: white;
 }
 
 .btn-importar {
@@ -349,6 +435,16 @@ header .icons {
     margin-top: 10px;
 }
 
+.btn-carregar:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.btn-carregar:focus-visible {
+    outline: 2px solid #0056b3;
+    outline-offset: 2px;
+}
+
 .btn-importar:hover:not(:disabled) {
     background-color: #218838;
     transform: translateY(-1px);
@@ -357,11 +453,6 @@ header .icons {
 .btn-importar:focus-visible {
     outline: 2px solid #218838;
     outline-offset: 2px;
-}
-
-.btn-excluir {
-    background-color: var(--danger-color);
-    color: white;
 }
 
 .btn-excluir:hover:not(:disabled) {
@@ -491,13 +582,14 @@ button:disabled,
         font-size: 16px;
     }
 
+    .global-selections {
+        flex-direction: column;
+        gap: 12px;
+    }
+
     .form-group-importar.pergunta-group {
         padding: 10px;
         gap: 10px;
-    }
-
-    .form-group-importar.pergunta-group .dropdown-group {
-        grid-template-columns: 1fr; /* Empilhar em telas pequenas */
     }
 
     .form-group-importar.pergunta-group .pergunta-label label {
@@ -566,13 +658,26 @@ button:disabled,
         padding: 8px;
     }
 
+    .perguntas-habilidades-container h4 {
+        font-size: 14px;
+    }
+
+    .global-selections {
+        gap: 10px;
+    }
+
+    .global-selections label {
+        font-size: 12px;
+    }
+
+    .global-selections select {
+        font-size: 12px;
+        padding: 6px;
+    }
+
     .form-group-importar.pergunta-group {
         padding: 8px;
         gap: 8px;
-    }
-
-    .form-group-importar.pergunta-group .dropdown-group {
-        grid-template-columns: 1fr; /* Empilhar em telas muito pequenas */
     }
 
     .form-group-importar.pergunta-group .pergunta-label label {
@@ -599,7 +704,7 @@ button:disabled,
 }
 
 @media (min-width: 769px) {
-    .form-group-importar.pergunta-group .dropdown-group {
-        grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas maiores */
+    .global-selections {
+        flex-direction: row;
     }
 }
