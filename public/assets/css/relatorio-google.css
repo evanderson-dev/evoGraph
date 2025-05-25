@@ -155,7 +155,10 @@ header .icons {
 
 .form-group-importar {
     display: grid;
-    grid-template-columns: 1fr; /* Primeira linha ocupa toda a largura */
+    grid-template-areas: 
+        "link link"
+        "identifier exclude";
+    grid-template-columns: 1fr 1fr; /* Segunda linha: duas colunas de tamanhos iguais */
     grid-template-rows: auto auto; /* Duas linhas */
     gap: 15px;
     align-items: flex-end;
@@ -192,12 +195,17 @@ header .icons {
     outline-offset: 2px;
 }
 
-.col-70 {
-    grid-column: span 1;
+/* Definindo as áreas do grid */
+.grid-area-link {
+    grid-area: link;
 }
 
-.col-30 {
-    grid-column: span 1;
+.grid-area-identifier {
+    grid-area: identifier;
+}
+
+.grid-area-exclude {
+    grid-area: exclude;
 }
 
 /* Seções com borda */
@@ -208,18 +216,9 @@ header .icons {
     background-color: #fafafa;
 }
 
+/* Garantir que a seção Link ocupe toda a largura */
 .form-section-link {
-    grid-column: 1;
-}
-
-.form-section-identifier {
-    grid-row: 2;
-    grid-column: 1;
-}
-
-.form-section-exclude {
-    grid-row: 2;
-    grid-column: 2;
+    width: 100%;
 }
 
 /* Agrupar input e botão Carregar */
@@ -250,19 +249,6 @@ header .icons {
 
 .exclude-group .btn-excluir {
     margin-bottom: 0; /* Alinhar com o dropdown */
-}
-
-/* Nova classe para a segunda linha (Excluir) */
-.exclude-row {
-    grid-row: 2;
-}
-
-.col-30.exclude-row {
-    grid-column: span 1;
-}
-
-.col-auto.exclude-row {
-    grid-column: auto;
 }
 
 /* ==================================================

@@ -91,7 +91,7 @@ $funcionario_id = $_SESSION["funcionario_id"];
                             <h3>Importar Dados da Planilha</h3>
                             <div class="form-group-importar">
                                 <!-- Primeira linha: Link da Planilha e botão Carregar -->
-                                <div class="col-70 form-section form-section-link">
+                                <div class="form-section form-section-link grid-area-link">
                                     <label for="googleSheetLink">Link da Planilha:</label>
                                     <div class="link-group">
                                         <input type="text" id="googleSheetLink" name="googleSheetLink" placeholder="Cole o link da planilha do Google Sheets" required>
@@ -99,11 +99,11 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     </div>
                                 </div>
                                 <!-- Segunda linha: Identificador e Excluir formulário -->
-                                <div class="col-30 form-section form-section-identifier">
+                                <div class="form-section form-section-identifier grid-area-identifier">
                                     <label for="formularioId">Identificador do formulário:</label>
                                     <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                                 </div>
-                                <div class="col-30 form-section form-section-exclude">
+                                <div class="form-section form-section-exclude grid-area-exclude">
                                     <label for="formularioIdDelete">Excluir formulário:</label>
                                     <div class="exclude-group">
                                         <select id="formularioIdDelete" name="formularioIdDelete">
