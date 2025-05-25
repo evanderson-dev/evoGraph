@@ -78,61 +78,33 @@ $funcionario_id = $_SESSION["funcionario_id"];
 
             <section class="relatorio-section">
                 <div id="message-box"></div>
-                <div class="profile-form">                    
+                <div class="profile-form">
                     <?php
-                    require_once "db_connection.php"; // Mover a conexão para o início da seção
+                    require_once "db_connection.php"; // Conexão com o banco
                     ?>
 
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
 
-                        <div class="form-group-link">
-                            <label for="googleSheetLink">Link da planilha do Google:</label>
-                            <div class="input-wrapper">
-                                <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
-                                <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                        <!-- Seção de input da planilha e identificador do formulário -->
+                        <div class="form-container">
+                            <h3>Importar Dados da Planilha</h3>
+                            <div class="form-group-importar">
+                                <div class="col-70">
+                                    <label for="googleSheetLink">Link da Planilha:</label>
+                                    <input type="text" id="googleSheetLink" name="googleSheetLink" placeholder="Cole o link da planilha do Google Sheets" required>
+                                </div>
+                                <div class="col-30">
+                                    <label for="formularioId">Identificador do formulário:</label>
+                                    <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
+                                </div>
+                                <div class="col-auto">
+                                    <label>&nbsp;</label>
+                                    <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group-importar">
-                            <div class="col-18">
-                                <label for="bnccAno">Ano Escolar:</label>
-                                <select id="bnccAno" name="bnccAno" required>
-                                    <option value="">Selecione o ano</option>
-                                    <?php
-                                    $query = "SELECT id, nome FROM anos_escolares ORDER BY ordem";
-                                    $result = $conn->query($query);
-                                    while ($row = $result->fetch_assoc()) {
-                                        $ano_id = htmlspecialchars($row['id']);
-                                        $ano_nome = htmlspecialchars($row['nome']);
-                                        echo "<option value=\"$ano_id\">$ano_nome</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="col-18">
-                                <label for="bnccDisciplina">Disciplina:</label>
-                                <select id="bnccDisciplina" name="bnccDisciplina" disabled required>
-                                    <option value="">Selecione a disciplina</option>
-                                </select>
-                            </div>
-                            <div class="col-18">
-                                <label for="bnccHabilidade">Habilidade BNCC:</label>
-                                <select id="bnccHabilidade" name="bnccHabilidade" disabled required>
-                                    <option value="">Selecione a habilidade</option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <label for="formularioId">Identificador do formulário:</label>
-                                <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
-                            </div>
-                            <div class="">
-                                <label> </label>
-                                <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
-                            </div>                                
-                        </div>
-
-                        <div class="form-group">
                             <div>
+                                <br>
                                 <label for="formularioIdDelete">Excluir formulário:</label>
                                 <select id="formularioIdDelete" name="formularioIdDelete">
                                     <option value="">Selecione um formulário</option>
@@ -151,14 +123,14 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 </select>
                             </div>
                             <div>
-                                <label> </label>
+                                <label>&nbsp;</label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>
                     </form>
 
                     <?php
-                    $conn->close(); // Fechar a conexão apenas no final da seção
+                    $conn->close(); // Fechar a conexão
                     ?>
                 </div>
             </section>
@@ -188,6 +160,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
     <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
