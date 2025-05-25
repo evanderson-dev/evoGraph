@@ -99,10 +99,10 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                     <input type="text" id="formularioId" name="formularioId" placeholder="Ex.: Avaliação_Geografia_05/2025" required>
                                 </div>
                                 <div class="col-auto">
-                                    <label> </label>
+                                    <label>&nbsp;</label>
                                     <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
                                 </div>
-                                <div class="col-30">
+                                <div class="col-30 exclude-row">
                                     <label for="formularioIdDelete">Excluir formulário:</label>
                                     <select id="formularioIdDelete" name="formularioIdDelete">
                                         <option value="">Selecione um formulário</option>
@@ -120,8 +120,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-auto">
-                                    <label> </label>
+                                <div class="col-auto exclude-row">
+                                    <label>&nbsp;</label>
                                     <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                                 </div>
                             </div>

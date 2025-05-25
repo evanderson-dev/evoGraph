@@ -155,7 +155,8 @@ header .icons {
 
 .form-group-importar {
     display: grid;
-    grid-template-columns: 2fr 1fr auto auto auto; /* Adicionar colunas para exclusão */
+    grid-template-columns: 2fr 1fr auto; /* Primeira linha: Link, Identificador, Carregar */
+    grid-template-rows: auto auto; /* Duas linhas */
     gap: 15px;
     align-items: flex-end;
 }
@@ -202,6 +203,19 @@ header .icons {
 .col-auto {
     display: flex;
     align-items: flex-end;
+}
+
+/* Nova classe para a segunda linha (Excluir) */
+.exclude-row {
+    grid-row: 2;
+}
+
+.col-30.exclude-row {
+    grid-column: span 1;
+}
+
+.col-auto.exclude-row {
+    grid-column: auto;
 }
 
 /* ==================================================
