@@ -78,14 +78,21 @@ $funcionario_id = $_SESSION["funcionario_id"];
 
             <section class="relatorio-section">
                 <div id="message-box"></div>
-                <div class="profile-form">
+                <div class="profile-form">                    
                     <?php
-                    require_once "db_connection.php"; // Conexão com o banco
+                    require_once "db_connection.php"; // Mover a conexão para o início da seção
                     ?>
 
                     <form id="profile-form" enctype="multipart/form-data">
                         <input type="hidden" name="save_profile" value="1">
 
+                        <div class="form-group-link">
+                            <label for="googleSheetLink">Link da planilha do Google:</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="googleSheetLink" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                                <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                            </div>
+                        </div>
                         <!-- Seção de input da planilha e identificador do formulário -->
                         <div class="form-container">
                             <h3>Importar Dados da Planilha</h3>
@@ -101,6 +108,32 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 <div class="col-auto">
                                     <label>&nbsp;</label>
                                     <button type="button" class="btn-carregar" onclick="carregarPlanilha()">Carregar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção para associar habilidades às perguntas -->
+                        <div class="tabela" id="perguntas-habilidades-section" style="display: none;">
+                            <div class="tabela-scroll">
+                                <h4>Associar Habilidades BNCC às Perguntas</h4>
+                                <div id="perguntas-habilidades-list" class="perguntas-habilidades-container">
+                                    <!-- Aqui será preenchido dinamicamente via JavaScript -->
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn-importar" onclick="importarParaBanco()">Importar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção para exibir os dados carregados da planilha -->
+                        <div class="tabela" id="dados-planilha-section">
+                            <div class="tabela-scroll">
+                                <h4>Dados Carregados da Planilha</h4>
+                                <div style="overflow-x: auto;">
+                                    <table id="tabela-dados">
+                                        <thead></thead>
+                                        <tbody></tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -125,14 +158,14 @@ $funcionario_id = $_SESSION["funcionario_id"];
                                 </select>
                             </div>
                             <div>
-                                <label>&nbsp;</label>
+                                <label> </label>
                                 <button type="button" class="btn-excluir" onclick="excluirFormulario()">Excluir</button>
                             </div>
                         </div>
                     </form>
 
                     <?php
-                    $conn->close(); // Fechar a conexão
+                    $conn->close(); // Fechar a conexão apenas no final da seção
                     ?>
                 </div>
             </section>
@@ -162,8 +195,6 @@ $funcionario_id = $_SESSION["funcionario_id"];
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
     <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
     <div id="modal-cadastrar-turma" class="modal" style="display: none;">
