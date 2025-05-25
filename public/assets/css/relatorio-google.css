@@ -216,9 +216,7 @@ header .icons {
 }
 
 .perguntas-habilidades-container {
-    display: grid;
-    grid-template-rows: auto auto; /* Duas linhas: pergunta e dropdowns */
-    gap: 15px;
+    display: block; /* Removido grid para evitar interferência */
     padding: 15px;
     background-color: var(--bg-white);
     border-radius: 10px;
@@ -237,6 +235,7 @@ header .icons {
 .form-group-importar.pergunta-group {
     display: grid;
     grid-template-rows: auto auto; /* Linha para pergunta, linha para dropdowns */
+    grid-template-columns: 1fr; /* Uma coluna para pergunta */
     gap: 10px;
     padding: 12px;
     border-bottom: 1px solid #e0e0e0;
@@ -252,26 +251,43 @@ header .icons {
     border-bottom: none;
 }
 
-.form-group-importar.pergunta-group label {
+.form-group-importar.pergunta-group .col-100 {
+    grid-row: 1;
+    grid-column: 1 / -1; /* Ocupa toda a largura */
+}
+
+.form-group-importar.pergunta-group .col-100 label {
+    font-size: 16px;
+    color: var(--text-darker);
+    font-weight: bold;
+}
+
+.form-group-importar.pergunta-group .col-18 {
+    grid-row: 2; /* Todos os .col-18 na segunda linha */
+}
+
+/* Agrupar os dropdowns em 3 colunas na segunda linha */
+.form-group-importar.pergunta-group .col-18:nth-child(2),
+.form-group-importar.pergunta-group .col-18:nth-child(3),
+.form-group-importar.pergunta-group .col-18:nth-child(4) {
+    grid-row: 2;
+    grid-column: auto; /* Colunas automáticas */
+}
+
+/* Criar um grid interno para os dropdowns */
+.form-group-importar.pergunta-group > div:nth-child(2) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas para os dropdowns */
+    gap: 12px;
+    grid-row: 2;
+    grid-column: 1 / -1;
+}
+
+.form-group-importar.pergunta-group .col-18 label {
     font-weight: 600;
     color: var(--text-dark);
     margin-bottom: 4px;
     font-size: 14px;
-}
-
-.form-group-importar.pergunta-group .pergunta-label {
-    grid-row: 1;
-    grid-column: 1 / -1; /* Ocupa toda a largura */
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.form-group-importar.pergunta-group .dropdown-group {
-    grid-row: 2;
-    grid-column: 1 / -1; /* Ocupa toda a largura */
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas para dropdowns */
-    gap: 12px;
 }
 
 .form-group-importar.pergunta-group select {
@@ -300,14 +316,10 @@ header .icons {
     cursor: not-allowed;
 }
 
-.form-group-importar.pergunta-group .col-100 label {
-    font-size: 16px;
-    color: var(--text-darker);
-    font-weight: bold;
-}
-
-.col-18 {
-    flex-basis: 18%;
+/* Remover classes desnecessárias */
+.pergunta-label,
+.dropdown-group {
+    display: none; /* Não usadas com a estrutura atual */
 }
 
 /* ==================================================
@@ -494,21 +506,21 @@ button:disabled,
         gap: 10px;
     }
 
-    .form-group-importar.pergunta-group .dropdown-group {
+    .form-group-importar.pergunta-group .col-18:nth-child(2) {
         grid-template-columns: 1fr; /* Empilhar em telas pequenas */
     }
 
-    .form-group-importar.pergunta-group .pergunta-label {
+    .form-group-importar.pergunta-group .col-100 label {
         font-size: 14px;
+    }
+
+    .form-group-importar.pergunta-group .col-18 label {
+        font-size: 13px;
     }
 
     .form-group-importar.pergunta-group select {
         font-size: 13px;
         padding: 7px;
-    }
-
-    .form-group-importar.pergunta-group .col-100 label {
-        font-size: 14px;
     }
 
     .form-group .btn-importar {
@@ -569,12 +581,16 @@ button:disabled,
         gap: 8px;
     }
 
-    .form-group-importar.pergunta-group .dropdown-group {
+    .form-group-importar.pergunta-group .col-18:nth-child(2) {
         grid-template-columns: 1fr; /* Empilhar em telas muito pequenas */
     }
 
-    .form-group-importar.pergunta-group .pergunta-label {
+    .form-group-importar.pergunta-group .col-100 label {
         font-size: 13px;
+    }
+
+    .form-group-importar.pergunta-group .col-18 label {
+        font-size: 12px;
     }
 
     .form-group-importar.pergunta-group select {
@@ -593,16 +609,7 @@ button:disabled,
 }
 
 @media (min-width: 769px) {
-    .form-group-importar.pergunta-group {
-        grid-template-rows: auto auto; /* Manter duas linhas */
-    }
-
-    .form-group-importar.pergunta-group .dropdown-group {
+    .form-group-importar.pergunta-group .col-18:nth-child(2) {
         grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas maiores */
-    }
-
-    .form-group-importar.pergunta-group .pergunta-label {
-        grid-row: 1;
-        grid-column: 1 / -1; /* Ocupa toda a largura */
     }
 }
