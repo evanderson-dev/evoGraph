@@ -68,6 +68,10 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
             <a href="relatorios_bncc.php"><i class="fa-solid fa-chart-bar"></i>Visualizar Relatório</a>
             <a href="my_profile.php"><i class="fa-solid fa-user-gear"></i>Meu Perfil</a>
 
+            <?php if ($cargo === 'Professor'): ?>
+                <a href="chamada.php"><i class="fa-solid fa-clipboard-check"></i>Chamada</a>
+            <?php endif; ?>
+            
             <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
             <div class="sidebar-item">
                 <a href="#" class="sidebar-toggle"><i class="fa-solid fa-plus"></i>Cadastro<i class="fa-solid fa-chevron-down submenu-toggle"></i></a>
