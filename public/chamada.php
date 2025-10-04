@@ -1,8 +1,5 @@
 <?php
-// chamada.php (nova página para registro de chamada)
 session_start();
-
-// Verificar se o usuário está logado e é Professor
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SESSION["cargo"] !== 'Professor') {
     header('Location: index.php');
     exit;
@@ -19,6 +16,8 @@ $funcionario_id = $_SESSION["funcionario_id"];
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/dashboard.css" />
     <link rel="stylesheet" href="./assets/css/sidebar.css" />
     <link rel="stylesheet" href="./assets/css/chamada.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -94,6 +93,12 @@ $funcionario_id = $_SESSION["funcionario_id"];
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./assets/js/sidebar.js"></script>
+    
+    <!-- Script inline para injetar o valor PHP como JS válido -->
+    <script>
+        window.funcionarioId = <?php echo json_encode($funcionario_id ?? null); ?>;
+    </script>
+    
     <script src="./assets/js/chamada.js"></script>
 </body>
 </html>

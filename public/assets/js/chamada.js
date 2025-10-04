@@ -1,7 +1,14 @@
+// assets/js/chamada.js (versão corrigida com inicializações e parâmetro de data no AJAX)
 $(document).ready(function() {
-    const funcionarioId = JSON.parse('<?= json_encode($funcionario_id ?? null); ?>');
+    const funcionarioId = window.funcionarioId;  // Lê do script inline no PHP
     let selectedTurmaId = null;
-    let selectedData = null;
+    let selectedData = $('#dataChamada').val();  // Inicializa com o valor atual do input (data de hoje)
+
+    if (!funcionarioId) {
+        console.error('funcionarioId não definido!');
+        showMessage('Erro: ID do funcionário não encontrado.', 'error');
+        return;
+    }
 
     // Carregar turmas do professor
     $.ajax({
@@ -10,18 +17,20 @@ $(document).ready(function() {
         data: { professor_id: funcionarioId, action: 'list' },
         dataType: 'json',
         success: function(response) {
+            console.log('Resposta do fetch_turmas:', response);  // Debug
             if (response.success) {
                 const select = $('#turmaSelect');
                 select.empty().append('<option value="">Selecione uma turma</option>');
                 response.turmas.forEach(turma => {
                     select.append(`<option value="${turma.id}">${turma.nome} (${turma.ano}º Ano)</option>`);
                 });
-                $('#loadAlunosBtn').prop('disabled', false);
+                $('#loadAlunosBtn').prop('disabled', false);  // Habilita o botão após carregar turmas (data já inicializada)
             } else {
                 showMessage('Erro ao carregar turmas: ' + response.message, 'error');
             }
         },
-        error: function() {
+        error: function(xhr, status, error) {
+            console.error('Erro AJAX:', xhr.responseText);  // Debug
             showMessage('Erro ao carregar turmas.', 'error');
         }
     });
@@ -43,22 +52,23 @@ $(document).ready(function() {
         $('#loadAlunosBtn').prop('disabled', !selectedTurmaId || !selectedData);
     }
 
-    // Evento para carregar alunos
+    // Evento para carregar alunos (agora com parâmetro 'data')
     $('#loadAlunosBtn').click(function() {
         if (!selectedTurmaId || !selectedData) return;
 
         $.ajax({
             url: 'fetch_turmas.php',
             method: 'POST',
-            data: { turma_id: selectedTurmaId, action: 'alunos' },
+            data: { turma_id: selectedTurmaId, action: 'alunos', data: selectedData },  // Adicionado o parâmetro 'data'
             dataType: 'json',
             success: function(response) {
+                console.log('Resposta dos alunos:', response);  // Debug
                 if (response.success) {
                     const container = $('.alunos-container');
                     container.empty();
                     response.alunos.forEach(aluno => {
                         // Verificar presença existente para pré-marcar
-                        const isPresente = response.presencas[aluno.matricula] || true; // Default true
+                        const isPresente = response.presencas[aluno.matricula] || false; // Default false
                         container.append(`
                             <div class="aluno-item">
                                 <span>${aluno.nome} ${aluno.sobrenome} (${aluno.matricula})</span>
@@ -75,7 +85,8 @@ $(document).ready(function() {
                     showMessage('Erro ao carregar alunos: ' + response.message, 'error');
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('Erro AJAX alunos:', xhr.responseText);  // Debug
                 showMessage('Erro ao carregar alunos.', 'error');
             }
         });
@@ -96,6 +107,7 @@ $(document).ready(function() {
             data: { turma_id: selectedTurmaId, data: selectedData, presencas: JSON.stringify(presencas) },
             dataType: 'json',
             success: function(response) {
+                console.log('Resposta do save:', response);  // Debug
                 if (response.success) {
                     showMessage(response.message, 'success');
                     $('#salvarChamadaBtn').prop('disabled', true);
@@ -103,7 +115,8 @@ $(document).ready(function() {
                     showMessage('Erro ao salvar chamada: ' + response.message, 'error');
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('Erro AJAX save:', xhr.responseText);  // Debug
                 showMessage('Erro ao salvar chamada.', 'error');
             }
         });
