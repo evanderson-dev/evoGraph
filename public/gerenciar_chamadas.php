@@ -1,5 +1,5 @@
 <?php
-// gerenciar_chamadas.php (nova página para consulta de chamadas por cargos superiores)
+// gerenciar_chamadas.php (versão atualizada para exibir nome do professor)
 session_start();
 
 // Verificar se o usuário está logado e tem cargo permitido (acima de Professor)
@@ -90,6 +90,11 @@ $cargo = $_SESSION["cargo"];
                         <input type="date" id="dataChamada" value="<?php echo date('Y-m-d'); ?>" required>
                     </div>
                     <button type="button" id="carregarChamadasBtn" class="btn-carregar" disabled>Carregar Chamadas</button>
+                </div>
+
+                <!-- Info da Turma Selecionada -->
+                <div id="infoTurma" style="display: none; margin-bottom: 15px; padding: 10px; background: #e9ecef; border-radius: 4px;">
+                    <strong>Turma: </strong><span id="nomeTurma"></span> - <strong>Professor Responsável: </strong><span id="nomeProfessor"></span>
                 </div>
 
                 <!-- Tabela de Presenças -->

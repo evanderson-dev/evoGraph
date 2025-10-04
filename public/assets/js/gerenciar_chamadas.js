@@ -1,13 +1,14 @@
-// assets/js/gerenciar_chamadas.js (JS para a página de gerenciamento de chamadas)
+// assets/js/gerenciar_chamadas.js (versão atualizada para exibir nome do professor)
 $(document).ready(function() {
     let selectedTurmaId = null;
     let selectedData = $('#dataChamada').val();  // Inicializa com data atual
+    let selectedTurmaInfo = null;  // Armazena info da turma selecionada
 
-    // Carregar todas as turmas (sem filtro por professor)
+    // Carregar todas as turmas com nome do professor
     $.ajax({
         url: 'fetch_turmas.php',
         method: 'POST',
-        data: { action: 'all_turmas' },  // Nova ação para todas as turmas
+        data: { action: 'all_turmas' },  // Nova ação para todas as turmas com professor
         dataType: 'json',
         success: function(response) {
             console.log('Resposta das turmas:', response);  // Debug
@@ -15,7 +16,7 @@ $(document).ready(function() {
                 const select = $('#turmaSelect');
                 select.empty().append('<option value="">Selecione uma turma</option>');
                 response.turmas.forEach(turma => {
-                    select.append(`<option value="${turma.id}">${turma.nome} (${turma.ano}º Ano)</option>`);
+                    select.append(`<option value="${turma.id}" data-professor="${turma.professor_nome || 'Sem Professor'}">${turma.nome} (${turma.ano}º Ano)</option>`);
                 });
                 $('#carregarChamadasBtn').prop('disabled', false);  // Habilita após carregar
             } else {
@@ -31,6 +32,18 @@ $(document).ready(function() {
     // Evento para seleção de turma
     $('#turmaSelect').change(function() {
         selectedTurmaId = $(this).val();
+        if (selectedTurmaId) {
+            const selectedOption = $(this).find('option:selected');
+            selectedTurmaInfo = {
+                nome: selectedOption.text().split(' (')[0],  // Extrai nome da turma
+                professor: selectedOption.data('professor')  // Nome do professor
+            };
+            $('#nomeTurma').text(selectedTurmaInfo.nome);
+            $('#nomeProfessor').text(selectedTurmaInfo.professor);
+            $('#infoTurma').show();
+        } else {
+            $('#infoTurma').hide();
+        }
         toggleLoadButton();
     });
 

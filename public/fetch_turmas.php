@@ -100,12 +100,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo json_encode($response);
         }
     } elseif ($action === 'all_turmas') {
-        // Nova ação: Listar todas as turmas (para cargos superiores)
+        // Nova ação: Listar todas as turmas com nome do professor (para cargos superiores)
         if (!in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])) {
             echo json_encode(['success' => false, 'message' => 'Acesso negado.']);
             exit;
         }
-        $sql = "SELECT id, nome, ano FROM turmas ORDER BY ano, nome";
+        $sql = "SELECT t.id, t.nome, t.ano, CONCAT(f.nome, ' ', f.sobrenome) AS professor_nome
+                FROM turmas t 
+                LEFT JOIN funcionarios f ON t.professor_id = f.id
+                ORDER BY t.ano, t.nome";
         $result = $conn->query($sql);
         $turmas = [];
         while ($row = $result->fetch_assoc()) {
