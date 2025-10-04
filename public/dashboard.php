@@ -71,6 +71,10 @@ $header_photo = file_exists($square_photo_path) ? $square_photo_path : $default_
             <?php if ($cargo === 'Professor'): ?>
                 <a href="chamada.php"><i class="fa-solid fa-clipboard-check"></i>Chamada</a>
             <?php endif; ?>
+
+            <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
+                <a href="gerenciar_chamadas.php"><i class="fa-solid fa-clipboard-list"></i>Gerenciar Chamadas</a>
+            <?php endif; ?>
             
             <?php if (in_array($cargo, ['Coordenador', 'Diretor', 'Administrador'])): ?>
             <div class="sidebar-item">
