@@ -14,11 +14,56 @@ $funcionario_id = $_SESSION["funcionario_id"];
 
 header('Content-Type: application/json');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
-    $turma_id = (int)$_POST['turma_id'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $turma_id = isset($_POST['turma_id']) ? (int)$_POST['turma_id'] : null;
+    $professor_id = isset($_POST['professor_id']) ? (int)$_POST['professor_id'] : null;
     $action = $_POST['action'] ?? '';
 
-    if ($action === 'edit' && ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador")) {
+    if ($action === 'list' && $professor_id) {
+        // Nova ação: Listar turmas do professor
+        $sql = "SELECT id, nome, ano FROM turmas WHERE professor_id = ? ORDER BY ano, nome";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $professor_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $turmas = [];
+        while ($row = $result->fetch_assoc()) {
+            $turmas[] = $row;
+        }
+        $stmt->close();
+        echo json_encode(['success' => true, 'turmas' => $turmas]);
+        exit;
+    } elseif ($action === 'alunos' && $turma_id) {
+        // Nova ação: Carregar alunos e presenças da turma para uma data específica
+        $data = $_POST['data'] ?? date('Y-m-d');
+
+        // Buscar alunos
+        $sql = "SELECT a.id, a.nome, a.sobrenome, a.matricula FROM alunos a WHERE a.turma_id = ? ORDER BY a.nome";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $turma_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $alunos = [];
+        while ($row = $result->fetch_assoc()) {
+            $alunos[] = $row;
+        }
+        $stmt->close();
+
+        // Buscar presenças existentes para a data
+        $presencas = [];
+        $sql = "SELECT aluno_matricula, presente FROM presencas WHERE turma_id = ? AND data = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("is", $turma_id, $data);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $presencas[$row['aluno_matricula']] = (bool)$row['presente'];
+        }
+        $stmt->close();
+
+        echo json_encode(['success' => true, 'alunos' => $alunos, 'presencas' => $presencas]);
+        exit;
+    } elseif ($turma_id && $action === 'edit' && ($cargo === "Coordenador" || $cargo === "Diretor" || $cargo === "Administrador")) {
         // Substitui fetch_turma.php
         $sql = "SELECT t.id, t.nome, t.ano, t.professor_id 
                 FROM turmas t 
@@ -35,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['turma_id'])) {
             echo json_encode(['success' => false, 'message' => 'Turma não encontrada.']);
         }
         $stmt->close();
-    } elseif ($action === 'details') {
+    } elseif ($turma_id && $action === 'details') {
         // Substitui fetch_turma_data.php
         $total_alunos = getTotalAlunos($conn, $cargo);
         $quantidade_turma = getQuantidadeTurma($conn, $turma_id);

@@ -101,3 +101,22 @@ CREATE TABLE habilidades_bncc (
     FOREIGN KEY (ano_id) REFERENCES anos_escolares(id) ON DELETE RESTRICT,
     FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id) ON DELETE RESTRICT
 );
+
+-- Adicionar a nova tabela presencas ao banco de dados evograph_db
+USE evograph_db;
+
+CREATE TABLE presencas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    aluno_matricula VARCHAR(20) NOT NULL,
+    turma_id INT NOT NULL,
+    data DATE NOT NULL,
+    presente BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    INDEX idx_turma_data (turma_id, data),
+    INDEX idx_aluno_matricula (aluno_matricula),
+    
+    FOREIGN KEY (aluno_matricula) REFERENCES alunos(matricula) ON DELETE CASCADE,
+    FOREIGN KEY (turma_id) REFERENCES turmas(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_presence (aluno_matricula, turma_id, data)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
