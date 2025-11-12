@@ -63,7 +63,12 @@ sudo mysql -e "GRANT ALL PRIVILEGES ON evograph_db.* TO 'admEvoGraph'@'localhost
 sudo mysql -e "FLUSH PRIVILEGES;"
 
 # Criar tabelas no banco evograph_db
-sudo mysql -e "USE evograph_db;
+sudo mysql -e "
+USE evograph_db;
+
+-- ======================
+-- TABELA: funcionarios
+-- ======================
 CREATE TABLE IF NOT EXISTS funcionarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -74,18 +79,52 @@ CREATE TABLE IF NOT EXISTS funcionarios (
     rf VARCHAR(20) UNIQUE NOT NULL,
     foto VARCHAR(255) DEFAULT NULL,
     cargo VARCHAR(50) NOT NULL DEFAULT 'Professor'
-);"
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-sudo mysql -e "USE evograph_db;
+-- ======================
+-- TABELA: anos_escolares
+-- ======================
+CREATE TABLE IF NOT EXISTS anos_escolares (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL UNIQUE,
+    ordem INT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================
+-- TABELA: disciplinas
+-- ======================
+CREATE TABLE IF NOT EXISTS disciplinas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================
+-- TABELA: habilidades_bncc
+-- ======================
+CREATE TABLE IF NOT EXISTS habilidades_bncc (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ano_id INT NOT NULL,
+    disciplina_id INT NOT NULL,
+    codigo VARCHAR(20) NOT NULL UNIQUE,
+    descricao TEXT NOT NULL,
+    FOREIGN KEY (ano_id) REFERENCES anos_escolares(id) ON DELETE RESTRICT,
+    FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================
+-- TABELA: turmas
+-- ======================
 CREATE TABLE IF NOT EXISTS turmas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     ano INT NOT NULL,
     professor_id INT,
     FOREIGN KEY (professor_id) REFERENCES funcionarios(id)
-);"
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-sudo mysql -e "USE evograph_db;
+-- ======================
+-- TABELA: alunos
+-- ======================
 CREATE TABLE IF NOT EXISTS alunos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -99,9 +138,24 @@ CREATE TABLE IF NOT EXISTS alunos (
     foto VARCHAR(255) DEFAULT NULL,
     email VARCHAR(150) UNIQUE DEFAULT NULL,
     FOREIGN KEY (turma_id) REFERENCES turmas(id)
-);"
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-sudo mysql -e "USE evograph_db;
+-- ======================
+-- TABELA: perguntas_formulario
+-- ======================
+CREATE TABLE IF NOT EXISTS perguntas_formulario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    formulario_id VARCHAR(50),
+    bncc_habilidade_id INT DEFAULT NULL,
+    pergunta_texto TEXT NOT NULL,
+    resposta_correta VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================
+-- TABELA: respostas_formulario
+-- ======================
 CREATE TABLE IF NOT EXISTS respostas_formulario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     aluno_id INT,
@@ -110,58 +164,12 @@ CREATE TABLE IF NOT EXISTS respostas_formulario (
     data_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
     dados_json JSON NOT NULL,
     pontuacao DECIMAL(5,2) DEFAULT NULL,
+    bncc_habilidade_id INT DEFAULT NULL,
     INDEX idx_email (email),
-    FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
-
-sudo mysql -e "USE evograph_db;
-CREATE TABLE IF NOT EXISTS perguntas_formulario (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    formulario_id VARCHAR(50),
-    bncc_habilidade VARCHAR(50),
-    pergunta_texto TEXT NOT NULL,
-    resposta_correta VARCHAR(255),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);"
-
-# Adicionar coluna bncc_habilidade_id à tabela respostas_formulario
-sudo mysql -e "USE evograph_db;
-ALTER TABLE respostas_formulario
-ADD COLUMN bncc_habilidade_id INT DEFAULT NULL,
-ADD CONSTRAINT fk_bncc_habilidade FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL;"
-
-# Modificar a tabela perguntas_formulario para usar bncc_habilidade_id
-sudo mysql -e "USE evograph_db;
-ALTER TABLE perguntas_formulario
-CHANGE COLUMN bncc_habilidade bncc_habilidade_id INT DEFAULT NULL,
-ADD CONSTRAINT fk_perguntas_bncc_habilidade FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL;"
-
-# Tabela para armazenar os anos escolares
-sudo mysql -e "USE evograph_db;
-CREATE TABLE anos_escolares (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(50) NOT NULL UNIQUE,
-    ordem INT NOT NULL
-);"
-
-# Tabela para armazenar as disciplinas
-sudo mysql -e "USE evograph_db;
-CREATE TABLE disciplinas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL UNIQUE
-);"
-
-# Tabela para armazenar as habilidades BNCC
-sudo mysql -e "USE evograph_db;
-CREATE TABLE habilidades_bncc (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    ano_id INT NOT NULL,
-    disciplina_id INT NOT NULL,
-    codigo VARCHAR(20) NOT NULL UNIQUE,
-    descricao TEXT NOT NULL,
-    FOREIGN KEY (ano_id) REFERENCES anos_escolares(id) ON DELETE RESTRICT,
-    FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id) ON DELETE RESTRICT
-);"
+    FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE SET NULL,
+    FOREIGN KEY (bncc_habilidade_id) REFERENCES habilidades_bncc(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+"
 
 # 9. Instalar o PHP e módulos necessários
 echo "Instalando o PHP e módulos..."
@@ -177,6 +185,7 @@ echo "Clonando o repositório evoGraph em /var/www/html..."
 sudo rm -rf /var/www/html/*
 cd /var/www/html
 sudo git clone https://github.com/evanderson-dev/evoGraph.git .
+sudo git clone https://github.com/evanderson-dev/evograph-server.git .
 
 # 12. Ajustar permissões do diretório web
 echo "Ajustando permissões do diretório /var/www/html..."
